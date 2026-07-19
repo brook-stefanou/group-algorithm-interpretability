@@ -1,0 +1,183 @@
+[project]
+name = "group-algorithm-interp"
+version = "0.1.0"
+description = "Reproducible experiments on algorithms learned by neural networks for finite-group multiplication."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10,<3.14"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "numpy>=1.24.0",
+    "torch==2.12.1",
+    "hydra-core>=1.3.0",
+    "omegaconf>=2.3.0",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "wandb>=0.28.0",
+    "matplotlib>=3.8",
+    "sympy>=1.12",
+    "einops>=0.8.2",
+    "seaborn>=0.13",
+    "pandas>=2.0",
+    "scipy>=1.11",
+    "scikit-learn>=1.4",
+]
+
+# SageMath/GAP is needed ONLY to *generate* group artifacts
+# (`scripts/export_group.py`). Training, analysis, and the whole test suite run
+# against already-exported `.npz` artifacts and never import Sage — so this is an
+# optional extra, deliberately NOT a default dependency: `uv sync` and CI stay
+# fast, offline, and Sage-free.
+#
+#     uv sync --extra sage
+#     uv run python scripts/export_group.py --order 8 --index 3
+#
+# These four modular distributions (12 passagemath packages once resolved) are the
+# minimal set that exports a group correctly. `passagemath-standard` also works —
+# it is what `_require_sage` finds via `sage.all` — but pulls ~50 passagemath
+# packages for no added capability here.
+#
+# Every one of the four is load-bearing, and dropping any of them fails *late and
+# selectively* rather than at import, which is why the set was established by
+# exporting real groups rather than by reading the dependency graph:
+#   passagemath-gap      libgap: SmallGroup, Irr, IrreducibleRepresentations,
+#                        AllSubgroups (+ the SmallGroups library data)
+#   passagemath-modules  the MPFR complex field (CC/ComplexField) the exporter
+#                        converts GAP cyclotomics through
+#   passagemath-flint    sage.rings.number_field, reached by the cyclotomic -> CC
+#                        coercion for any character/irrep entry that is not rational
+#   passagemath-pari     PARI root-finding under that same coercion
+# Without -flint and -pari, `SmallGroup(8,3)` (D4) still exports fine because its
+# irrep matrices are rational, while S3, Q8, and C8 all fail — so a smoke test on
+# D4 alone would have "passed" a broken environment.
+#
+# Note passagemath 10.8 publishes no wheels for Python 3.10, which this project
+# still supports; the marker keeps the lock resolvable on 3.10, where the extra
+# installs nothing and the exporter exits with its install hint.
+[project.optional-dependencies]
+sage = [
+    "passagemath-gap>=10.8,<11; python_version >= '3.11'",
+    "passagemath-modules>=10.8,<11; python_version >= '3.11'",
+    "passagemath-flint>=10.8,<11; python_version >= '3.11'",
+    "passagemath-pari>=10.8,<11; python_version >= '3.11'",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.10.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=5.0",
+    "pytest-xdist>=3.6",
+    "ruff>=0.15.20",
+    "pre-commit>=3.7.0",
+    "types-pyyaml>=6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/group_algorithm_interp"]
+
+# Linux hosts resolve PyTorch's CUDA 12.9 wheel; macOS resolves the ordinary
+# PyPI/MPS wheel. This is not tied to a specific hosting provider.
+#
+# The CUDA index is cu129, not the older cu124/cu126, because of Blackwell.
+# PyTorch's own binary build script
+# (.ci/manywheel/build_cuda.sh) sets TORCH_CUDA_ARCH_LIST per CUDA version:
+# cu126 builds "5.0;6.0;7.0;7.5;8.0;8.6;9.0" -- it stops at Hopper (sm_90) --
+# while cu128/cu129/cu130 append "12.0". Blackwell (RTX PRO 4000/4500/6000,
+# RTX 50-series) is sm_120, so a cu124/cu126 wheel ships no kernel image for it
+# and the first CUDA op dies with "no kernel image is available for execution on
+# the device". torch 2.7.0 was the first stable release built on cu128, i.e. the
+# floor for Blackwell; cu128 itself stops at torch 2.11.0, so cu129 is the index
+# that carries current stable torch while staying on a CUDA 12.x runtime (CUDA
+# 13 wheels want a newer driver for no benefit here).
+#
+# Unlike the old cu124 pin, this index publishes Linux aarch64 wheels, and its
+# aarch64 arch list keeps 12.0 -- so ARM-based NVIDIA hosts (GH200/GB200) now
+# resolve and run, where previously they could not resolve at all.
+[[tool.uv.index]]
+name = "pytorch-cu129"
+url = "https://download.pytorch.org/whl/cu129"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu129", marker = "sys_platform == 'linux'" },
+]
+
+[tool.ruff]
+line-length = 100
+# This Sage-executed generator is maintained separately from the normal Python
+# runtime. Keep it out of local formatting/type gates until Sage tooling is
+# available in CI; all importable package and workflow code remains covered.
+#
+# scratchpad/ holds throwaway working scripts outside the reviewer-facing
+# surface the gate is meant to cover.
+extend-exclude = ["scripts/enumerate_groups.py", "scratchpad"]
+
+[tool.ruff.lint]
+extend-select = ["I"] # import sorting
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+mypy_path = ["src"]
+# Tests are intentionally excluded: several pass invalid literals (e.g.
+# logging.mode="onine") to assert that validation rejects them, which static
+# typing would flag. The bar is well-typed first-party src + scripts.
+#
+# Deliberately NOT --strict: research code touches a lot of tensors/Any and
+# strict typing there is friction with low payoff. Type-checking stays on (it
+# catches real errors and signals discipline) but we don't fight every Any.
+# No explicit python_version: mypy targets the interpreter it runs under. CI
+# runs mypy exactly once, in the quality job pinned to Python 3.12 (the separate
+# matrix job reruns pytest alone on 3.10/3.11/3.13, without mypy); the ambient
+# 3.12 dev env parses the newer numpy stubs (PEP 695 `type` aliases).
+files = ["src", "scripts"]
+# Sage/GAP's enumeration entry point is executed by Sage, whose runtime types
+# are not available in the normal Python environment.  The pure-Python loader
+# and selector remain type-checked; this is the only scoped exclusion.
+exclude = ["^scripts/enumerate_groups\\.py$"]
+warn_unused_ignores = true
+check_untyped_defs = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+
+[[tool.mypy.overrides]]
+module = ["rich.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["sage", "sage.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["pandas", "pandas.*", "scipy", "scipy.*", "seaborn.*", "sklearn.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["statsmodels.*", "umap"]
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["group_algorithm_interp"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.pytest.ini_options]
+# pythonpath=src lets tests import the package without relying on the editable
+# install. On macOS the editable .pth can be flagged UF_HIDDEN and Python 3.12+
+# silently skips hidden .pth files (`chflags -R nohidden .venv` un-hides them);
+# this keeps the suite working regardless. The scripts bootstrap src/ themselves.
+pythonpath = ["src"]
+addopts = "-q --cov=group_algorithm_interp --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests"]

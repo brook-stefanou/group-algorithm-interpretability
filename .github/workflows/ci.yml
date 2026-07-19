@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  WANDB_MODE: disabled
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --locked --dev --python 3.12
+      - run: uv run python scripts/check_docs.py
+      - run: >-
+          uv run python scripts/check_research_log.py
+          --base "${{ github.event.pull_request.base.sha || github.event.before }}"
+          --render-dir "$RUNNER_TEMP/research-log-indexes"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: research-log-indexes
+          path: ${{ runner.temp }}/research-log-indexes
+          if-no-files-found: warn
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run mypy
+      - run: uv run pytest --cov-report=xml:coverage.xml
+      - run: uv build --no-sources
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-python-3.12
+          path: coverage.xml
+          if-no-files-found: warn
+
+  # Reruns pytest alone (no lint/mypy/coverage) on the remaining Python versions
+  # this project supports. Together with the quality job's Python 3.12 run, this
+  # covers the full `requires-python` range (>=3.10,<3.14) in pyproject.toml --
+  # 3.12 is deliberately not repeated here, not skipped.
+  test:
+    needs: quality
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --locked --dev --python ${{ matrix.python-version }}
+      - run: uv run pytest

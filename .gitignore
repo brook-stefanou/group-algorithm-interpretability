@@ -1,0 +1,101 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Test / lint / type-check caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage*
+htmlcov/
+
+# Regenerable test support artifacts
+tests/.artifacts/
+
+# Checkpoints / weights
+*.pt
+*.pth
+*.bin
+*.ckpt
+
+# Run artifacts (manifests, resolved configs, checkpoints, analysis)
+runs/
+
+# Mac-side archive of run results pulled from the object store
+# (`just pull-results`)
+results-archive/
+
+# Transient scratch + per-run logs (sweeps, ad-hoc scripts)
+scratch/
+*.log
+
+# Hydra working dirs
+outputs/
+multirun/
+
+# Weights & Biases local files
+wandb/
+.wandb
+
+# Layer-2 literature cache (regenerable API responses)
+.lit_cache/
+
+# Personal working notes (not a committed artifact)
+HOWTO.md
+
+# Optional handoff from a separate project-selection system
+selected_project.json
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Private project process material. The public repository contains the runnable
+# code, configuration, tests, and curated documentation—not agent instructions,
+# research notes, decisions in progress, or working checklists.
+/CLAUDE.md
+/AGENTS.md
+/.claude/
+/internal/
+
+# data/ holds regenerable local research artifacts (per-group .npz exports),
+# except the committed ground-truth invariant dataset the clean-pair screen
+# and group selection are derived from.
+/data/*
+!/data/group_properties_full.jsonl
+
+# Generated publications and interactive scratch work.
+reports/figures/*
+!reports/figures/.gitkeep
+*.ipynb
+
+# Local environment variants and profiler output. Keep .env.example public.
+.env.*
+!.env.example
+*.prof
+*.profraw
+*.profdata
+
+# Subagent-driven-development scratch (briefs, reports, diffs, progress ledger)
+.superpowers/
+
+# Superpowers process docs (specs/plans) — kept local, not shipped in the template
+docs/superpowers/
+.aider*

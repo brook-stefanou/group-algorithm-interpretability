@@ -1,0 +1,50 @@
+# Optional but recommended: mirrors the CI gates locally. Install with
+#   uv run pre-commit install
+# ruff/mypy run through `uv run` so they use the exact pinned versions (and mypy
+# picks up the pydantic plugin + torch/numpy types).
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        # 1 MiB: run artifacts stay out of Git. The two committed derivation
+        # datasets (the invariant dataset and the falsifier-screen output) are
+        # deliberate exceptions.
+        args: ["--maxkb=1024"]
+        exclude: ^(data/group_properties_full\.jsonl|results/falsifier_screen_results_full\.json)$
+      - id: check-toml
+      - id: check-json
+
+  # Keep uv.lock in sync with pyproject.toml so the pinned environment never drifts.
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.7.13
+    hooks:
+      - id: uv-lock
+
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --fix
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format
+        language: system
+        types: [python]
+      - id: mypy
+        name: mypy
+        entry: uv run mypy
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: research-log
+        name: research log format and append-only history
+        entry: uv run python scripts/check_research_log.py --check-head
+        language: system
+        pass_filenames: false
