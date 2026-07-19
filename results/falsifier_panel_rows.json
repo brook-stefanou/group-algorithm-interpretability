@@ -1,0 +1,6472 @@
+{
+  "rows": [
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 25,
+      "index": 2,
+      "desc": "`C5 x C5`",
+      "name": "**C5\u00b2**",
+      "serves": "**M5**",
+      "line": 211,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 27,
+      "index": 3,
+      "desc": "`(C3 x C3) : C3`",
+      "name": "extraspecial `3^{1+2}_+` (exp 3)",
+      "serves": "**M1**",
+      "line": 212,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 27,
+      "index": 4,
+      "desc": "`C9 : C3`",
+      "name": "extraspecial `3^{1+2}_-` (exp 9)",
+      "serves": "**M1**",
+      "line": 213,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 27,
+      "index": 5,
+      "desc": "`C3 x C3 x C3`",
+      "name": "**C3\u00b3**",
+      "serves": "**M5**",
+      "line": 214,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 4,
+      "desc": "`C8 : C4`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 215,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 18,
+      "desc": "`D32`",
+      "name": "**D32** (order 32; = D16 in the other convention)",
+      "serves": "**M2**",
+      "line": 216,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 19,
+      "desc": "`QD32`",
+      "name": "**QD32 = SD32**",
+      "serves": "**M2**",
+      "line": 217,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 20,
+      "desc": "`Q32`",
+      "name": "**Q32** (order 32; = Q16 / Dic8 elsewhere)",
+      "serves": "**M2**",
+      "line": 218,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 48,
+      "index": 23,
+      "desc": "`C24 x C2`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 219,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 48,
+      "index": 28,
+      "desc": "`C2 . S4 = SL(2,3) . C2`",
+      "name": "**SL(2,3).C2** = binary octahedral `2O` [non-split]",
+      "serves": "**M3** \u00b7 R2 split/non-split",
+      "line": 220,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 48,
+      "index": 29,
+      "desc": "`GL(2,3)`",
+      "name": "**GL(2,3)** [split]",
+      "serves": "**M3** \u00b7 R2 split/non-split",
+      "line": 221,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 48,
+      "index": 52,
+      "desc": "`C6 x C2 x C2 x C2`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 222,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 49,
+      "index": 2,
+      "desc": "`C7 x C7`",
+      "name": "**C7\u00b2**",
+      "serves": "**M5**",
+      "line": 223,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 52,
+      "desc": "`D64`",
+      "name": "**D64**",
+      "serves": "**M2**",
+      "line": 224,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 53,
+      "desc": "`QD64`",
+      "name": "**QD64**",
+      "serves": "**M2**",
+      "line": 225,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 54,
+      "desc": "`Q64`",
+      "name": "**Q64**",
+      "serves": "**M2**",
+      "line": 226,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 63,
+      "desc": "`(C4 x C4) : C4`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 227,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 68,
+      "desc": "`(C4 : C4) : C4`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 228,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 120,
+      "desc": "`C4 x Q16`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 229,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 168,
+      "desc": "`(C2 x C2) . (C2 x D8) = (C4 x C2) . (C2 x C2 x C2)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 230,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 192,
+      "desc": "`C4 x C4 x C2 x C2`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 231,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 80,
+      "index": 23,
+      "desc": "`C40 x C2`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 232,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 96,
+      "index": 24,
+      "desc": "`C3 : (C8 : C4)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 233,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 96,
+      "index": 132,
+      "desc": "`C2 x (C12 : C4)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 234,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 112,
+      "index": 21,
+      "desc": "`C7 x (C4 : C4)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 235,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 125,
+      "index": 3,
+      "desc": "`(C5 x C5) : C5`",
+      "name": "extraspecial `5^{1+2}_+`",
+      "serves": "**M1**",
+      "line": 236,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 125,
+      "index": 4,
+      "desc": "`C25 : C5`",
+      "name": "extraspecial `5^{1+2}_-`",
+      "serves": "**M1**",
+      "line": 237,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 127,
+      "index": 1,
+      "desc": "`C127`",
+      "name": "**C127** \u2014 the Nanda/Chughtai case",
+      "serves": "M4 anchor",
+      "line": 238,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 47,
+      "desc": "`C36 x C2 x C2`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 239,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 99,
+      "desc": "`(C3 x C3) : Q16`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 240,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 20,
+      "desc": "`C8 x (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 241,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 146,
+      "desc": "`C2 x (C20 : C4)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 242,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 176,
+      "index": 19,
+      "desc": "`C44 x C4`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 243,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 389,
+      "desc": "`C3 : (C8 x Q8)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 244,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1027,
+      "desc": "`C2 x (C3 : (C4 : Q8))`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 245,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 208,
+      "index": 32,
+      "desc": "`C2 x (C13 : C8)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 246,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 145,
+      "desc": "`(C3 x C3 x C3) : Q8`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 247,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 224,
+      "index": 55,
+      "desc": "`C7 x (C8 : C4)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 248,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 224,
+      "index": 164,
+      "desc": "`C56 x C2 x C2`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 249,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 84,
+      "desc": "`C120 x C2`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 250,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 173,
+      "desc": "`C2 x C10 x (C3 : C4)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 251,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 2,
+      "desc": "`(C9 x C3) : C9`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 252,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 37,
+      "desc": "`(C3 x ((C3 x C3) : C3)) : C3`",
+      "name": "\u2014",
+      "serves": "**M1**",
+      "line": 253,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 47,
+      "desc": "`(C9 x C9) : C3`",
+      "name": "\u2014",
+      "serves": "**M1**",
+      "line": 254,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 65,
+      "desc": "`(C3 x ((C3 x C3) : C3)) : C3`",
+      "name": "extraspecial `3^{1+4}_+`",
+      "serves": "**M1**",
+      "line": 255,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 66,
+      "desc": "`(C3 x (C9 : C3)) : C3`",
+      "name": "extraspecial `3^{1+4}_-`",
+      "serves": "**M1**",
+      "line": 256,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 67,
+      "desc": "`C3 x C3 x C3 x C3 x C3`",
+      "name": "elementary abelian **C3\u2075**",
+      "serves": "M4 anchor \u00b7 **M5**",
+      "line": 257,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 250,
+      "index": 10,
+      "desc": "`C2 x ((C5 x C5) : C5)`",
+      "name": "`C2 \u00d7 5^{1+2}_+`",
+      "serves": "**M1**",
+      "line": 258,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "MAIN",
+      "order": 250,
+      "index": 11,
+      "desc": "`C2 x (C25 : C5)`",
+      "name": "`C2 \u00d7 5^{1+2}_-`",
+      "serves": "**M1**",
+      "line": 259,
+      "panel_claimed": 49,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 1,
+      "desc": "`C128`",
+      "name": "**C128**",
+      "serves": "**M4**",
+      "line": 265,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 156,
+      "desc": "`C32 : C4`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 266,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 161,
+      "desc": "`D128`",
+      "name": "**D128**",
+      "serves": "**M2**",
+      "line": 267,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 162,
+      "desc": "`QD128`",
+      "name": "**QD128**",
+      "serves": "**M2**",
+      "line": 268,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 163,
+      "desc": "`Q128`",
+      "name": "**Q128**",
+      "serves": "**M2**",
+      "line": 269,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 831,
+      "desc": "`(C2 x C2 x C2) . (C2 x D8) = (C4 x C2 x C2) . (C2 x C2 x C2)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 270,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 1265,
+      "desc": "`(C2 x C2 x C2) . (C2 x C2 x C2 x C2)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 271,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 1623,
+      "desc": "`C2 x C2 x (Q8 : C4)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 272,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 1805,
+      "desc": "`C2 x (Q8 : Q8)`",
+      "name": "\u2014",
+      "serves": "**M5**",
+      "line": 273,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T1",
+      "panel": "O128",
+      "order": 128,
+      "index": 2328,
+      "desc": "`C2 x C2 x C2 x C2 x C2 x C2 x C2`",
+      "name": "elementary abelian **C2\u2077**",
+      "serves": "**M4**",
+      "line": 274,
+      "panel_claimed": 10,
+      "tier_claims": {
+        "groups": 59,
+        "main": 49,
+        "o128": 10,
+        "runs": 2950
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 2,
+      "desc": "`(C4 x C2) : C4`",
+      "name": "\u2014 [indecomposable]",
+      "serves": "S-E12",
+      "line": 282,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 6,
+      "desc": "`(C2 x C2 x C2) : C4`",
+      "name": "\u2014 [indecomposable]",
+      "serves": "S-E14",
+      "line": 283,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 9,
+      "desc": "`(C8 x C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E13",
+      "line": 284,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 10,
+      "desc": "`Q8 : C4`",
+      "name": "**Q8 : C4**",
+      "serves": "S-E13",
+      "line": 285,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 11,
+      "desc": "`(C4 x C4) : C2`",
+      "name": "`C4 wr C2`",
+      "serves": "S-E13",
+      "line": 286,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 22,
+      "desc": "`C2 x ((C4 x C2) : C2)`",
+      "name": "\u2014 [direct]",
+      "serves": "S-E12",
+      "line": 287,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 24,
+      "desc": "`(C4 x C4) : C2`",
+      "name": "\u2014 [central]",
+      "serves": "S-E12",
+      "line": 288,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 27,
+      "desc": "`(C2 x C2 x C2 x C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E13",
+      "line": 289,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 28,
+      "desc": "`(C4 x C2 x C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E13",
+      "line": 290,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 43,
+      "desc": "`C8 : (C2 x C2)`",
+      "name": "\u2014 [indecomposable]",
+      "serves": "S-E14",
+      "line": 291,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 49,
+      "desc": "`(C2 x C2 x C2) : (C2 x C2)`",
+      "name": "`D8 \u2218 D8` = extraspecial `2^{1+4}_+`",
+      "serves": "S-E11",
+      "line": 292,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 32,
+      "index": 50,
+      "desc": "`(C2 x Q8) : C2`",
+      "name": "`D8 \u2218 Q8` = extraspecial `2^{1+4}_-`",
+      "serves": "S-E11",
+      "line": 293,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 48,
+      "index": 32,
+      "desc": "`C2 x SL(2,3)`",
+      "name": "**C2 \u00d7 SL(2,3)** [direct]",
+      "serves": "S-E12",
+      "line": 294,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 48,
+      "index": 33,
+      "desc": "`((C4 x C2) : C2) : C3`",
+      "name": "`SL(2,3) \u2218 C4` [central]",
+      "serves": "S-E12",
+      "line": 295,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 48,
+      "index": 40,
+      "desc": "`Q8 x S3`",
+      "name": "**Q8 \u00d7 S3**",
+      "serves": "S-E12",
+      "line": 296,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 48,
+      "index": 41,
+      "desc": "`(C4 x S3) : C2`",
+      "name": "\u2014",
+      "serves": "S-E12",
+      "line": 297,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 4,
+      "desc": "`((C8 x C2) : C2) : C2`",
+      "name": "\u2014 (class 3)",
+      "serves": "S-E10",
+      "line": 298,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 18,
+      "desc": "`(C4 x C4) : C4`",
+      "name": "\u2014 (class 2)",
+      "serves": "S-E10",
+      "line": 299,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 238,
+      "desc": "`Q8 : Q8`",
+      "name": "`Q8 \u2218 Q8` (central product)",
+      "serves": "S-E4",
+      "line": 300,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 239,
+      "desc": "`Q8 x Q8`",
+      "name": "**Q8 \u00d7 Q8**",
+      "serves": "S-E4",
+      "line": 301,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 257,
+      "desc": "`(C2 x D16) : C2`",
+      "name": "`D16 \u2218 D8`",
+      "serves": "S-E11",
+      "line": 302,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 259,
+      "desc": "`(C2 x Q16) : C2`",
+      "name": "`Q16 \u2218 D8`",
+      "serves": "S-E11",
+      "line": 303,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 81,
+      "index": 7,
+      "desc": "`(C3 x C3 x C3) : C3`",
+      "name": "`C3 wr C3`",
+      "serves": "S-E13",
+      "line": 304,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 100,
+      "index": 11,
+      "desc": "`(C5 x C5) : C4`",
+      "name": "\u2014 (Frobenius; **no** faithful irrep)",
+      "serves": "S-E6",
+      "line": 305,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 100,
+      "index": 12,
+      "desc": "`(C5 x C5) : C4`",
+      "name": "\u2014 (Frobenius; faithful irrep d = 4)",
+      "serves": "S-E6",
+      "line": 306,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 120,
+      "index": 5,
+      "desc": "`SL(2,5)`",
+      "name": "**SL(2,5)** \u2014 the non-solvable exemplar",
+      "serves": "R2 split/non-split",
+      "line": 307,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 31,
+      "desc": "`C2 . (((C2 x C2) : C9) : C2) = (Q8 : C9) . C2`",
+      "name": "[non-split]",
+      "serves": "R2 split/non-split",
+      "line": 308,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 32,
+      "desc": "`(Q8 : C9) : C2`",
+      "name": "[split]",
+      "serves": "R2 split/non-split",
+      "line": 309,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 10,
+      "desc": "`C3 : (((C4 x C2) : C4) : C2)`",
+      "name": "\u2014 (`mci` 48)",
+      "serves": "S-E8",
+      "line": 310,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 24,
+      "desc": "`C3 : ((C2 x C2) . ((C4 x C2) : C2) = (C4 x C2) . (C4 x C2))`",
+      "name": "\u2014 (`mci` 192)",
+      "serves": "S-E8",
+      "line": 311,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 180,
+      "desc": "`C2 . (((C4 x C4) : C3) : C2) = (((C4 x C2) : C4) : C3) . C2`",
+      "name": "[non-split]",
+      "serves": "R2 split/non-split",
+      "line": 312,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 181,
+      "desc": "`(((C4 x C2) : C4) : C3) : C2`",
+      "name": "[split]",
+      "serves": "R2 split/non-split",
+      "line": 313,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 187,
+      "desc": "`C8 . S4 = SL(2,3) . C8`",
+      "name": "[non-split] \u2014 **no clean split partner exists**",
+      "serves": "R2 split/non-split",
+      "line": 314,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 945,
+      "desc": "`SL(2,3) : Q8`",
+      "name": "[split] *(prints as `SL(2,3) : Q8`, as does (192,950))*",
+      "serves": "R2 split/non-split",
+      "line": 315,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 948,
+      "desc": "`(C2 x C2) . (C2 x S4) = (C2 x SL(2,3)) . (C2 x C2)`",
+      "name": "[non-split]",
+      "serves": "R2 split/non-split",
+      "line": 316,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 962,
+      "desc": "`C2 . ((C4 x A4) : C2) = (((C4 x C2) : C2) : C3) . (C2 x C2)`",
+      "name": "[non-split]",
+      "serves": "R2 split/non-split",
+      "line": 317,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 966,
+      "desc": "`(((C8 x C2) : C2) : C3) : C2`",
+      "name": "[split] \u2014 CT-fingerprint identical to (192,962)",
+      "serves": "R2 split/non-split",
+      "line": 318,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1491,
+      "desc": "`C2 . (((C2 x C2 x C2 x C2) : C3) : C2) = (((C2 x C2 x C2) : (C2 x C2)) : C3) . C2`",
+      "name": "[non-split]",
+      "serves": "R2 split/non-split",
+      "line": 319,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1492,
+      "desc": "`C2 . (((C2 x C2 x C2 x C2) : C3) : C2) = (((C2 x C2 x C2) : (C2 x C2)) : C3) . C2`",
+      "name": "[non-split]",
+      "serves": "R2 split/non-split",
+      "line": 320,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1493,
+      "desc": "`(((C2 x C2 x C2) : (C2 x C2)) : C3) : C2`",
+      "name": "[split]",
+      "serves": "R2 split/non-split",
+      "line": 321,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1494,
+      "desc": "`(((C2 x C2 x C2) : (C2 x C2)) : C3) : C2`",
+      "name": "[split]",
+      "serves": "R2 split/non-split",
+      "line": 322,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 89,
+      "desc": "`C2 . S5 = SL(2,5) . C2`",
+      "name": "**2\u00b7S5** = `SL(2,5).C2` [non-split]",
+      "serves": "R2 split/non-split",
+      "line": 323,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 12,
+      "desc": "`(C27 x C3) : C3`",
+      "name": "\u2014 (`mfpd` 36)",
+      "serves": "S-E9",
+      "line": 324,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 22,
+      "desc": "`C27 : C9`",
+      "name": "\u2014",
+      "serves": "S-E14",
+      "line": 325,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 49,
+      "desc": "`C3 x (C27 : C3)`",
+      "name": "\u2014 (`mfpd` 30)",
+      "serves": "S-E9",
+      "line": 326,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 50,
+      "desc": "`(C27 x C3) : C3`",
+      "name": "\u2014 (`mfpd` 81)",
+      "serves": "S-E9",
+      "line": 327,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 56,
+      "desc": "`(C3 x ((C3 x C3) : C3)) : C3`",
+      "name": "\u2014",
+      "serves": "S-E14",
+      "line": 328,
+      "panel_claimed": 47,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "O128",
+      "order": 128,
+      "index": 842,
+      "desc": "`(C16 : C4) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 \u00b7 S-E10 pool",
+      "line": 334,
+      "panel_claimed": 6,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "O128",
+      "order": 128,
+      "index": 885,
+      "desc": "`(C8 . D8 = C4 . (C8 x C2)) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 \u00b7 S-E10 pool",
+      "line": 335,
+      "panel_claimed": 6,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "O128",
+      "order": 128,
+      "index": 928,
+      "desc": "`(((C2 x C2 x C2) : (C2 x C2)) : C2) : C2`",
+      "name": "`D8 wr C2`",
+      "serves": "S-E13",
+      "line": 336,
+      "panel_claimed": 6,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "O128",
+      "order": 128,
+      "index": 937,
+      "desc": "`(Q8 x Q8) : C2`",
+      "name": "`Q8 wr C2`",
+      "serves": "S-E13",
+      "line": 337,
+      "panel_claimed": 6,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "O128",
+      "order": 128,
+      "index": 2326,
+      "desc": "`(C2 x ((C2 x C2 x C2) : (C2 x C2))) : C2`",
+      "name": "extraspecial `2^{1+6}_+`",
+      "serves": "S-E11",
+      "line": 338,
+      "panel_claimed": 6,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T2",
+      "panel": "O128",
+      "order": 128,
+      "index": 2327,
+      "desc": "`(C2 x ((C2 x Q8) : C2)) : C2`",
+      "name": "extraspecial `2^{1+6}_-`",
+      "serves": "S-E11",
+      "line": 339,
+      "panel_claimed": 6,
+      "tier_claims": {
+        "groups": 53,
+        "main": 47,
+        "o128": 6,
+        "runs": 2650
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 36,
+      "index": 1,
+      "desc": "`C9 : C4`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 347,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 36,
+      "index": 3,
+      "desc": "`(C2 x C2) : C9`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 348,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 36,
+      "index": 4,
+      "desc": "`D36`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 349,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 36,
+      "index": 11,
+      "desc": "`C3 x A4`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 350,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 6,
+      "desc": "`(C8 x C4) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 351,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 23,
+      "desc": "`((C4 x C2) : C2) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 352,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 60,
+      "desc": "`(C2 x ((C4 x C2) : C2)) : C2`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 353,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 65,
+      "desc": "`(C4 x C4) : C4`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 354,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 116,
+      "desc": "`(C2 x (C8 : C2)) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 355,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 220,
+      "desc": "`(C4 x D8) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 356,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 72,
+      "index": 44,
+      "desc": "`A4 x S3`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 357,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 72,
+      "index": 45,
+      "desc": "`C2 x ((C3 x C3) : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 358,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 80,
+      "index": 3,
+      "desc": "`C5 : C16`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 359,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 80,
+      "index": 28,
+      "desc": "`C5 : (C8 x C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 360,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 80,
+      "index": 30,
+      "desc": "`C4 x (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 361,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 80,
+      "index": 39,
+      "desc": "`D8 x D10`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 362,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 80,
+      "index": 40,
+      "desc": "`(C4 x D10) : C2`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 363,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 80,
+      "index": 42,
+      "desc": "`(C4 x D10) : C2`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 364,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 104,
+      "index": 4,
+      "desc": "`C13 : Q8`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 365,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 104,
+      "index": 6,
+      "desc": "`D104`",
+      "name": "**D104**",
+      "serves": "S-E2",
+      "line": 366,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 108,
+      "index": 9,
+      "desc": "`(C9 : C3) : C4`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 367,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 108,
+      "index": 19,
+      "desc": "`(C2 x C2) : (C9 : C3)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 368,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 108,
+      "index": 21,
+      "desc": "`(C2 x C2) : (C9 : C3)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 369,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 108,
+      "index": 22,
+      "desc": "`(C2 x C2) : ((C3 x C3) : C3)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 370,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 108,
+      "index": 25,
+      "desc": "`C2 x ((C3 x C3) : C6)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 371,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 108,
+      "index": 26,
+      "desc": "`C2 x (C9 : C6)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 372,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 3,
+      "desc": "`(C4 x C4) : C9`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 373,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 51,
+      "desc": "`(C3 x C3) : C16`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 374,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 52,
+      "desc": "`(C3 : C8) x S3`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 375,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 53,
+      "desc": "`(C3 x C3) : (C8 x C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 376,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 67,
+      "desc": "`(C3 x C3) : (C4 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 377,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 68,
+      "desc": "`C3 x ((C4 x C4) : C3)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 378,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 80,
+      "desc": "`C3 x ((C3 x D8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 379,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 81,
+      "desc": "`C3 x ((C3 : Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 380,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 83,
+      "desc": "`C3 x (C3 : Q16)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 381,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 114,
+      "desc": "`(C3 x C3) : C16`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 382,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 119,
+      "desc": "`(C3 x C3) : Q16`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 383,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 131,
+      "desc": "`(C3 x C3) : (C8 : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 384,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 132,
+      "desc": "`C4 x ((C3 x C3) : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 385,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 136,
+      "desc": "`(C3 x C3) : ((C4 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 386,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 143,
+      "desc": "`C4 x S3 x S3`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 387,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 150,
+      "desc": "`C2 x ((C6 x S3) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 388,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 151,
+      "desc": "`C2 x ((C6 x S3) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 389,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 152,
+      "desc": "`C2 x ((C3 x C3) : Q8)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 390,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 168,
+      "desc": "`C2 x ((C3 x C3) : Q8)`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 391,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 170,
+      "desc": "`C2 x ((C12 x C3) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 392,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 172,
+      "desc": "`D8 x ((C3 x C3) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 393,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 173,
+      "desc": "`(C3 x C3) : ((C4 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 394,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 174,
+      "desc": "`Q8 x ((C3 x C3) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 395,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 175,
+      "desc": "`(C3 x C3) : ((C4 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 396,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 183,
+      "desc": "`S3 x S4`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 397,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 185,
+      "desc": "`C2 x ((C3 x C3) : C8)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 398,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 3,
+      "desc": "`C5 : C32`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 399,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 64,
+      "desc": "`C5 : (C16 x C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 400,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 65,
+      "desc": "`C5 : (C16 : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 401,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 66,
+      "desc": "`C8 x (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 402,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 67,
+      "desc": "`C5 : (C8 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 403,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 72,
+      "desc": "`C2 x (C5 : C16)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 404,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 73,
+      "desc": "`C5 : (C16 : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 405,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 75,
+      "desc": "`C4 x (C5 : C8)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 406,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 98,
+      "desc": "`C5 : ((C4 x C4) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 407,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 99,
+      "desc": "`C5 : ((C2 x Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 408,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 101,
+      "desc": "`((C4 x C2) : C2) x D10`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 409,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 102,
+      "desc": "`C5 : (C4 x D8)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 410,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 116,
+      "desc": "`C5 : ((C4 x C2 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 411,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 127,
+      "desc": "`(C8 : C2) x D10`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 412,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 128,
+      "desc": "`C5 : ((C8 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 413,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 131,
+      "desc": "`D16 x D10`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 414,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 132,
+      "desc": "`C5 : (C8 : (C2 x C2))`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 415,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 133,
+      "desc": "`C5 : ((C8 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 416,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 134,
+      "desc": "`QD16 x D10`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 417,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 135,
+      "desc": "`C5 : (C8 : (C2 x C2))`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 418,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 136,
+      "desc": "`C5 : ((C2 x Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 419,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 137,
+      "desc": "`C5 : ((C8 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 420,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 139,
+      "desc": "`C5 : ((C2 x Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 421,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 140,
+      "desc": "`C5 : ((C8 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 422,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 200,
+      "desc": "`C2 x (C5 : (C8 x C2))`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 423,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 202,
+      "desc": "`C5 : (C2 x (C8 : C2))`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 424,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 203,
+      "desc": "`C2 x C4 x (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 425,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 205,
+      "desc": "`C5 : ((C4 x C4) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 426,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 206,
+      "desc": "`C5 : ((C8 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 427,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 207,
+      "desc": "`D8 x (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 428,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 208,
+      "desc": "`C5 : ((C8 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 429,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 209,
+      "desc": "`Q8 x (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 430,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 221,
+      "desc": "`C2 x ((C4 x D10) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 431,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 160,
+      "index": 223,
+      "desc": "`((C4 x C2) : C2) x D10`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 432,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 180,
+      "index": 1,
+      "desc": "`C5 x (C9 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 433,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 180,
+      "index": 8,
+      "desc": "`C5 x ((C2 x C2) : C9)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 434,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 180,
+      "index": 10,
+      "desc": "`C10 x D18`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 435,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 180,
+      "index": 31,
+      "desc": "`C15 x A4`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 436,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 30,
+      "desc": "`C3 : (((C2 x C2 x C2) : C4) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 437,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 31,
+      "desc": "`C3 : ((C4 x C2 x C2) : C4)`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 438,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 34,
+      "desc": "`C3 : (((C8 : C2) : C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 439,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 35,
+      "desc": "`C3 : ((C4 x C2 x C2) : C4)`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 440,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 131,
+      "desc": "`C3 x ((C8 x C4) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 441,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 148,
+      "desc": "`C3 x (((C4 x C2) : C2) : C4)`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 442,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 842,
+      "desc": "`C6 x ((C2 x C2 x C2) : C4)`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 443,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 868,
+      "desc": "`C3 x ((C2 x (C8 : C2)) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 444,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1427,
+      "desc": "`C3 x ((C4 x D8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 445,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1428,
+      "desc": "`C3 x ((C4 x D8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 446,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 200,
+      "index": 32,
+      "desc": "`(C5 x C5) : Q8`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 447,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 200,
+      "index": 34,
+      "desc": "`(C5 x C5) : D8`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 448,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 208,
+      "index": 39,
+      "desc": "`D8 x D26`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 449,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 208,
+      "index": 41,
+      "desc": "`Q8 x D26`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 450,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 33,
+      "desc": "`((C3 x C3) : C3) : Q8`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 451,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 35,
+      "desc": "`((C3 x C3) : C3) : D8`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 452,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 37,
+      "desc": "`((C3 x C3) : C3) : D8`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 453,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 39,
+      "desc": "`Q8 : (C9 : C3)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 454,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 41,
+      "desc": "`Q8 : (C9 : C3)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 455,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 42,
+      "desc": "`Q8 : ((C3 x C3) : C3)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 456,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 49,
+      "desc": "`((C3 x C3) : C3) : Q8`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 457,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 54,
+      "desc": "`(C9 : C3) : D8`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 458,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 66,
+      "desc": "`((C3 x C3) : C3) : Q8`",
+      "name": "\u2014",
+      "serves": "S-E16 pool \u00b7 T4 commutator obs",
+      "line": 459,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 68,
+      "desc": "`((C3 x C3) : C3) : D8`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 460,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 72,
+      "desc": "`((C3 x C3) : C3) : D8`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 461,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 90,
+      "desc": "`(((C2 x C2) : C9) : C2) : C3`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 462,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 92,
+      "desc": "`((C3 x A4) : C2) : C3`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 463,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 95,
+      "desc": "`((C2 x C2) : ((C3 x C3) : C3)) : C2`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 464,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 106,
+      "desc": "`C2 x ((C2 x C2) : (C9 : C3))`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 465,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 107,
+      "desc": "`C2 x ((C2 x C2) : ((C3 x C3) : C3))`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 466,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 158,
+      "desc": "`(C3 x C3 x C3) : D8`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 467,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 160,
+      "desc": "`C3 x ((C3 x C3) : Q8)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 468,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 220,
+      "index": 2,
+      "desc": "`C4 x (C11 : C5)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 469,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 220,
+      "index": 11,
+      "desc": "`D10 x D22`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 470,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 224,
+      "index": 113,
+      "desc": "`C7 : ((C2 x Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 471,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 224,
+      "index": 173,
+      "desc": "`C4 x ((C2 x C2 x C2) : C7)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 472,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 5,
+      "desc": "`C3 x (C5 : C16)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 473,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 6,
+      "desc": "`C3 : (C5 : C16)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 474,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 13,
+      "desc": "`C3 : ((C5 x D8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool \u00b7 T4 commutator obs",
+      "line": 475,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 14,
+      "desc": "`C3 : D80`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 476,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 16,
+      "desc": "`C3 : ((C5 x Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 477,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 17,
+      "desc": "`C3 : ((C5 : Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 478,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 18,
+      "desc": "`C3 : (C40 : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 479,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 22,
+      "desc": "`C3 : (C5 : Q16)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 480,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 60,
+      "desc": "`C5 x ((C3 x D8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 481,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 61,
+      "desc": "`C5 x ((C3 : Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 482,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 68,
+      "desc": "`D240`",
+      "name": "**D240**",
+      "serves": "S-E2",
+      "line": 483,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 69,
+      "desc": "`C3 : (C5 : Q16)`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 484,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 76,
+      "desc": "`C3 : ((C5 x D8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 485,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 77,
+      "desc": "`C3 : ((C5 : Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 486,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 78,
+      "desc": "`C3 : ((C5 x Q8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 487,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 79,
+      "desc": "`C3 : (C5 : Q16)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 488,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 95,
+      "desc": "`(C3 : C4) x (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 489,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 98,
+      "desc": "`S3 x (C5 : C8)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 490,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 99,
+      "desc": "`C3 : (C5 : (C8 x C2))`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 491,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 111,
+      "desc": "`C3 x (C5 : (C8 x C2))`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 492,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 113,
+      "desc": "`C12 x (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 493,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 114,
+      "desc": "`C3 x (C20 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 494,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 116,
+      "desc": "`C3 x ((C5 : C8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 495,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 117,
+      "desc": "`C3 x ((C10 x C2) : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 496,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 118,
+      "desc": "`C3 : (C5 : (C8 x C2))`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 497,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 119,
+      "desc": "`C3 : ((C5 : C8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 498,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 120,
+      "desc": "`C4 x (C15 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 499,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 121,
+      "desc": "`C3 : (C20 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 500,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 123,
+      "desc": "`C3 : ((C5 : C8) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 501,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 124,
+      "desc": "`C3 : ((C10 x C2) : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 502,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 132,
+      "desc": "`C3 : ((C20 x C2) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 503,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 149,
+      "desc": "`((C6 x C2) : C2) x D10`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 504,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 162,
+      "desc": "`C3 x ((C4 x D10) : C2)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 505,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 240,
+      "index": 195,
+      "desc": "`C2 x (S3 x (C5 : C4))`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 506,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 13,
+      "desc": "`((C9 x C3) : C3) : C3`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 507,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 39,
+      "desc": "`((C9 x C3) : C3) : C3`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 508,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 248,
+      "index": 3,
+      "desc": "`C31 : Q8`",
+      "name": "\u2014",
+      "serves": "S-E2",
+      "line": 509,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 248,
+      "index": 5,
+      "desc": "`D248`",
+      "name": "**D248**",
+      "serves": "S-E2",
+      "line": 510,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 252,
+      "index": 3,
+      "desc": "`C7 x (C9 : C4)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 511,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 252,
+      "index": 10,
+      "desc": "`C7 x ((C2 x C2) : C9)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 512,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 252,
+      "index": 13,
+      "desc": "`C14 x D18`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 513,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 252,
+      "index": 36,
+      "desc": "`S3 x D42`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 514,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 252,
+      "index": 39,
+      "desc": "`C21 x A4`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 515,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "MAIN",
+      "order": 252,
+      "index": 40,
+      "desc": "`C3 x ((C14 x C2) : C3)`",
+      "name": "\u2014",
+      "serves": "S-E16 pool",
+      "line": 516,
+      "panel_claimed": 170,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 6,
+      "desc": "`(C8 x C4) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 522,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 7,
+      "desc": "`(C8 x C2) : C8`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 523,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 8,
+      "desc": "`(C4 : C8) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 524,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 9,
+      "desc": "`(C8 x C2) : C8`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 525,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 11,
+      "desc": "`(C4 : C8) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 526,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 12,
+      "desc": "`((C8 x C2) : C2) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 527,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 13,
+      "desc": "`(C8 x C2) : C8`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 528,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 14,
+      "desc": "`((C8 x C2) : C2) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 529,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 61,
+      "desc": "`(C16 x C4) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 530,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 107,
+      "desc": "`(C16 x C2) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 531,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 108,
+      "desc": "`(C16 : C2) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 532,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 109,
+      "desc": "`(C16 : C2) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 533,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 111,
+      "desc": "`(C16 x C2) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 534,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 183,
+      "desc": "`(C8 : C8) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 535,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 185,
+      "desc": "`(C8 : C8) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 536,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 191,
+      "desc": "`(C2 x ((C8 x C2) : C2)) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 537,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 192,
+      "desc": "`((C8 x C4) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 538,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 193,
+      "desc": "`(C2 x Q8) : C8`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 539,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 208,
+      "desc": "`((C4 : C8) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 540,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 209,
+      "desc": "`(C2 x (C4 : C8)) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 541,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 210,
+      "desc": "`((C4 : C8) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 542,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 211,
+      "desc": "`(Q8 : C8) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 543,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 296,
+      "desc": "`(C8 : C8) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 544,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 472,
+      "desc": "`((C4 x C4) : C2) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 545,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 474,
+      "desc": "`((C8 : C2) : C4) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 546,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 496,
+      "desc": "`((C4 x C2) . D8 = C4 . (C4 x C4)) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 547,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 497,
+      "desc": "`((C4 x C2) . D8 = C4 . (C4 x C4)) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 548,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 503,
+      "desc": "`(C8 : C4) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 549,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 504,
+      "desc": "`(C8 x C4) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 550,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 505,
+      "desc": "`(C8 : C4) : C4`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 551,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 648,
+      "desc": "`(C4 : C4) : C8`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 552,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 655,
+      "desc": "`((C8 x C2) : C4) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 553,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 671,
+      "desc": "`(C4 : C4) : C8`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 554,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 883,
+      "desc": "`(C4 : C16) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 555,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 896,
+      "desc": "`(C16 x C4) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 556,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 900,
+      "desc": "`(C2 x (C16 : C2)) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 557,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1055,
+      "desc": "`(C2 x C4 x Q8) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 558,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1653,
+      "desc": "`((C8 : C4) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 559,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1662,
+      "desc": "`((C2 x (C8 : C2)) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 560,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1664,
+      "desc": "`((C2 x (C8 : C2)) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 561,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1693,
+      "desc": "`(C8 : Q8) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 562,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1698,
+      "desc": "`((C8 : C4) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 563,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1699,
+      "desc": "`((C8 : C4) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 564,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1713,
+      "desc": "`(((C8 x C2) : C2) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 565,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1717,
+      "desc": "`(C8 : Q8) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 566,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1721,
+      "desc": "`((C4 : C8) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 567,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1724,
+      "desc": "`((C4 : C8) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 568,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T3",
+      "panel": "O128",
+      "order": 128,
+      "index": 1725,
+      "desc": "`((C4 : C8) : C2) : C2`",
+      "name": "\u2014",
+      "serves": "S-E10 pool",
+      "line": 569,
+      "panel_claimed": 48,
+      "tier_claims": {
+        "groups": 218,
+        "main": 170,
+        "o128": 48,
+        "runs": 10900
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 57,
+      "desc": "`(C4 x C4) : C4`",
+      "name": "\u2014",
+      "serves": "T4 factor-count gradient",
+      "line": 577,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 59,
+      "desc": "`C4 x (C4 : C4)`",
+      "name": "\u2014",
+      "serves": "T4 factor-count gradient",
+      "line": 578,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 197,
+      "desc": "`C2 x C4 x Q8`",
+      "name": "\u2014",
+      "serves": "T4 factor-count gradient",
+      "line": 579,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 64,
+      "index": 262,
+      "desc": "`C2 x C2 x C2 x Q8`",
+      "name": "\u2014",
+      "serves": "T4 factor-count gradient",
+      "line": 580,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 96,
+      "index": 3,
+      "desc": "`((C4 x C2) : C4) : C3`",
+      "name": "\u2014",
+      "serves": "T4 commutator obs",
+      "line": 581,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 100,
+      "index": 10,
+      "desc": "`(C5 x C5) : C4`",
+      "name": "\u2014",
+      "serves": "T4 Frobenius obs",
+      "line": 582,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 56,
+      "desc": "`(C3 x C3) : D16`",
+      "name": "\u2014",
+      "serves": "T4 commutator obs",
+      "line": 583,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 144,
+      "index": 57,
+      "desc": "`(C3 x C3) : D16`",
+      "name": "\u2014",
+      "serves": "T4 sibling",
+      "line": 584,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 162,
+      "index": 17,
+      "desc": "`((C9 x C3) : C3) : C2`",
+      "name": "\u2014",
+      "serves": "T4 commutator obs \u00b7 T4 central-step",
+      "line": 585,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 162,
+      "index": 20,
+      "desc": "`((C9 x C3) : C3) : C2`",
+      "name": "\u2014",
+      "serves": "T4 sibling",
+      "line": 586,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 162,
+      "index": 46,
+      "desc": "`(C3 x ((C3 x C3) : C3)) : C2`",
+      "name": "\u2014",
+      "serves": "T4 central-step",
+      "line": 587,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 168,
+      "index": 23,
+      "desc": "`Q8 : (C7 : C3)`",
+      "name": "\u2014",
+      "serves": "T4 commutator obs",
+      "line": 588,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 180,
+      "index": 22,
+      "desc": "`(C3 x C3) : (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "T4 Frobenius obs",
+      "line": 589,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 180,
+      "index": 24,
+      "desc": "`(C3 x C3) : (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "T4 Frobenius obs",
+      "line": 590,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 180,
+      "index": 25,
+      "desc": "`(C3 x C3) : (C5 : C4)`",
+      "name": "\u2014",
+      "serves": "T4 Frobenius obs",
+      "line": 591,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 96,
+      "desc": "`C3 : (((C8 x C2) : C2) : C2)`",
+      "name": "\u2014",
+      "serves": "T4 commutator obs",
+      "line": 592,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 215,
+      "desc": "`C3 : ((C4 x C2) : Q8)`",
+      "name": "\u2014",
+      "serves": "T4 commutator obs",
+      "line": 593,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 222,
+      "desc": "`((C4 x C2) : C4) x S3`",
+      "name": "\u2014",
+      "serves": "T4 factor-count gradient",
+      "line": 594,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 225,
+      "desc": "`C3 : (C4 x ((C4 x C2) : C2))`",
+      "name": "\u2014",
+      "serves": "T4 factor-count gradient",
+      "line": 595,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 380,
+      "desc": "`C3 : ((C2 x (C8 : C2)) : C2)`",
+      "name": "\u2014",
+      "serves": "T4 graded rep-route",
+      "line": 596,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 992,
+      "desc": "`C2 x C2 x ((C4 x C4) : C3)`",
+      "name": "\u2014",
+      "serves": "T4 Fourier-cost gradient",
+      "line": 597,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1000,
+      "desc": "`C2 x (((C2 x C2 x C2 x C2) : C2) : C3)`",
+      "name": "\u2014",
+      "serves": "T4 Fourier-cost gradient",
+      "line": 598,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1008,
+      "desc": "`(((C2 x C2 x C2 x C2) : C2) : C2) : C3`",
+      "name": "\u2014",
+      "serves": "T4 Fourier-cost gradient",
+      "line": 599,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1022,
+      "desc": "`(Q8 x Q8) : C3`",
+      "name": "\u2014",
+      "serves": "T4 commutator obs",
+      "line": 600,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1060,
+      "desc": "`C2 x ((C4 : C4) x S3)`",
+      "name": "\u2014",
+      "serves": "T4 factor-count gradient",
+      "line": 601,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1335,
+      "desc": "`((C2 x Q8) : C2) x S3`",
+      "name": "\u2014",
+      "serves": "T4 graded rep-route",
+      "line": 602,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 192,
+      "index": 1517,
+      "desc": "`C2 x C2 x Q8 x S3`",
+      "name": "\u2014",
+      "serves": "T4 factor-count gradient",
+      "line": 603,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 200,
+      "index": 43,
+      "desc": "`(C5 x C5) : D8`",
+      "name": "\u2014",
+      "serves": "T4 Frobenius obs",
+      "line": 604,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 200,
+      "index": 44,
+      "desc": "`(C5 x C5) : Q8`",
+      "name": "\u2014",
+      "serves": "T4 Frobenius obs",
+      "line": 605,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 127,
+      "desc": "`(C3 x C3 x C3) : D8`",
+      "name": "\u2014",
+      "serves": "T4 sibling",
+      "line": 606,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 216,
+      "index": 132,
+      "desc": "`(C3 x C3 x C3) : D8`",
+      "name": "\u2014",
+      "serves": "T4 commutator obs",
+      "line": 607,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 55,
+      "desc": "`((C9 x C3) : C3) : C3`",
+      "name": "\u2014",
+      "serves": "T4 graded rep-route",
+      "line": 608,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    },
+    {
+      "tier": "T4",
+      "panel": "MAIN",
+      "order": 243,
+      "index": 57,
+      "desc": "`((C9 x C3) : C3) : C3`",
+      "name": "\u2014",
+      "serves": "T4 graded rep-route",
+      "line": 609,
+      "panel_claimed": 33,
+      "tier_claims": {
+        "groups": 33,
+        "main": 33,
+        "o128": 0,
+        "runs": 1650
+      }
+    }
+  ],
+  "armA_pairs": [
+    [
+      36,
+      8,
+      36,
+      14,
+      "`C12 x C3` / `C6 x C6`",
+      620
+    ],
+    [
+      72,
+      13,
+      72,
+      49,
+      "`(C3 x C3) : C8` / `C2 x C2 x ((C3 x C3) : C2)`",
+      621
+    ],
+    [
+      72,
+      14,
+      72,
+      36,
+      "`C24 x C3` / `C12 x C6`",
+      622
+    ],
+    [
+      72,
+      32,
+      72,
+      34,
+      "`C4 x ((C3 x C3) : C2)` / `C2 x ((C3 x C3) : C4)`",
+      623
+    ],
+    [
+      100,
+      8,
+      100,
+      16,
+      "`C20 x C5` / `C10 x C10`",
+      624
+    ],
+    [
+      108,
+      12,
+      108,
+      29,
+      "`C36 x C3` / `C18 x C6`",
+      625
+    ],
+    [
+      108,
+      35,
+      108,
+      45,
+      "`C12 x C3 x C3` / `C6 x C6 x C3`",
+      626
+    ],
+    [
+      144,
+      29,
+      144,
+      169,
+      "`(C3 x C3) : C16` / `C2 x C4 x ((C3 x C3) : C2)`",
+      627
+    ],
+    [
+      144,
+      30,
+      144,
+      104,
+      "`C48 x C3` / `C24 x C6`",
+      628
+    ],
+    [
+      144,
+      85,
+      144,
+      90,
+      "`C8 x ((C3 x C3) : C2)` / `C2 x ((C3 x C3) : C8)`",
+      629
+    ],
+    [
+      144,
+      86,
+      144,
+      177,
+      "`(C3 x C3) : (C8 : C2)` / `C2 x ((C6 x C6) : C2)`",
+      630
+    ],
+    [
+      144,
+      91,
+      144,
+      94,
+      "`(C3 x C3) : (C8 : C2)` / `(C3 x C3) : (C4 : C4)`",
+      631
+    ],
+    [
+      144,
+      93,
+      144,
+      171,
+      "`(C3 x C3) : (C4 : C4)` / `(C3 x C3) : ((C4 x C2) : C2)`",
+      632
+    ],
+    [
+      144,
+      105,
+      144,
+      180,
+      "`C3 x C3 x (C8 : C2)` / `C3 x C6 x Q8`",
+      633
+    ],
+    [
+      144,
+      179,
+      144,
+      181,
+      "`C3 x C6 x D8` / `C3 x C3 x ((C4 x C2) : C2)`",
+      634
+    ],
+    [
+      180,
+      18,
+      180,
+      37,
+      "`C60 x C3` / `C30 x C6`",
+      635
+    ],
+    [
+      192,
+      1505,
+      192,
+      1540,
+      "`C4 x ((C2 x C2 x C2 x C2) : C3)` / `C2 x C2 x ((C2 x C2 x C2 x C2) : C3)`",
+      636
+    ],
+    [
+      196,
+      7,
+      196,
+      12,
+      "`C28 x C7` / `C14 x C14`",
+      637
+    ],
+    [
+      200,
+      16,
+      200,
+      51,
+      "`(C5 x C5) : C8` / `C2 x C2 x ((C5 x C5) : C2)`",
+      638
+    ],
+    [
+      200,
+      17,
+      200,
+      37,
+      "`C40 x C5` / `C20 x C10`",
+      639
+    ],
+    [
+      200,
+      33,
+      200,
+      35,
+      "`C4 x ((C5 x C5) : C2)` / `C2 x ((C5 x C5) : C4)`",
+      640
+    ],
+    [
+      216,
+      16,
+      216,
+      112,
+      "`(C9 x C3) : C8` / `C2 x C2 x ((C9 x C3) : C2)`",
+      641
+    ],
+    [
+      216,
+      18,
+      216,
+      73,
+      "`C72 x C3` / `C36 x C6`",
+      642
+    ],
+    [
+      216,
+      64,
+      216,
+      69,
+      "`C4 x ((C9 x C3) : C2)` / `C2 x ((C9 x C3) : C4)`",
+      643
+    ],
+    [
+      216,
+      82,
+      216,
+      174,
+      "`C3 x C3 x (C3 : C8)` / `C6 x C6 x S3`",
+      644
+    ],
+    [
+      216,
+      83,
+      216,
+      175,
+      "`C3 x ((C3 x C3) : C8)` / `C2 x C6 x ((C3 x C3) : C2)`",
+      645
+    ],
+    [
+      216,
+      84,
+      216,
+      176,
+      "`(C3 x C3 x C3) : C8` / `C2 x C2 x ((C3 x C3 x C3) : C2)`",
+      646
+    ],
+    [
+      216,
+      85,
+      216,
+      150,
+      "`C24 x C3 x C3` / `C12 x C6 x C3`",
+      647
+    ],
+    [
+      216,
+      136,
+      216,
+      138,
+      "`C3 x C12 x S3` / `C3 x C6 x (C3 : C4)`",
+      648
+    ],
+    [
+      216,
+      141,
+      216,
+      143,
+      "`C12 x ((C3 x C3) : C2)` / `C6 x ((C3 x C3) : C4)`",
+      649
+    ],
+    [
+      216,
+      146,
+      216,
+      148,
+      "`C4 x ((C3 x C3 x C3) : C2)` / `C2 x ((C3 x C3 x C3) : C4)`",
+      650
+    ],
+    [
+      225,
+      2,
+      225,
+      4,
+      "`C75 x C3` / `C45 x C5`",
+      651
+    ],
+    [
+      252,
+      25,
+      252,
+      46,
+      "`C84 x C3` / `C42 x C6`",
+      652
+    ]
+  ],
+  "tier_claims": {
+    "T1": {
+      "groups": 59,
+      "main": 49,
+      "o128": 10,
+      "runs": 2950
+    },
+    "T2": {
+      "groups": 53,
+      "main": 47,
+      "o128": 6,
+      "runs": 2650
+    },
+    "T3": {
+      "groups": 218,
+      "main": 170,
+      "o128": 48,
+      "runs": 10900
+    },
+    "T4": {
+      "groups": 33,
+      "main": 33,
+      "o128": 0,
+      "runs": 1650
+    },
+    "ArmA": {
+      "groups": 66,
+      "pairs": 33,
+      "runs": 3300
+    }
+  }
+}
