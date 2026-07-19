@@ -1,0 +1,14 @@
+# Trajectory-snapshot policy. Maps onto SnapshotConfig. This is the single
+# concept governing everything written to runs/<run_id>/checkpoints/ -- there
+# is no separate resume/recovery checkpoint config (runs always restart from
+# scratch).
+enabled: true
+log_dense_until: 1024
+interval: 100
+event_based: true
+event_rel_drop: 0.1
+save_final: true # always write one final.pt snapshot at the end of training
+# Also snapshot each of the last N epochs of the ceiling as
+# final_epoch_<E>.pt (0 disables), so a post-grok "slingshot" dip in the very
+# last epoch never leaves final.pt as the only end-of-training record.
+final_window_epochs: 5

@@ -1,0 +1,13 @@
+# @package _global_
+# The pre-registered core campaign: `experiment=core` runs the full 30,000-epoch
+# ceiling Brook set for the campaign (raised from a previously-planned 20,000).
+#
+# See configs/experiment/debug.yaml for why this preset sets `optim.epochs` (the
+# knob the training loop iterates) rather than a run-length field of its own.
+# This preset is not the composed default: configs/config.yaml still selects
+# `experiment: default`, so a run launched with no `experiment=` override keeps
+# using `optim.epochs` from the optim group (10,000), not the campaign ceiling.
+experiment:
+  name: core
+optim:
+  epochs: 30000

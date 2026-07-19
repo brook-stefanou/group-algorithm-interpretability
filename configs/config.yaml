@@ -1,0 +1,36 @@
+# Top-level Hydra config. The `defaults` list composes one file from each
+# config group below; `_self_` comes last so the top-level keys here win over
+# anything a group sets. Override any field on the CLI with dotted syntax, e.g.
+#   uv run python scripts/run.py optim.lr=1e-3 optim.epochs=100
+#
+# `experiment: default` is the full-length run (optim.epochs from the optim
+# group). `experiment=debug` and `experiment=smoke` are the short presets: they
+# override optim.epochs, so selecting one genuinely shortens the run.
+defaults:
+  - model: example
+  - data: example
+  - optim: default
+  - snapshot: default
+  - logging: wandb
+  - experiment: default
+  - eval: default
+  - validation: default
+  - _self_
+
+project_name: group-algorithm-interp
+seed: 0
+deterministic: false # opt in explicitly when you need deterministic CUDA kernels
+device: auto # auto | cpu | cuda | mps -- "auto" is resolved at runtime
+allow_expensive: false # set true to bypass the run-budget guard (eval.max_steps_warn)
+
+# Keep Hydra's own bookkeeping out of the way. We manage run artifacts under
+# runs/<run_id>/ ourselves (see manifest.py), so we do NOT let Hydra chdir into
+# its output dir -- that would make `runs/` land somewhere surprising.
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}

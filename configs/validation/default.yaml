@@ -1,0 +1,6 @@
+# Validation / pre-registration discipline. Maps onto ValidationConfig.
+#   stance: exploratory -> nothing required (rapid iteration; recorded as exploratory)
+#           confirmatory -> a declared held-out + a single sealed eval are enforced
+# Switch groups with `validation=confirmatory`, or override stance on the CLI.
+stance: exploratory
+prediction: null

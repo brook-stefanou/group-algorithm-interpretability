@@ -1,0 +1,14 @@
+# @package _global_
+# Minimal experiment for interactive debugging: a handful of epochs. Use with
+# `experiment=debug` to iterate on plumbing without waiting.
+#
+# `@package _global_` puts these keys at the config root rather than under
+# `experiment:`, which is what lets this preset set the run length where the
+# training loop actually reads it (`optim.epochs`). The preset formerly set an
+# `experiment.steps` field that no code read, so `experiment=debug` trained for
+# the full 10,000 epochs. A CLI `optim.epochs=...` still wins over this file:
+# defaults compose first, command-line overrides last.
+experiment:
+  name: debug
+optim:
+  epochs: 20

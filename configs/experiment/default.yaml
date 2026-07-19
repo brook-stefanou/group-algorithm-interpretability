@@ -1,0 +1,9 @@
+# The full-length experiment: run identity only, no run-length override, so the
+# run trains for `optim.epochs` as set by the optim group (10,000 by default).
+# This is the composed default in configs/config.yaml -- a campaign launched with
+# no `experiment=` override gets the full budget.
+#
+# The two short presets (`experiment=debug`, `experiment=smoke`) override
+# `optim.epochs` instead of carrying a run-length knob of their own; run length
+# has exactly one home, and it is `optim.epochs`.
+name: run

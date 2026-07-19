@@ -1,0 +1,7 @@
+# Example confirmatory run: enforce a held-out eval and pre-register a prediction.
+# Edit the prediction to your metric/direction/value before running.
+stance: confirmatory
+prediction:
+  metric: accuracy
+  direction: higher   # higher | lower
+  value: 0.7

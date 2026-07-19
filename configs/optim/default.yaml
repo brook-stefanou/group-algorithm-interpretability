@@ -1,0 +1,13 @@
+lr: 0.001
+lr_base_width: 64
+scale_lr_with_width: false
+lr_effective: null
+betas: [0.9, 0.98]
+weight_decay: 1.0
+epochs: 10000
+log_every: 1
+print_every: 1000
+wandb_every: 100
+stop_on_generalize: false
+generalize_test_acc: 0.99
+generalize_patience: 5

@@ -1,0 +1,9 @@
+# Analysis-friendly model used for group multiplication.
+arch: transformer
+d_model: 128
+n_heads: 4
+# null -> d_mlp defaults to 2 * d_model (here: 256), so a d_model sweep scales
+# d_mlp with it automatically. Set explicitly to decouple d_mlp from d_model.
+d_mlp: null
+use_mlp: true
+activation: relu

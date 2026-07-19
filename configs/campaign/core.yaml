@@ -1,0 +1,673 @@
+# The pre-registered core-study campaign: the fixed, ordered cell list this
+# repository commits to running. This file doubles as the pre-registered run
+# list (`docs/methodology.md`'s "manual and pre-registered" group selection)
+# and as the input `scripts/run_campaign.py` iterates -- there is no coverage
+# panel, selection solver, or quota here, only this table.
+#
+# Derived from the study design in `docs/core-study.md` (the group table and
+# the run plan). Every (order, index) was checked against
+# `data/group_properties_full.jsonl` before this file was written, and
+# `scripts/run_campaign.py` re-checks it at run time.
+#
+# Two pre-registered phases, in the order they must run (phase 0 settles the
+# width and the seed count before any core cell trains -- see
+# `docs/core-study.md`, "Run plan"):
+#
+#   pilot  5 groups x widths {64, 128, 256} x 10 seeds, to the 30,000-epoch
+#          ceiling, early stopping off (the repository default:
+#          optim.stop_on_generalize is false unless a run overrides it, so no
+#          cell needs to say so explicitly).
+#   core   the 36 core-study groups x one width (128, the phase-0-chosen
+#          width) x 50 paired seeds. Same 30,000-epoch ceiling, same default
+#          early-stopping-off.
+#
+# Two further OPT-IN phases, run only when `scripts/run_campaign.py` is given
+# `--include-bonus` (without the flag they are excluded entirely, including
+# from --dry-run listings). They are NOT part of the pre-registered core
+# study and are never pooled into its counts (39 groups / 1,950 models):
+# they are extension supply run as tail-filler, always after every core
+# cell:
+#
+#   bonus-e6  the E6 bundle: 6 groups x width 128 x 50 seeds.
+#   bonus-e2  the first 10 order-128 GENUINE_CLEAN pairs from the falsifier
+#             screen (extension supply, E2): 20 groups x width 128 x 50
+#             seeds.
+#
+# Cells are ordered cheapest-first WITHIN EACH PHASE by ascending group order
+# (ties broken by ascending index, then ascending width) -- not by claim
+# (C1..C5). `docs/core-study.md`'s run plan groups by claim
+# (C1 -> C2 -> C3 -> C4 -> C5, cheapest-first within each claim) for the
+# writeup; this file reorders for wall-clock efficiency, since cost scales
+# with group order (~|G|^2.119) and nothing else here.
+#
+# Every cell composes with `experiment=<experiment>` plus
+# `data.group.order=<order> data.group.index=<index> model.d_model=<width>`,
+# and runs its `seeds` range (Python slice syntax, STOP exclusive) as one
+# `scripts/run_batch.py` invocation. `note` is documentation only (the
+# group's role and the one-line rationale from `docs/core-study.md`'s group
+# table) -- it is never read by the runner.
+
+cells:
+  # --- phase: pilot (5 groups x widths 64/128/256 x 10 seeds) ---------------
+  - phase: pilot
+    order: 32
+    index: 1
+    name: "C32"
+    width: 64
+    seeds: "0:10"
+    experiment: core
+    note: "carry propagation -- pilot form of the C3 contrast"
+  - phase: pilot
+    order: 32
+    index: 1
+    name: "C32"
+    width: 128
+    seeds: "0:10"
+    experiment: core
+    note: "carry propagation -- pilot form of the C3 contrast"
+  - phase: pilot
+    order: 32
+    index: 1
+    name: "C32"
+    width: 256
+    seeds: "0:10"
+    experiment: core
+    note: "carry propagation -- pilot form of the C3 contrast"
+  - phase: pilot
+    order: 32
+    index: 18
+    name: "D32"
+    width: 64
+    seeds: "0:10"
+    experiment: core
+    note: "coset route available -- pilot form of C2"
+  - phase: pilot
+    order: 32
+    index: 18
+    name: "D32"
+    width: 128
+    seeds: "0:10"
+    experiment: core
+    note: "coset route available -- pilot form of C2"
+  - phase: pilot
+    order: 32
+    index: 18
+    name: "D32"
+    width: 256
+    seeds: "0:10"
+    experiment: core
+    note: "coset route available -- pilot form of C2"
+  - phase: pilot
+    order: 32
+    index: 20
+    name: "Q32"
+    width: 64
+    seeds: "0:10"
+    experiment: core
+    note: "no coset route, non-split, one involution -- expected hardest"
+  - phase: pilot
+    order: 32
+    index: 20
+    name: "Q32"
+    width: 128
+    seeds: "0:10"
+    experiment: core
+    note: "no coset route, non-split, one involution -- expected hardest"
+  - phase: pilot
+    order: 32
+    index: 20
+    name: "Q32"
+    width: 256
+    seeds: "0:10"
+    experiment: core
+    note: "no coset route, non-split, one involution -- expected hardest"
+  - phase: pilot
+    order: 32
+    index: 51
+    name: "C2 x C2 x C2 x C2 x C2"
+    width: 64
+    seeds: "0:10"
+    experiment: core
+    note: "pure XOR, no carries -- expected easiest"
+  - phase: pilot
+    order: 32
+    index: 51
+    name: "C2 x C2 x C2 x C2 x C2"
+    width: 128
+    seeds: "0:10"
+    experiment: core
+    note: "pure XOR, no carries -- expected easiest"
+  - phase: pilot
+    order: 32
+    index: 51
+    name: "C2 x C2 x C2 x C2 x C2"
+    width: 256
+    seeds: "0:10"
+    experiment: core
+    note: "pure XOR, no carries -- expected easiest"
+  - phase: pilot
+    order: 64
+    index: 52
+    name: "D64"
+    width: 64
+    seeds: "0:10"
+    experiment: core
+    note: "one order-64 group, calibrates the |G|^2 cost scaling"
+  - phase: pilot
+    order: 64
+    index: 52
+    name: "D64"
+    width: 128
+    seeds: "0:10"
+    experiment: core
+    note: "one order-64 group, calibrates the |G|^2 cost scaling"
+  - phase: pilot
+    order: 64
+    index: 52
+    name: "D64"
+    width: 256
+    seeds: "0:10"
+    experiment: core
+    note: "one order-64 group, calibrates the |G|^2 cost scaling"
+
+  # --- phase: core (36 groups x width 128 x 50 seeds) -----------------------
+  - phase: core
+    order: 27
+    index: 3
+    name: "(C3 x C3) : C3"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "3^{1+2}+ -- C1 tier-1 pair with (27,4); cheapest clean pair, exponent 3 vs 9 at identical CT+FS"
+  - phase: core
+    order: 27
+    index: 4
+    name: "C9 : C3"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "3^{1+2}- -- C1 tier-1 pair with (27,3); exponent 3 vs 9 at identical CT+FS"
+  - phase: core
+    order: 32
+    index: 18
+    name: "D32"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C2 case study (with 32,19 and 32,20) -- coset route available; shared with phase 0"
+  - phase: core
+    order: 32
+    index: 19
+    name: "QD32"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C2 case study (with 32,18 and 32,20) -- third arm, not CT-equivalent to D/Q"
+  - phase: core
+    order: 32
+    index: 20
+    name: "Q32"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C2 case study (with 32,18 and 32,19) -- no coset route, structural negative control; shared with phase 0"
+  - phase: core
+    order: 48
+    index: 28
+    name: "C2 . S4 = SL(2,3) . C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C5 cocycle pair with (48,29) -- non-split extension; the one clean non-2-group split/non-split contrast"
+  - phase: core
+    order: 48
+    index: 29
+    name: "GL(2,3)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C5 cocycle pair with (48,28) -- split extension control (f=1 by construction)"
+  - phase: core
+    order: 54
+    index: 10
+    name: "C2 x ((C3 x C3) : C3)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 persistence-under-embedding probe with (54,11) -- direct-product lift of the (27,3)/(27,4) contrast"
+  - phase: core
+    order: 54
+    index: 11
+    name: "C2 x (C9 : C3)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 persistence-under-embedding probe with (54,10) -- direct-product lift of the (27,3)/(27,4) contrast"
+  - phase: core
+    order: 64
+    index: 60
+    name: "(C2 x ((C4 x C2) : C2)) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C4 tier-3 exemplar with (64,65) -- the star FS flip; involutions 31 vs 7"
+  - phase: core
+    order: 64
+    index: 65
+    name: "(C4 x C4) : C4"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C4 tier-3 exemplar with (64,60) -- the star FS flip; involutions 31 vs 7"
+  - phase: core
+    order: 64
+    index: 74
+    name: "((C4 x C2) : C4) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (64,80) -- first clean falsifier in the even-order world"
+  - phase: core
+    order: 64
+    index: 80
+    name: "((C4 x C2) : C4) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (64,74) -- first clean falsifier in the even-order world"
+  - phase: core
+    order: 64
+    index: 228
+    name: "(C2 x ((C4 x C2) : C2)) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (64,229) -- even-order clean falsifier, same family as (64,74)/(64,80)"
+  - phase: core
+    order: 64
+    index: 229
+    name: "(C2 x ((C4 x C2) : C2)) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (64,228) -- even-order clean falsifier, same family as (64,74)/(64,80)"
+  - phase: core
+    order: 64
+    index: 236
+    name: "((C4 x C4) : C2) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (64,240) -- even-order clean falsifier, same family as (64,74)/(64,80)"
+  - phase: core
+    order: 64
+    index: 240
+    name: "(C4 x D8) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (64,236) -- even-order clean falsifier, same family as (64,74)/(64,80)"
+  - phase: core
+    order: 64
+    index: 241
+    name: "((C4 x C2 x C2) : C2) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (64,242) -- even-order clean falsifier, same family as (64,74)/(64,80)"
+  - phase: core
+    order: 64
+    index: 242
+    name: "((C4 x C4) : C2) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (64,241) -- even-order clean falsifier, same family as (64,74)/(64,80)"
+  - phase: core
+    order: 81
+    index: 12
+    name: "C3 x ((C3 x C3) : C3)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 persistence-under-embedding probe with (81,13) -- direct-product lift of the (27,3)/(27,4) contrast"
+  - phase: core
+    order: 81
+    index: 13
+    name: "C3 x (C9 : C3)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 persistence-under-embedding probe with (81,12) -- direct-product lift of the (27,3)/(27,4) contrast"
+  - phase: core
+    order: 104
+    index: 4
+    name: "C13 : Q8"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C4 tier-3 exemplar with (104,6) -- real vs quaternionic direction test; occupancy excluded"
+  - phase: core
+    order: 104
+    index: 6
+    name: "D104"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C4 tier-3 exemplar with (104,4) -- real vs quaternionic direction test; occupancy excluded"
+  - phase: core
+    order: 125
+    index: 3
+    name: "(C5 x C5) : C5"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "5^{1+2}+ -- C1 tier-1 pair with (125,4); the 3^{1+2}+/- fork at prime 5"
+  - phase: core
+    order: 125
+    index: 4
+    name: "C25 : C5"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "5^{1+2}- -- C1 tier-1 pair with (125,3); the 3^{1+2}+/- fork at prime 5"
+  - phase: core
+    order: 127
+    index: 1
+    name: "C127"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C3 anchor -- the solved modular-addition case; calibrates every reading, pooled with nothing"
+  - phase: core
+    order: 128
+    index: 1
+    name: "C128"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C3 pair with (128,2328) -- radix 128; carry is the only varying quantity"
+  - phase: core
+    order: 128
+    index: 2328
+    name: "C2 x C2 x C2 x C2 x C2 x C2 x C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C3 pair with (128,1) -- radix 2, pure XOR, linear over F2"
+  - phase: core
+    order: 216
+    index: 106
+    name: "C2 x ((C2 x C2) : (C9 : C3))"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C4 tier-2 exemplar with (216,107) -- FS-identical falsification-grade pair, best occupancy power (7.67)"
+  - phase: core
+    order: 216
+    index: 107
+    name: "C2 x ((C2 x C2) : ((C3 x C3) : C3))"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C4 tier-2 exemplar with (216,106) -- FS-identical falsification-grade pair, best occupancy power (7.67)"
+  - phase: core
+    order: 243
+    index: 56
+    name: "(C3 x ((C3 x C3) : C3)) : C3"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (243,57) -- full-index-screen survivor at p=3, order 3^5"
+  - phase: core
+    order: 243
+    index: 57
+    name: "((C9 x C3) : C3) : C3"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (243,56) -- full-index-screen survivor at p=3, order 3^5"
+  - phase: core
+    order: 243
+    index: 65
+    name: "(C3 x ((C3 x C3) : C3)) : C3"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "3^{1+4}+ -- C1 tier-1 pair with (243,66); extraspecial fork at rank 4"
+  - phase: core
+    order: 243
+    index: 66
+    name: "(C3 x (C9 : C3)) : C3"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "3^{1+4}- -- C1 tier-1 pair with (243,65); extraspecial fork at rank 4"
+  - phase: core
+    order: 250
+    index: 10
+    name: "C2 x ((C5 x C5) : C5)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (250,11) -- exponent 10 vs 50; checks the contrast survives a C2 tensor factor"
+  - phase: core
+    order: 250
+    index: 11
+    name: "C2 x (C25 : C5)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "C1 tier-1 pair with (250,10) -- exponent 10 vs 50; checks the contrast survives a C2 tensor factor"
+
+  # --- phase: bonus-e6 (opt-in, --include-bonus; 6 groups x width 128 x 50 seeds)
+  - phase: bonus-e6
+    order: 64
+    index: 92
+    name: "C2 x ((C8 : C2) : C2)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E6 bundle (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e6
+    order: 64
+    index: 93
+    name: "C2 x (C2 . ((C4 x C2) : C2) = (C2 x C2) . (C4 x C2))"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E6 bundle (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e6
+    order: 64
+    index: 99
+    name: "((C4 x C4) : C2) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E6 bundle (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e6
+    order: 64
+    index: 100
+    name: "(Q8 : C4) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E6 bundle (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e6
+    order: 192
+    index: 397
+    name: "C3 : ((C2 x (C8 : C2)) : C2)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E6 bundle (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e6
+    order: 192
+    index: 584
+    name: "C4 x ((C3 x Q8) : C2)"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E6 bundle (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+
+  # --- phase: bonus-e2 (opt-in, --include-bonus; 10 order-128 clean pairs x width 128 x 50 seeds)
+  - phase: bonus-e2
+    order: 128
+    index: 197
+    name: "(((C8 x C2) : C2) : C2) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,198) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 198
+    name: "((C8 : C4) : C2) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,197) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 280
+    name: "((C2 x C2) . ((C4 x C2) : C2) = (C4 x C2) . (C4 x C2)) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,281) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 281
+    name: "((C2 x C2) . ((C4 x C2) : C2) = (C4 x C2) . (C4 x C2)) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,280) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 288
+    name: "((C2 x C2) . ((C4 x C2) : C2) = (C4 x C2) . (C4 x C2)) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,290) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 290
+    name: "((C2 x C2) . ((C4 x C2) : C2) = (C4 x C2) . (C4 x C2)) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,288) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 372
+    name: "(C4 : Q16) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,378) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 378
+    name: "((C4 : Q8) : C2) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,372) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 451
+    name: "(C8 : C8) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,452) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 452
+    name: "(C8 : Q8) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,451) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 602
+    name: "(C2 x ((C8 x C2) : C2)) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,687) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 634
+    name: "((C8 x C2) : C4) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,641) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 635
+    name: "((C2 x (C8 : C2)) : C2) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,642) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 641
+    name: "((C4 x C4) : C4) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,634) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 642
+    name: "(((C4 x C4) : C2) : C2) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,635) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 651
+    name: "(C8 : C4) : C4"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,652) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 652
+    name: "(C8 : C4) : C4"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,651) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 675
+    name: "(C8 : C4) : C4"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,676) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 676
+    name: "(C8 : C4) : C4"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,675) (extension supply, not part of the pre-registered core); runs only with --include-bonus"
+  - phase: bonus-e2
+    order: 128
+    index: 687
+    name: "(C2 x (C4 : C8)) : C2"
+    width: 128
+    seeds: "0:50"
+    experiment: core
+    note: "E2 order-128 clean pair with (128,602) (extension supply, not part of the pre-registered core); runs only with --include-bonus"

@@ -1,0 +1,28 @@
+# Experiment-tracking config. W&B is the primary (and only) metrics backend.
+# Maps onto LoggingConfig.
+#
+#   mode: online   -> log to wandb.ai (needs `wandb login` or WANDB_API_KEY)
+#   mode: offline  -> log locally to ./wandb, sync later with `wandb sync`
+#   mode: disabled -> no W&B at all; local manifest/config/checkpoints still saved
+backend: wandb
+mode: disabled
+project: group-algorithm-interp
+entity: null
+tags: []
+notes: null
+
+# --- W&B feature flags -------------------------------------------------------
+# group: grouping is a view-time W&B UI feature, not something forced at init.
+# By default (null) no group is forced, so every run/seed renders as its own
+# live line in the UI. A reviewer can group runs on-demand in the W&B UI by any
+# logged config field -- including `config_group_hash`, a seed-invariant hash
+# of the config that the trainer logs into every run's config (see
+# BaseExperiment.__init__ / compute_group_hash) -- to compare all seeds of one
+# config as a mean ± std band when that's wanted. Setting `group` here
+# explicitly still forces a W&B-level group at init, if that's ever wanted.
+group: null
+job_type: run
+save_code: false      # upload entry script + git diff for full reproducibility
+watch_model: false    # log gradient/parameter histograms (overhead; debug aid)
+watch_log_freq: 100
+log_checkpoints: false  # log best/final checkpoints as versioned model artifacts

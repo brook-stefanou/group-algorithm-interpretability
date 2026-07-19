@@ -1,0 +1,10 @@
+# Finite-group multiplication task.  Canonical GAP SmallGroups identity only.
+group:
+  order: 8
+  index: 1
+train_frac: 0.8
+# Pinned (not null) so a multi-seed campaign cell varies only initialisation,
+# not the train/test split. 0 reproduces the split every prior single-seed run
+# (with the default config.seed=0) already used, so this is not a silent data
+# change.
+split_seed: 0

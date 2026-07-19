@@ -1,0 +1,5 @@
+# Evaluation / scoring and run-budget settings.
+# These keys map 1:1 onto EvalConfig in src/group_algorithm_interp/config.py.
+# (A `metric` key used to live here; no code ever read it -- the pre-registered
+# metric name is `validation.prediction.metric`, which the lifecycle does read.)
+max_steps_warn: 100000 # runs whose optim.epochs exceed this fail unless allow_expensive=true
