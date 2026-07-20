@@ -43,12 +43,13 @@ def test_short_experiment_presets_actually_shorten_the_run(preset, epochs):
 
 def test_core_experiment_preset_sets_the_campaign_epoch_ceiling():
     """`experiment=core` is the pre-registered campaign preset: it must set
-    `optim.epochs` to the campaign ceiling (30,000), not the optim group's
-    default (10,000) -- the same run-length-has-one-home rule debug/smoke
-    follow, just lengthening instead of shortening the run."""
+    `optim.epochs` to the campaign ceiling (60,000, raised from 30,000 for the
+    2026-07-20 restart), not the optim group's default (10,000) -- the same
+    run-length-has-one-home rule debug/smoke follow, just lengthening instead
+    of shortening the run."""
     cfg = validate_config(_compose(["experiment=core"]))
     assert cfg.experiment.name == "core"
-    assert cfg.optim.epochs == 30_000
+    assert cfg.optim.epochs == 60_000
     assert cfg.optim.epochs > FULL_EPOCHS
 
 

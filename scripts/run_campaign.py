@@ -78,7 +78,7 @@ DEFAULT_GROUP_PROPERTIES = ROOT / "data" / "group_properties_full.jsonl"
 # Execution order: earlier phases always run before later ones, both in the
 # campaign file and within every shard. The bonus phases are opt-in
 # (--include-bonus) and are not part of the pre-registered core study.
-PHASES: tuple[str, ...] = ("pilot", "core", "bonus-e6", "bonus-e2")
+PHASES: tuple[str, ...] = ("pilot", "core", "extra", "bonus-e6", "bonus-e2")
 BONUS_PHASES: frozenset[str] = frozenset({"bonus-e6", "bonus-e2"})
 
 

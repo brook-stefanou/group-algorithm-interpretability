@@ -820,29 +820,35 @@ def test_main_empty_shard_exits_zero(tmp_path, capsys):
 
 def test_checked_in_core_campaign_parses_with_the_pre_registered_shape():
     """Bonus phases must never change the pre-registered shape
-    (docs/core-study.md's group table and run plan)."""
+    (docs/core-study.md's group table and run plan, as revised by the
+    2026-07-20 restart in internal/docs/handoff.md)."""
     cells = run_campaign_module.parse_campaign(_REAL_CAMPAIGN)
     registered = [cell for cell in cells if cell.phase not in run_campaign_module.BONUS_PHASES]
     pilot = [cell for cell in cells if cell.phase == "pilot"]
     core = [cell for cell in cells if cell.phase == "core"]
+    extra = [cell for cell in cells if cell.phase == "extra"]
 
-    assert len(registered) == 51
-    assert len(pilot) == 15 and len(core) == 36
-    # the pre-registered phases come first, pilot then core, contiguous
-    assert [cell.phase for cell in registered] == ["pilot"] * 15 + ["core"] * 36
-    # pilot: 5 distinct groups x widths 64/128/256, 10 seeds
-    assert len({cell.group_key for cell in pilot}) == 5
-    assert sorted({cell.width for cell in pilot}) == [64, 128, 256]
-    assert all(cell.seed_range == range(0, 10) for cell in pilot)
-    # core: 36 distinct groups, width 128, 50 paired seeds
-    assert len({cell.group_key for cell in core}) == 36
-    assert all(cell.width == 128 for cell in core)
+    assert len(registered) == 35
+    assert len(pilot) == 1 and len(core) == 31 and len(extra) == 3
+    # the pre-registered phases come first, pilot then core then extra, contiguous
+    assert [cell.phase for cell in registered] == ["pilot"] * 1 + ["core"] * 31 + ["extra"] * 3
+    # pilot: one D32 smoke cell, width 128, 2 seeds (no fresh phase-0 re-run)
+    assert pilot[0].group_key == (32, 18)
+    assert pilot[0].width == 128
+    assert pilot[0].seed_range == range(0, 2)
+    # core: 26 distinct groups -- 5 of them (the D32/QD32/Q32 case study and
+    # the GL(2,3)/(48,28) cocycle pair) run at both width 128 and 256, so
+    # (order, index) is not unique within core, only group_key membership is
+    assert len({cell.group_key for cell in core}) == 26
     assert all(cell.seed_range == range(0, 50) for cell in core)
-    # 39 distinct pre-registered groups; 1,950 pre-registered models
-    assert len({cell.group_key for cell in registered}) == 39
-    assert sum(len(cell.seed_range) for cell in registered) == 1950
+    # extra: the D5 additions, width 128, 50 seeds
+    assert {cell.group_key for cell in extra} == {(81, 7), (192, 10), (192, 24)}
+    assert all(cell.width == 128 and cell.seed_range == range(0, 50) for cell in extra)
+    # 29 distinct pre-registered groups; 1,702 pre-registered models
+    assert len({cell.group_key for cell in registered}) == 29
+    assert sum(len(cell.seed_range) for cell in registered) == 1702
     # cheapest-first within each phase (ascending group order)
-    for block in (pilot, core):
+    for block in (pilot, core, extra):
         orders = [cell.order for cell in block]
         assert orders == sorted(orders)
     # every cell runs the pre-registered experiment preset
@@ -855,11 +861,12 @@ def test_checked_in_bonus_phases_have_the_commissioned_shape():
     cells = run_campaign_module.parse_campaign(_REAL_CAMPAIGN)
     e6 = [cell for cell in cells if cell.phase == "bonus-e6"]
     e2 = [cell for cell in cells if cell.phase == "bonus-e2"]
+    extra = [cell for cell in cells if cell.phase == "extra"]
 
     assert len(e6) == 6 and len(e2) == 20
-    assert len(cells) == 77  # 51 pre-registered + 26 bonus
+    assert len(cells) == 61  # 35 pre-registered (pilot+core+extra) + 26 bonus
     # bonus comes last: e6 then e2, contiguous
-    assert [cell.phase for cell in cells[51:]] == ["bonus-e6"] * 6 + ["bonus-e2"] * 20
+    assert [cell.phase for cell in cells[35:]] == ["bonus-e6"] * 6 + ["bonus-e2"] * 20
     assert {cell.group_key for cell in e6} == {
         (64, 92),
         (64, 93),
@@ -894,14 +901,20 @@ def test_checked_in_bonus_phases_have_the_commissioned_shape():
         )
     }
     assert all(cell.width == 128 and cell.seed_range == range(0, 50) for cell in e6 + e2)
-    # bonus groups never overlap the pre-registered 39
+    # bonus groups never overlap the pre-registered 29
     registered_groups = {
         cell.group_key for cell in cells if cell.phase not in run_campaign_module.BONUS_PHASES
     }
     assert registered_groups.isdisjoint({cell.group_key for cell in e6 + e2})
+    # the extra phase's D5 additions, width 128, 50 seeds, never overlapping
+    # pilot/core/bonus groups
+    assert {cell.group_key for cell in extra} == {(81, 7), (192, 10), (192, 24)}
+    assert all(cell.width == 128 and cell.seed_range == range(0, 50) for cell in extra)
+    non_extra_groups = {cell.group_key for cell in cells if cell.phase != "extra"}
+    assert {(81, 7), (192, 10), (192, 24)}.isdisjoint(non_extra_groups)
     # whole-file totals with bonus included
-    assert len({cell.group_key for cell in cells}) == 65
-    assert sum(len(cell.seed_range) for cell in cells) == 3250
+    assert len({cell.group_key for cell in cells}) == 55
+    assert sum(len(cell.seed_range) for cell in cells) == 3002
 
 
 @pytest.mark.skipif(
