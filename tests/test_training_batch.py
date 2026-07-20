@@ -264,6 +264,132 @@ def test_keyboard_interrupt_finalises_every_manifest_as_aborted(tmp_path):
 
 
 # ---------------------------------------------------------------------------
+# 4b. Periodic eval-history flush: run.log streams a growing, valid prefix
+#     mid-training, and the finalised file is byte-identical to no-flush.
+# ---------------------------------------------------------------------------
+
+
+class _CaptureLogMidRun(BatchEnsembleTrainer):
+    """Record every run.log's on-disk content at the end of one chosen epoch,
+    without interrupting training."""
+
+    def __init__(self, *args, capture_epoch: int, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._capture_epoch = capture_epoch
+        self.captured: dict[int, str] = {}
+
+    def _on_epoch_end(self, epoch: int) -> None:
+        if epoch == self._capture_epoch:
+            for run in self._runs:
+                path = run.run_dir / "run.log"
+                self.captured[run.seed] = path.read_text() if path.is_file() else ""
+
+
+def test_periodic_flush_streams_prefix_mid_training(tmp_path):
+    """With ``snapshot.history_flush_epochs=2`` and log_every=1, the end of
+    epoch 3 (flushes fire after epochs 1 and 3) has exactly the epoch 0..3
+    rows on disk for every model, newline-terminated for the tailer -- a
+    byte-prefix of the finalised file -- while training runs on to
+    completion."""
+    config = _config(epochs=6)
+    config.snapshot.history_flush_epochs = 2
+    trainer = _CaptureLogMidRun(config, [0, 1], runs_root=tmp_path, capture_epoch=3)
+    statuses = trainer.run()
+    assert statuses == {0: "completed", 1: "completed"}
+
+    for run in trainer._runs:
+        mid = trainer.captured[run.seed]
+        for epoch in range(4):
+            assert f"epoch {epoch} |" in mid
+        assert "epoch 4 |" not in mid
+        assert mid.endswith("\n")
+        final = (run.run_dir / "run.log").read_text()
+        assert final.startswith(mid)  # the mid-training file is a byte-prefix
+        assert f"completed {run.run_id}" in final
+
+
+def test_flushed_run_log_is_byte_identical_to_no_flush(tmp_path):
+    """Flushing changes WHEN rows reach disk, never the finalised bytes. Two
+    checks per seed: the flushed file equals the in-memory history exactly
+    (single source of truth: same rows, same order, no duplicates), and it
+    matches a flush-disabled run of the same config byte for byte once the
+    run id embedded in the ``completed`` line is normalised."""
+    seeds = [0, 1]
+
+    flush_config = _config(epochs=5, name="flush-on")
+    flush_config.snapshot.history_flush_epochs = 2
+    flushed = BatchEnsembleTrainer(flush_config, seeds, runs_root=tmp_path / "flush-on")
+    flushed.run()
+    for run in flushed._runs:
+        text = (run.run_dir / "run.log").read_text()
+        assert text == "\n".join(run.history) + "\n"
+
+    plain_config = _config(epochs=5, name="flush-off")
+    plain_config.snapshot.history_flush_epochs = 0
+    plain = BatchEnsembleTrainer(plain_config, seeds, runs_root=tmp_path / "flush-off")
+    plain.run()
+
+    plain_by_seed = {run.seed: run for run in plain._runs}
+    for run in flushed._runs:
+        other = plain_by_seed[run.seed]
+        a = (run.run_dir / "run.log").read_text().replace(run.run_id, "<run>")
+        b = (other.run_dir / "run.log").read_text().replace(other.run_id, "<run>")
+        assert a == b, f"seed {run.seed}: flushed run.log diverged from the no-flush file"
+
+
+class _AssertNoLogMidRun(BatchEnsembleTrainer):
+    def _on_epoch_end(self, epoch: int) -> None:
+        for run in self._runs:
+            assert not (run.run_dir / "run.log").exists(), (
+                f"seed {run.seed}: run.log written mid-training with flushing disabled"
+            )
+
+
+def test_flush_disabled_writes_only_at_finalisation(tmp_path):
+    """``history_flush_epochs=0`` is finalise-only, exactly today's behaviour:
+    no run.log exists at any epoch boundary, and the finalised file is the one
+    full write of the history."""
+    config = _config(epochs=4)
+    config.snapshot.history_flush_epochs = 0
+    trainer = _AssertNoLogMidRun(config, [0, 1], runs_root=tmp_path)
+    statuses = trainer.run()
+    assert statuses == {0: "completed", 1: "completed"}
+    for run in trainer._runs:
+        text = (run.run_dir / "run.log").read_text()
+        assert text == "\n".join(run.history) + "\n"
+
+
+class _SigtermAfterFlush(BatchEnsembleTrainer):
+    """Fire a real SIGTERM right after the epoch-3 flush has run."""
+
+    def _on_epoch_end(self, epoch: int) -> None:
+        if epoch < 3:
+            return
+        os.kill(os.getpid(), signal.SIGTERM)
+        for _ in range(10_000):
+            pass
+        raise AssertionError("SIGTERM did not interrupt the batch")
+
+
+def test_abort_after_flush_appends_only_the_remainder(tmp_path):
+    """An abort after a flush must finalise run.log by appending only the
+    unwritten remainder -- the file still equals the full history once, with
+    the flushed prefix never duplicated."""
+    config = _config(epochs=50)
+    config.snapshot.history_flush_epochs = 2
+    trainer = _SigtermAfterFlush(config, [0, 1], runs_root=tmp_path)
+    with pytest.raises(RunAborted, match="SIGTERM"):
+        trainer.run()
+
+    for run in trainer._runs:
+        manifest = yaml.safe_load((run.run_dir / "manifest.yaml").read_text())
+        assert manifest["status"] == "aborted"
+        text = (run.run_dir / "run.log").read_text()
+        assert text == "\n".join(run.history) + "\n"
+        assert text.count("epoch 0 |") == 1  # the flushed prefix was not rewritten
+
+
+# ---------------------------------------------------------------------------
 # 5. Trajectory tracks the single path (loosely -- NOT bit-identical).
 # ---------------------------------------------------------------------------
 

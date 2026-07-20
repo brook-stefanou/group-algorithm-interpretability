@@ -12,3 +12,8 @@ save_final: true # always write one final.pt snapshot at the end of training
 # final_epoch_<E>.pt (0 disables), so a post-grok "slingshot" dip in the very
 # last epoch never leaves final.pt as the only end-of-training record.
 final_window_epochs: 5
+# Every N epochs the vmapped ensemble path appends its buffered run.log eval
+# rows to disk, so the live sidecar (scripts/stream_runs.py) can tail growing
+# curves mid-training (0 = write only at finalisation; the finalised file is
+# byte-identical either way). The single-seed path already streams per epoch.
+history_flush_epochs: 250

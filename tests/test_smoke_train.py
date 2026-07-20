@@ -310,6 +310,42 @@ def test_group_experiment_runs_real_training_path(tmp_path):
     assert "epoch 0 |" in (experiment.run_dir / "run.log").read_text()
 
 
+class _StreamCheckExperiment(GroupGeneralizationExperiment):
+    """Observe run.log from inside the epoch loop: ``log_metrics`` fires right
+    after the epoch's run-log line is emitted, so it can check what a tailing
+    sidecar would see at that moment."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.observed: dict[int, bool] = {}
+
+    def log_metrics(self, metrics: dict[str, float], step: int) -> None:
+        text = (self.run_dir / "run.log").read_text()
+        self.observed[step] = all(f"epoch {epoch} |" in text for epoch in range(step + 1))
+        super().log_metrics(metrics, step)
+
+
+def test_single_path_run_log_streams_per_epoch(tmp_path):
+    """The single-seed path needs no flush machinery (unlike the ensemble
+    path's ``snapshot.history_flush_epochs``): its eval rows go through a
+    ``logging.FileHandler``, which writes and flushes each record as it is
+    emitted. Pinned mid-training, not post-hoc: at every epoch, that epoch's
+    row -- and all earlier rows -- is already on disk for a tailer."""
+    config = ProjectConfig(
+        device="cpu",
+        data={"group": "C4", "train_frac": 0.5},
+        model={"d_model": 16, "d_mlp": 32, "n_heads": 1},
+        optim={"epochs": 3, "log_every": 1, "print_every": 1, "wandb_every": 1},
+        snapshot={"enabled": False},
+        logging=LoggingConfig(mode="disabled"),
+        experiment=ExperimentConfig(name="stream-check"),
+    )
+    experiment = _StreamCheckExperiment(config, runs_root=tmp_path)
+    experiment.execute()
+
+    assert experiment.observed == {0: True, 1: True, 2: True}
+
+
 def test_checkpoints_never_include_optimizer_state(tmp_path):
     """No resume path exists, so neither a trajectory snapshot nor the final
     checkpoint carries optimizer_state_dict."""

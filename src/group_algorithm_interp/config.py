@@ -190,8 +190,10 @@ class OptimConfig(_Strict):
 
 
 class SnapshotConfig(_Strict):
-    """Trajectory-snapshot policy: the single concept governing everything
-    written under ``runs/<run_id>/checkpoints/``.
+    """On-disk artefact policy for a run in flight: the trajectory snapshots
+    written under ``runs/<run_id>/checkpoints/`` and the eval-history flush
+    cadence for ``run.log``. Deliberately outside ``compute_group_hash``: these
+    knobs change what lands on disk when, never the experiment itself.
 
     This project never resumes a run -- restarting from scratch is cheap, so
     there is no separate resume-oriented checkpoint config. Two independent
@@ -211,6 +213,10 @@ class SnapshotConfig(_Strict):
       unchanged by this window; the window exists so post-hoc analysis can
       recover a stable model when a post-grok "slingshot" dip destabilises
       the very last epoch.
+    * ``history_flush_epochs`` independently gates the periodic ``run.log``
+      eval-history flush on the vmapped ensemble path (see the field comment
+      below); it is the one knob here that governs a file outside
+      ``checkpoints/``.
     """
 
     enabled: bool = True
@@ -220,6 +226,16 @@ class SnapshotConfig(_Strict):
     event_rel_drop: float = Field(0.1, gt=0.0)
     save_final: bool = True
     final_window_epochs: int = Field(5, ge=0)
+    # How often (in epochs) the vmapped ensemble path appends its buffered
+    # run.log eval rows to disk, so the live sidecar (scripts/stream_runs.py)
+    # can tail a curve that grows while the seed is still training -- and a
+    # crash leaves a valid prefix of the history on disk instead of nothing.
+    # 0 disables the periodic flush (write-at-finalisation only). Pure file
+    # I/O cadence: it changes when rows reach disk, never which rows exist,
+    # and the finalised run.log is byte-identical either way. The single-seed
+    # path ignores it -- its run.log goes through a logging.FileHandler that
+    # already writes each row as it is emitted.
+    history_flush_epochs: int = Field(250, ge=0)
 
 
 class LoggingConfig(_Strict):

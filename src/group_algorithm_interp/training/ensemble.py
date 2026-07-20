@@ -149,6 +149,11 @@ class _ModelRun:
     run_dir: Path
     config: ProjectConfig
     history: list[str] = field(default_factory=list)
+    # Rows of ``history`` already appended to run.log by a periodic flush (see
+    # ``BatchEnsembleTrainer._flush_history``). The file always holds exactly
+    # ``history[:flushed]``, so finalisation writes only the remainder and the
+    # finalised file is byte-identical to a single unflushed write.
+    flushed: int = 0
     summary: dict[str, float] = field(default_factory=dict)
     status: str | None = None  # None until finalised
 
@@ -304,6 +309,21 @@ class BatchEnsembleTrainer:
             self._runs.append(model_run)
             self._run_by_seed[seed] = model_run
 
+    def _flush_history(self, runs: list[_ModelRun]) -> None:
+        """Append each model's buffered-but-unwritten eval rows to its run.log --
+        one batched write per model, never one per row -- so the live sidecar
+        (``scripts/stream_runs.py``) can tail curves that grow while the seed is
+        still training, and a crash leaves a valid prefix of the history on disk.
+        ``_ModelRun.flushed`` is the per-model cursor; :meth:`_finalize` writes
+        only the remainder, so no row is ever written twice."""
+        for run in runs:
+            pending = run.history[run.flushed :]
+            if not pending:
+                continue
+            with (run.run_dir / "run.log").open("a") as log:
+                log.write("\n".join(pending) + "\n")
+            run.flushed = len(run.history)
+
     def _finalize(
         self,
         run: _ModelRun,
@@ -317,7 +337,17 @@ class BatchEnsembleTrainer:
             return
         if status == "completed":
             run.history.append(f"completed {run.run_id} | {run.summary}")
-        (run.run_dir / "run.log").write_text("\n".join(run.history) + "\n")
+        # Append only what a periodic flush has not already written: run.log
+        # holds exactly history[:flushed], so this remainder-write makes the
+        # finalised file byte-identical to the single unflushed write it
+        # replaces (same rows, same order, no duplicates). The flushed == 0
+        # arm keeps the never-flushed empty-history case (a seed aborted
+        # before its first eval) writing the same lone newline it always has.
+        pending = run.history[run.flushed :]
+        if pending or run.flushed == 0:
+            with (run.run_dir / "run.log").open("a") as log:
+                log.write("\n".join(pending) + "\n")
+            run.flushed = len(run.history)
         final_ckpt: str | None = None
         if status == "completed" and self.config.snapshot.save_final:
             final_ckpt = str(self._save_checkpoint(run, "final"))
@@ -648,6 +678,7 @@ class BatchEnsembleTrainer:
         n_test = shared.n_test
         k = len(chunk_seeds)
         last_epoch = cfg.epochs - 1
+        flush_every = self.config.snapshot.history_flush_epochs
 
         for epoch in range(cfg.epochs):
             self._current_epoch = epoch
@@ -700,6 +731,12 @@ class BatchEnsembleTrainer:
             if snap.final_window_epochs > 0 and epoch >= cfg.epochs - snap.final_window_epochs:
                 for run in chunk_runs:
                     self._save_checkpoint(run, f"final_epoch_{epoch}")
+
+            # Periodic eval-history flush: pure file I/O (no torch, no eval),
+            # so the live sidecar sees each model's run.log curve grow during
+            # training instead of appearing whole at finalisation.
+            if flush_every > 0 and (epoch + 1) % flush_every == 0:
+                self._flush_history(chunk_runs)
 
             self._on_epoch_end(epoch)
 
