@@ -150,6 +150,6 @@ are validated end to end; the natural second paper.
 365 groups and 18,250 runs across confirmatory, diagnostic, statistical, and
 observational tiers, with class-level typology computed downstream from the
 per-run measurement vectors, plus the remaining named experiments and
-instrument builds.  Needs the batch-compaction engineering (phase-0-gated)
-built first.  Worth running when the core lands and the panel is wanted at
-full scale.
+instrument builds.  The vmapped batch-compaction machinery it needs is already
+built.  Worth running when the core lands and the panel is wanted at full
+scale.

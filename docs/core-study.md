@@ -1,8 +1,9 @@
 # The core study
 
-This registers the core study before any of it runs: the question, the five
-claims the design can license, the groups, the endpoints, and the run plan.
-The design was fixed on 2026-07-15.  No training run has started and no
+This registers the core study: the question, the five claims the design can
+license, the groups, the endpoints, and the run plan.  The design was fixed
+on 2026-07-15, and the run plan below — the cell list, the widths, and the
+epoch ceiling — was settled on 2026-07-20.  No analysis has been read and no
 empirical result exists yet — every number below is a plan.  Selection and
 reporting rules are in [the methodology](methodology.md), provenance rules in
 [the reproducibility contract](reproducibility.md), and the directions the
@@ -81,7 +82,11 @@ order ≤ 81, N = 11 —
 `(125,3)/(125,4)`, `(243,56)/(243,57)`, `(243,65)/(243,66)`,
 `(250,10)/(250,11)`.  Four of the order-64 pairs are the first clean
 falsifiers known in the even-order world; every previously known 2-group pair
-with equal character tables was a Frobenius–Schur flip.
+with equal character tables was a Frobenius–Schur flip.  The six pairs at
+order ≤ 64 train unconditionally; the five heavier pairs are staged behind
+the width-256 probe cells (the staging rule is in the groups section below).
+The family definition and the rule that claims it are unchanged by the
+staging.
 
 The pair family comes from a re-runnable, hash-pinned screen
 (`scripts/derive_falsifiers.py`, whose output is committed at
@@ -95,7 +100,7 @@ orders 21–255.  The rule claiming eleven of them was fixed before any run.
 
 A reproducible within-pair difference on any endpoint is evidence against the
 full-Fourier account, attributable to the power-map axis.  Tight intervals
-around zero on all eleven pairs are the Fourier account surviving its
+around zero on every trained pair are the Fourier account surviving its
 sharpest available behavioural test in this regime, reported as interval
 upper bounds — itself a result.  Two of the eleven, `(54,10)/(54,11)` and
 `(81,12)/(81,13)`, are the `(27,3)/(27,4)` contrast tensored with a bystander
@@ -215,44 +220,43 @@ measurement.  No prior work looks for explicitly learned extension data — a
 ## The groups
 
 Seeds are paired: the same seed list on both members of every pair, with the
-data split seed pinned across the whole campaign.
+data split seed pinned across the whole campaign.  The campaign is the fixed
+cell list in `configs/campaign/core.yaml`, and every count in this section is
+counted from that file.  A single smoke cell — D32 at width 128, two seeds —
+runs first and verifies the training path and the off-pod shipping end to end
+before any core cell starts.
 
-Phase 0 pilot (widths 64/128/256 × 10 seeds, early stopping off, to the
-30,000-epoch ceiling):
+The core phase (width per cell as listed; 50 paired seeds per cell):
 
-| group | name | why |
-|---|---|---|
-| (32,51) | C2⁵ | pure XOR, no carries — expected easiest |
-| (32,1) | C32 | carry propagation — pilot form of the C3 contrast |
-| (32,18) | D32 | coset route available — pilot form of C2 |
-| (32,20) | Q32 | no coset route, non-split, one involution — expected hardest |
-| (64,52) | D64 | one order-64 group; checks how run time scales with \|G\|² |
+| group | name | role | width | why (one line) |
+|---|---|---|---|---|
+| (27,3) / (27,4) | 3^{1+2}₊ / 3^{1+2}₋ | C1 tier-1 pair, staging probe | 256 | cheapest clean pair; exponent 3 vs 9 at identical character table and FS data |
+| (54,10) / (54,11) | — | C1 embedding probe, staging probe | 256 | the (27,3)/(27,4) contrast under a C2 bystander factor |
+| (64,74) / (64,80) | — | C1 tier-1 pair | 128 | first clean falsifier family in the even-order world |
+| (64,228) / (64,229) | — | C1 tier-1 pair | 128 | even-order clean falsifier, same family |
+| (64,236) / (64,240) | — | C1 tier-1 pair | 128 | even-order clean falsifier, same family |
+| (64,241) / (64,242) | — | C1 tier-1 pair | 128 | even-order clean falsifier, same family |
+| (32,18) / (32,19) / (32,20) | D32 / QD32 / Q32 | C2 case study | 128 and 256 | the most diagnostic triple available; the twist rule is the only mover |
+| (128,1) / (128,2328) | C128 / C2⁷ | C3 pair | 128 | radix 128 vs radix 2 at fixed order; carry is the only varying quantity |
+| (127,1) | C127 | C3 anchor | 128 | the solved modular-addition case; calibrates every reading |
+| (216,106) / (216,107) | — | C4 tier-2 exemplar | 128 | FS-identical falsification-grade pair with the panel's best occupancy power |
+| (64,60) / (64,65) | — | C4 tier-3 exemplar | 128 | the star FS flip; involutions 31 vs 7 |
+| (104,4) / (104,6) | C13:Q8 / D104 | C4 tier-3 exemplar | 128 | cheap real↔quaternionic direction test; no occupancy claims |
+| (48,29) / (48,28) | GL(2,3) / SL(2,3).C2 | C5 cocycle pair | 128 and 256 | the only clean non-2-group split/non-split contrast |
 
-Core (width fixed by phase 0; 50 paired seeds per group):
+That is 31 cells over 26 distinct groups: 22 groups at width 128, five of
+them — the C2 triple and the C5 pair — duplicated at width 256 as a
+width-sensitivity readout, and the four order-27/54 cells at width 256 only.
 
-| group | name | role | why (one line) |
-|---|---|---|---|
-| (27,3) / (27,4) | 3^{1+2}₊ / 3^{1+2}₋ | C1 tier-1 pair | cheapest clean pair; exponent 3 vs 9 at identical character table and FS data |
-| (125,3) / (125,4) | 5^{1+2}₊ / 5^{1+2}₋ | C1 tier-1 pair | the same fork at prime 5 — replication across primes |
-| (243,56) / (243,57) | — | C1 tier-1 pair | full-index-screen survivor at p=3, order 3⁵ |
-| (243,65) / (243,66) | 3^{1+4}₊ / 3^{1+4}₋ | C1 tier-1 pair | extraspecial fork at rank 4 — higher-dimensional irrep sector |
-| (250,10) / (250,11) | C2×5^{1+2}₊ / C2×5^{1+2}₋ | C1 tier-1 pair | exponent 10 vs 50; the contrast under a C2 tensor factor |
-| (54,10) / (54,11) | — | C1 embedding probe | the (27,3)/(27,4) contrast under a C2 bystander factor |
-| (64,74) / (64,80) | — | C1 tier-1 pair | first clean falsifier family in the even-order world |
-| (64,228) / (64,229) | — | C1 tier-1 pair | even-order clean falsifier, same family |
-| (64,236) / (64,240) | — | C1 tier-1 pair | even-order clean falsifier, same family |
-| (64,241) / (64,242) | — | C1 tier-1 pair | even-order clean falsifier, same family |
-| (81,12) / (81,13) | — | C1 embedding probe | the (27,3)/(27,4) contrast under a C3 bystander factor |
-| (32,18) / (32,19) / (32,20) | D32 / QD32 / Q32 | C2 case study | the most diagnostic triple available; the twist rule is the only mover |
-| (128,1) / (128,2328) | C128 / C2⁷ | C3 pair | radix 128 vs radix 2 at fixed order; carry is the only varying quantity |
-| (127,1) | C127 | C3 anchor | the solved modular-addition case; calibrates every reading |
-| (216,106) / (216,107) | — | C4 tier-2 exemplar | FS-identical falsification-grade pair with the panel's best occupancy power |
-| (64,60) / (64,65) | — | C4 tier-3 exemplar | the star FS flip; involutions 31 vs 7 |
-| (104,4) / (104,6) | C13:Q8 / D104 | C4 tier-3 exemplar | cheap real↔quaternionic direction test; no occupancy claims |
-| (48,29) / (48,28) | GL(2,3) / SL(2,3).C2 | C5 cocycle pair | the only clean non-2-group split/non-split contrast |
-
-36 core groups (D32 and Q32 shared with phase 0) plus 3 pilot-only groups: 39
-distinct groups, 1,950 trained models.
+The five remaining tier-1 pairs — `(81,12)/(81,13)`, `(125,3)/(125,4)`,
+`(243,56)/(243,57)`, `(243,65)/(243,66)`, `(250,10)/(250,11)` — are staged,
+and the staging is itself pre-registered.  They belong to the same
+odd-p-group construction family as the order-27 pair and its order-54 lift,
+and they are the most expensive cells in the study; a family that does not
+grok returns only both-censored ties, at the largest orders in the design.
+The four width-256 cells therefore double as staging probes: the staged pairs
+re-enter the cell list only if those probes grok.  The censoring rule and the
+ceiling do not change either way.
 
 ## Endpoints and reporting
 
@@ -270,11 +274,11 @@ confirmatory, and a null outcome on any claim ships as a measurement.
 
 1. Epochs-to-grok: the first epoch beginning a run of >0.99 accuracy on the
    transpose-unleaked held-out subset sustained for 5+ consecutive epochs.
-   The censoring rule, pre-registered verbatim: hard 30,000-epoch ceiling,
-   pre-registered; a non-grokking seed is recorded as censored (>30k); no
-   extensions, no resume.  Non-grokking definition: never >0.99 unleaked
-   accuracy for 5+ consecutive epochs before 30k.  Censored seeds enter
-   paired summaries as ">30k"; one-side-censored pairs keep their sign,
+   The censoring rule, pre-registered verbatim: hard 60,000-epoch ceiling
+   (`configs/experiment/core.yaml`); a non-grokking seed is recorded as
+   censored (>60k); no extensions, no resume.  Non-grokking definition: never
+   >0.99 unleaked accuracy for 5+ consecutive epochs before 60k.  Censored
+   seeds enter paired summaries as ">60k"; one-side-censored pairs keep their sign,
    both-censored pairs are ties, and the censoring fraction is itself a
    reported per-group measurement.
 2. Accuracy means transpose-unleaked held-out accuracy, everywhere.  When a
@@ -306,24 +310,25 @@ data split seed pinned across the sweep, unmatched seeds dropped to preserve
 the pairing.  Aggregation happens within pair first; the unit of any
 cross-group statement is the pair; confidence intervals come from a paired
 bootstrap over seeds within a pair.  The tier-1 family is reported pair by
-pair — eleven estimates, eleven intervals, with seeds never pooled across
+pair — one estimate and one interval per pair, with seeds never pooled across
 pairs.  Nine of the eleven are replication across primes and orders; the
 remaining two are the embedding probes described under C1.
 
 ## Run plan
 
-Phase 0 runs first: the pilot table above.  It settles the model width — a
-statistical-power parameter for the occupancy instrument, pre-registered
-after phase 0 and before any core run — plus the seed-variance estimate that
-confirms or revises n = 50, whether batch compaction is worth building, and
-the pilot D32/Q32 effect size.  Every core number below is conditional on
-phase 0.  If a core group shows >15% non-grokking seeds at every pilot width,
-its epochs endpoint degrades to a censoring-fraction comparison and is
-flagged before running.
+`scripts/run_campaign.py` runs the cell list in `configs/campaign/core.yaml`
+in phase order — the smoke cell, then core, then two supply phases —
+cheapest first within each phase (ascending group order, ties by ascending
+index and then width).  The core phase is the 31 cells in the table: 1,550
+runs at 50 paired seeds per cell, on top of the two-seed smoke cell.
 
-Phase 1 trains the 36 core groups at 50 paired seeds, in claim order
-C1 → C2 → C3 → C4 → C5, cheapest first within each claim, at one shared
-width.
+The two supply phases run with the campaign and are never pooled into the
+core counts.  The `extra` phase is three width-128 cells — `(81,7)` and the
+`(192,10)/(192,24)` coset-test pair — supply for extensions E10 and E8.  The
+bonus phases are 26 cells of extension supply for E6 and E2 (six and twenty
+cells), opt-in via `--include-bonus` and included in this campaign.  The full
+cell list is 61 cells and 3,002 runs; every count in this section is counted
+from `configs/campaign/core.yaml`.
 
 Why 50 seeds, and pre-registered: within-pair paired tests at n = 50 reach
 ~81% power at a standardised effect of d = 0.5, whereas n = 25 suffices only
@@ -347,9 +352,10 @@ frozen and hashed before the first core run.
 
 ## What this study does not claim
 
-- Results are conditional on one architecture at one phase-0-chosen width: a
-  one-layer transformer, with a fully-connected replication only for the C2
-  case study.  No cross-architecture universality claim is made.
+- Results are conditional on one architecture: a one-layer transformer at
+  width 128, with the named cells duplicated at width 256 and a
+  fully-connected replication only for the C2 case study.  No
+  cross-architecture universality claim is made.
 - Cross-group claims are associations (rung 0) and are stated as such.  No
   intervention inside one model tests a claim about the difference between
   two models; only the within-model mechanism claims of C2, C3, and C5 rise

@@ -116,7 +116,7 @@ image is available for execution on the device".
 ## Run length
 
 The composed default config trains for 10,000 epochs (`optim.epochs`). The
-campaign preset `experiment=core` sets the pre-registered 30,000-epoch ceiling;
+campaign preset `experiment=core` sets the pre-registered 60,000-epoch ceiling;
 a seed that has not grokked by the ceiling is analysed as censored (see
 [core-study.md](core-study.md)) and is never extended or resumed.
 

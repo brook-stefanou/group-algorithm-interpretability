@@ -7,13 +7,14 @@ with identical character tables: every account that reads the learned
 circuit through its representation theory predicts identical behaviour on
 both members of such a pair, so a reproducible within-pair difference
 falsifies that account.  [The core study](docs/core-study.md) registers five
-claims over 39 groups and 1,950 training runs, reported estimation-first —
-effect sizes with confidence intervals, and every measurement taken ships.
+claims over 26 groups in 31 paired-seed cells (1,550 runs), reported
+estimation-first — effect sizes with confidence intervals, and every
+measurement taken ships.
 
-The design was fixed on 2026-07-15 and the training and campaign machinery
-below runs end to end.  No training run has started, no
-empirical result or mechanistic claim is released here yet, and the analysis
-instruments are still being built.
+The design was fixed on 2026-07-15, with the epoch ceiling settled on
+2026-07-20, and the training and campaign machinery below runs end to end.
+No training run has started, no empirical result or mechanistic claim is
+released here yet, and the analysis instruments are still being built.
 
 ## Quickstart: run the training loop without SageMath
 

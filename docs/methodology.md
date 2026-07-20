@@ -43,9 +43,10 @@ core-free subgroup at any index whose induced-representation template separates
 the pair — pairs on which the Fourier account and the coset account both
 predict no within-pair difference. The selection rule is closed:
 the five pre-registered panel pairs plus every screen-clean pair at order
-≤ 81, eleven pairs in total. The full list, with each pair's role, is in
-[core-study.md](core-study.md); the decisions that produced this design are
-dated in the [research log](research-log.md).
+≤ 81, eleven pairs in total. The full list, each pair's role, and the staging
+rule that gates the five heaviest pairs behind the width-256 probe cells are
+in [core-study.md](core-study.md); the decisions that produced this design
+are dated in the [research log](research-log.md).
 
 ## Reporting
 
@@ -79,9 +80,9 @@ Seeds are paired: the same 50 seeds on both members of every pair, with
 train/test split and only initialisation varies. An unmatched seed is dropped
 so the pairing is never broken. Differences are aggregated within pair first;
 the unit of any cross-group statement is the pair, and confidence intervals
-come from a paired bootstrap over seeds within a pair. The eleven C1 pairs are
-reported pair by pair — eleven estimates, eleven intervals, seeds never pooled
-across pairs. Nine are replication across primes and orders; the other two are
+come from a paired bootstrap over seeds within a pair. The C1 pairs are
+reported pair by pair — one estimate and one interval per pair, seeds never
+pooled across pairs. Nine are replication across primes and orders; the other two are
 direct-product lifts of the `(27,3)/(27,4)` contrast and are read as
 persistence-under-embedding probes of that pair.
 
@@ -89,9 +90,10 @@ persistence-under-embedding probes of that pair.
 
 1. Epochs-to-grok: the first epoch beginning a streak of five or more
    consecutive epochs above 0.99 accuracy on the transpose-unleaked held-out
-   subset. The training ceiling is 30,000 epochs, pre-registered and hard: a
-   seed that has not grokked by then is recorded as censored (>30k), with no
-   extension and no resume. One-side-censored pairs keep their sign;
+   subset. The training ceiling is 60,000 epochs
+   (`configs/experiment/core.yaml`), pre-registered and hard: a seed that has
+   not grokked by then is recorded as censored (>60k), with no extension and
+   no resume. One-side-censored pairs keep their sign;
    both-censored pairs are ties; the censoring fraction is itself a reported
    per-group measurement.
 2. Accuracy means transpose-unleaked held-out accuracy everywhere. A test pair
@@ -110,13 +112,17 @@ No analysis runs during training. A run writes trajectory snapshots (dense
 early, then at a fixed interval), and every instrument and every transition
 criterion runs post-hoc from those snapshots, so an analysis criterion can
 change without retraining anything. Analysis scripts are frozen and hashed
-before the first core run. No analysis tooling exists in the repository yet.
+before the first analysis is read. The first instrument is built:
+`scripts/measure_occupancy.py` measures irrep occupancy from a run directory
+offline, selecting each run's checkpoint through the dip-aware rule in
+[the reproducibility contract](reproducibility.md).
 
 ## Scope
 
-- One architecture at one width: a one-layer transformer, with the width fixed
-  by the phase-0 pilot before any core run. Every result is conditional on
-  that regime. A fully connected replication is scoped to the C2 case study.
+- One architecture: a one-layer transformer at width 128, with named cells
+  duplicated at width 256 (the cell list in `configs/campaign/core.yaml`
+  fixes each cell's width). Every result is conditional on that regime. A
+  fully connected replication is scoped to the C2 case study.
 - Cross-group contrasts are associations. No intervention inside one model can
   test a claim about the difference between two models; only within-model
   mechanism claims (the D32 circuit account, the carry ablation, the cocycle
