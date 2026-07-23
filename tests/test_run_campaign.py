@@ -925,3 +925,116 @@ def test_checked_in_core_campaign_groups_all_exist_in_the_real_catalogue():
     cells = run_campaign_module.parse_campaign(_REAL_CAMPAIGN)
     known = run_campaign_module.load_known_groups(_REAL_GROUP_PROPERTIES)
     assert run_campaign_module.validate_cells(cells, known) == []
+
+
+# --- post-run analysis (--analyse) ------------------------------------------------
+
+
+def test_build_analysis_command_is_measure_run_dirs_out():
+    command = run_campaign_module.build_analysis_command(
+        Path("scripts/measure_endpoints.py"),
+        [Path("runs/a"), Path("runs/b")],
+        Path("results/endpoints.json"),
+    )
+    assert command[:4] == ["uv", "run", "python", "scripts/measure_endpoints.py"]
+    assert command[4] == "measure"
+    assert "runs/a" in command and "runs/b" in command
+    assert command[-2:] == ["--out", "results/endpoints.json"]
+
+
+def test_run_post_analysis_invokes_each_instrument_once(tmp_path):
+    recorder = _RecordingRun()
+    outcomes = run_campaign_module.run_post_analysis(
+        [tmp_path / "runs" / "r0", tmp_path / "runs" / "r1"],
+        results_dir=tmp_path / "results",
+        cwd=tmp_path,
+        dry_run=False,
+        run=recorder,
+    )
+    names = [name for name, _ in run_campaign_module.ANALYSIS_SCRIPTS]
+    assert [o.name for o in outcomes] == names
+    assert all(o.status == "complete" for o in outcomes)
+    assert len(recorder.commands) == len(names)
+    # each command targets both run dirs and writes results/<name>.json
+    for name, command in zip(names, recorder.commands, strict=True):
+        assert command[4] == "measure"
+        assert command[-1].endswith(f"{name}.json")
+
+
+def test_run_post_analysis_skips_when_no_run_dirs(tmp_path):
+    recorder = _RecordingRun()
+    outcomes = run_campaign_module.run_post_analysis(
+        [],
+        results_dir=tmp_path / "results",
+        cwd=tmp_path,
+        dry_run=False,
+        run=recorder,
+    )
+    assert recorder.commands == []
+    assert all(o.status == "skipped_no_runs" for o in outcomes)
+
+
+def test_run_post_analysis_records_a_failed_instrument_without_stopping(tmp_path):
+    # second instrument fails; the rest still run and it is recorded, not raised.
+    recorder = _RecordingRun(returncodes={1: 2})
+    outcomes = run_campaign_module.run_post_analysis(
+        [tmp_path / "runs" / "r0"],
+        results_dir=tmp_path / "results",
+        cwd=tmp_path,
+        dry_run=False,
+        run=recorder,
+    )
+    statuses = [o.status for o in outcomes]
+    assert statuses[1] == "failed"
+    assert statuses.count("complete") == len(run_campaign_module.ANALYSIS_SCRIPTS) - 1
+
+
+def test_run_post_analysis_dry_run_records_would_run_and_launches_nothing(tmp_path):
+    recorder = _RecordingRun()
+    outcomes = run_campaign_module.run_post_analysis(
+        [tmp_path / "runs" / "r0"],
+        results_dir=tmp_path / "results",
+        cwd=tmp_path,
+        dry_run=True,
+        run=recorder,
+    )
+    assert recorder.commands == []
+    assert all(o.status == "would_run" for o in outcomes)
+
+
+def test_main_analyse_runs_instruments_after_the_cells(tmp_path, monkeypatch):
+    runs_dir = tmp_path / "runs"
+    for seed in range(2):
+        _completed_run(runs_dir, f"done-{seed}", order=32, index=18, width=64, seed=seed)
+    campaign = _write_campaign(
+        tmp_path / "campaign.yaml", [_cell_dict(order=32, index=18, width=64, seeds="0:2")]
+    )
+    groups = _write_group_properties(tmp_path / "groups.jsonl", [(32, 18)])
+
+    commands: list[list[str]] = []
+
+    def _record(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        commands.append(list(command))
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(run_campaign_module.subprocess, "run", _record)
+    code = run_campaign_module.main(
+        [
+            "--campaign",
+            str(campaign),
+            "--group-properties",
+            str(groups),
+            "--runs-dir",
+            str(runs_dir),
+            "--results-dir",
+            str(tmp_path / "results"),
+            "--analyse",
+        ]
+    )
+    assert code == 0
+    # the cell was already complete (no training spawned); every launched
+    # command is an analysis instrument on the discovered run dirs.
+    assert commands, "expected the analysis instruments to be invoked"
+    assert all(command[4] == "measure" for command in commands)
+    launched = {Path(command[3]).name for command in commands}
+    assert launched == {f"measure_{name}.py" for name, _ in run_campaign_module.ANALYSIS_SCRIPTS}

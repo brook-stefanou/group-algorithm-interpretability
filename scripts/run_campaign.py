@@ -74,6 +74,22 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CAMPAIGN = ROOT / "configs" / "campaign" / "core.yaml"
 DEFAULT_RUN_BATCH = ROOT / "scripts" / "run_batch.py"
 DEFAULT_GROUP_PROPERTIES = ROOT / "data" / "group_properties_full.jsonl"
+DEFAULT_RESULTS_DIR = ROOT / "results"
+
+# The offline measurement instruments run as a post-run step (opt-in, --analyse).
+# Each is an independent entry point that takes ``measure <run_dirs...> --out
+# <file>`` and re-runs entirely from the run directories' committed artefacts --
+# there was no earlier post-run wiring (measure_occupancy.py was only documented,
+# never invoked here), so this hook establishes the pattern. Order is fixed for
+# a reproducible log; each writes ``<run_dir>/analysis/<name>.json`` per run and
+# a pooled ``results/<name>.json``, and exits non-zero if any requested run was
+# not measurable, so a failing instrument surfaces loudly.
+ANALYSIS_SCRIPTS: tuple[tuple[str, Path], ...] = (
+    ("occupancy", ROOT / "scripts" / "measure_occupancy.py"),
+    ("endpoints", ROOT / "scripts" / "measure_endpoints.py"),
+    ("probes", ROOT / "scripts" / "measure_probes.py"),
+    ("coset", ROOT / "scripts" / "measure_coset.py"),
+)
 
 # Execution order: earlier phases always run before later ones, both in the
 # campaign file and within every shard. The bonus phases are opt-in
@@ -367,6 +383,81 @@ def build_run_batch_command(
     ]
 
 
+# --- post-run analysis --------------------------------------------------------
+
+
+def build_analysis_command(
+    script_path: Path, run_dirs: Sequence[Path], out_path: Path
+) -> list[str]:
+    """One instrument's complete invocation: ``measure <run_dirs...> --out
+    <file>``, the shape every ``scripts/measure_*.py`` entry point shares
+    (composed the same way the manual command line takes it)."""
+    return [
+        "uv",
+        "run",
+        "python",
+        str(script_path),
+        "measure",
+        *[str(run_dir) for run_dir in run_dirs],
+        "--out",
+        str(out_path),
+    ]
+
+
+@dataclass(frozen=True)
+class AnalysisOutcome:
+    name: str
+    status: Literal["complete", "failed", "would_run", "skipped_no_runs"]
+    command: list[str] | None
+    returncode: int | None
+
+
+def run_post_analysis(
+    run_dirs: Sequence[Path],
+    *,
+    results_dir: Path,
+    scripts: Sequence[tuple[str, Path]] = ANALYSIS_SCRIPTS,
+    cwd: Path,
+    dry_run: bool,
+    run: Callable[..., subprocess.CompletedProcess[Any]] | None = None,
+    log: Callable[[str], None] = print,
+) -> list[AnalysisOutcome]:
+    """Run each offline measurement instrument over ``run_dirs`` as the campaign's
+    post-run step, one aggregate output per instrument under ``results_dir``.
+
+    Every instrument re-runs from the committed artefacts, so passing the whole
+    set of discovered run directories is safe and idempotent (the occupancy and
+    endpoint records pool by group internally). A missing set of run directories
+    is logged and skipped rather than invoking an instrument with no targets.
+    Mirrors :func:`run_campaign`'s continue-past-failure accounting: a failed
+    instrument is recorded, not raised, and the others still run.
+    """
+    launch = run if run is not None else subprocess.run
+    outcomes: list[AnalysisOutcome] = []
+    if not run_dirs:
+        for name, _ in scripts:
+            log(f"[analysis] {name} -> SKIP (no run directories to analyse)")
+            outcomes.append(AnalysisOutcome(name, "skipped_no_runs", None, None))
+        return outcomes
+    for name, script_path in scripts:
+        out_path = results_dir / f"{name}.json"
+        command = build_analysis_command(script_path, run_dirs, out_path)
+        if dry_run:
+            log(f"[analysis] {name} -> WOULD RUN: {' '.join(command)}")
+            outcomes.append(AnalysisOutcome(name, "would_run", command, None))
+            continue
+        log(f"[analysis] {name} -> running: {' '.join(command)}")
+        result = launch(command, cwd=cwd)
+        returncode = result.returncode
+        if returncode == 0:
+            log(f"[analysis] {name} -> COMPLETE ({out_path})")
+            outcomes.append(AnalysisOutcome(name, "complete", command, returncode))
+        else:
+            log(f"[analysis] {name} -> FAILED (exit {returncode})")
+            outcomes.append(AnalysisOutcome(name, "failed", command, returncode))
+    return outcomes
+
+
 # --- the campaign loop ----------------------------------------------------------
 
 CellStatus = Literal["skip", "complete", "failed", "would_run", "not_run"]
@@ -505,6 +596,21 @@ def parse_arguments(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "--dry-run", action="store_true", help="Print the plan and each cell's status; run nothing."
     )
     parser.add_argument(
+        "--analyse",
+        action="store_true",
+        help="After the cells, run the offline measurement instruments "
+        "(measure_occupancy/endpoints/probes/coset) over every run directory under "
+        "--runs-dir, writing one pooled results/<name>.json per instrument. Off by "
+        "default; the campaign otherwise only trains.",
+    )
+    parser.add_argument(
+        "--results-dir",
+        type=Path,
+        default=DEFAULT_RESULTS_DIR,
+        dest="results_dir",
+        help="Where --analyse writes each instrument's pooled output (default: results/).",
+    )
+    parser.add_argument(
         "--keep-going",
         action="store_true",
         help="Continue launching remaining cells after a failed cell instead of stopping; "
@@ -591,9 +697,22 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
 
     print(_summarize(outcomes))
+
+    analysis_failed = False
+    if args.analyse:
+        analysis_run_dirs = discover_run_dirs(args.runs_dir)
+        analysis_outcomes = run_post_analysis(
+            analysis_run_dirs,
+            results_dir=args.results_dir,
+            cwd=ROOT,
+            dry_run=args.dry_run,
+        )
+        analysis_failed = any(outcome.status == "failed" for outcome in analysis_outcomes)
+
     if args.dry_run:
         return 0
-    return 0 if all(outcome.status in ("skip", "complete") for outcome in outcomes) else 1
+    cells_ok = all(outcome.status in ("skip", "complete") for outcome in outcomes)
+    return 0 if cells_ok and not analysis_failed else 1
 
 
 if __name__ == "__main__":

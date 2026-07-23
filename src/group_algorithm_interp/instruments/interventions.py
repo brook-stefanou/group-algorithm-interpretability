@@ -28,12 +28,17 @@ claim about that one model, never a between-model difference claim.
 
 from __future__ import annotations
 
+import copy
 from dataclasses import dataclass
 from typing import Any
 
+import numpy as np
 import torch
 
+from ..groups.group import FiniteGroup
 from ..model import GroupModel
+from .nulls import random_neuron_control
+from .occupancy import cayley_grid_tokens
 
 MODES = ("zero", "mean", "resample")
 READ_POS = -1
@@ -181,8 +186,7 @@ def ablate_neurons(
         target_effect = _effect_block(
             model, cache, post, targets, unleaked_mask, idx, baseline, rng_seed
         )
-        control_generator = torch.Generator().manual_seed(rng_seed + 1)
-        control_idx = torch.randperm(d_mlp, generator=control_generator)[: idx.shape[0]]
+        control_idx = random_neuron_control(d_mlp, idx.shape[0], seed=rng_seed + 1)
         control_effect = _effect_block(
             model, cache, post, targets, unleaked_mask, control_idx, baseline, rng_seed
         )
@@ -303,9 +307,97 @@ def patch_neurons(
     }
 
 
+# ---------------------------------------------------------------------------
+# Representational-axis ablation: zero-ablate a single direction out of W_E and
+# read the behavioural cost in flips, against norm-matched random directions.
+# This is the harness substrate I-28b (probes.involution_direction_ablation)
+# consumes -- the direction it removes is instrument-specific, the machinery
+# that removes it and scores the cost is shared here.
+# ---------------------------------------------------------------------------
+
+
+def model_correct_mask(model: GroupModel, group: FiniteGroup) -> np.ndarray:
+    """Boolean ``[order*order]`` mask of whether the model's argmax at the read
+    position equals ``a*b``, in Cayley-grid (row-major) order."""
+    tokens = cayley_grid_tokens(group.order)
+    model.eval()
+    with torch.no_grad():
+        logits = model(tokens)[:, -1, :]
+        predictions = logits.argmax(dim=-1).cpu().numpy()
+    targets = group.cayley_table.reshape(-1)
+    return predictions == targets
+
+
+def _accuracy_in_flips(mask: np.ndarray, subset: np.ndarray | None) -> int:
+    if subset is None:
+        return int(mask.sum())
+    return int(mask[subset].sum())
+
+
+def _ablated_model(model: GroupModel, direction: np.ndarray) -> GroupModel:
+    """A copy of ``model`` with the unit ``direction`` (in ``d_model`` space)
+    projected out of every ``W_E`` row -- zero-ablation of one representational
+    axis."""
+    clone = copy.deepcopy(model)
+    unit = direction / (np.linalg.norm(direction) + 1e-12)
+    unit_t = torch.tensor(unit, dtype=clone.W_E.dtype)
+    with torch.no_grad():
+        projection = clone.W_E @ unit_t  # [d_vocab_in]
+        clone.W_E.sub_(torch.outer(projection, unit_t))
+    return clone
+
+
+def ablate_direction(
+    model: GroupModel,
+    group: FiniteGroup,
+    direction: np.ndarray,
+    *,
+    subset: np.ndarray | None = None,
+    n_controls: int = 8,
+    seed: int = 0,
+) -> dict[str, Any]:
+    """Zero-ablate one representational axis (``direction``, in ``d_model``
+    space) out of ``W_E`` and measure the drop in behavioural accuracy in flips
+    -- the change in the number of correctly answered pairs -- against
+    norm-matched random-direction controls.
+
+    ``subset`` restricts the accuracy count to an unleaked held-out mask when the
+    caller supplies one; by default every pair is counted. The random controls
+    draw from a private ``numpy`` generator (never the global stream) and share
+    the ablated axis's dimensionality, so the effect is read against a matched
+    baseline rather than an absolute threshold. Effect sizes only, no verdict
+    (within-model, two-track rule)."""
+    baseline_mask = model_correct_mask(model, group)
+    baseline = _accuracy_in_flips(baseline_mask, subset)
+    n_scored = group.order * group.order if subset is None else int(subset.size)
+
+    ablated_mask = model_correct_mask(_ablated_model(model, direction), group)
+    ablated = _accuracy_in_flips(ablated_mask, subset)
+
+    rng = np.random.default_rng(seed)
+    control_drops: list[int] = []
+    for _ in range(n_controls):
+        random_direction = np.asarray(rng.standard_normal(direction.shape[0]))
+        control_mask = model_correct_mask(_ablated_model(model, random_direction), group)
+        control_drops.append(baseline - _accuracy_in_flips(control_mask, subset))
+
+    return {
+        "n_scored_pairs": n_scored,
+        "baseline_correct": baseline,
+        "ablated_correct": ablated,
+        "direction_drop_flips": baseline - ablated,
+        "random_direction_drop_flips": {
+            "mean": float(np.mean(control_drops)),
+            "per_control": control_drops,
+        },
+    }
+
+
 __all__ = [
     "MODES",
     "ablate_component",
+    "ablate_direction",
     "ablate_neurons",
+    "model_correct_mask",
     "patch_neurons",
 ]

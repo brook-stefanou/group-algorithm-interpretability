@@ -62,6 +62,7 @@ from sklearn.model_selection import StratifiedKFold
 
 from ..groups.group import FiniteGroup
 from ..model import GroupModel
+from .interventions import ablate_direction, model_correct_mask
 from .occupancy import cayley_grid_tokens, neuron_activations
 
 UNDEFINED = "UNDEFINED"
@@ -596,41 +597,13 @@ def power_map_probe(
 
 
 # ---------------------------------------------------------------------------
-# Behavioural helpers for ablation (I-28b): unleaked-held-out accuracy in flips.
+# I-28b: involution-direction ablation. The behavioural machinery -- zero-
+# ablating a representational axis out of W_E and scoring the cost in flips
+# against random-direction controls -- lives in the shared I-07 harness
+# (interventions.ablate_direction); this probe only picks the direction.
+# ``model_correct_mask`` is re-exported from that harness for callers that read
+# the model's correctness directly.
 # ---------------------------------------------------------------------------
-
-
-def model_correct_mask(model: GroupModel, group: FiniteGroup) -> np.ndarray:
-    """Boolean ``[order*order]`` mask of whether the model's argmax at the read
-    position equals ``a*b``, in Cayley-grid (row-major) order."""
-    tokens = cayley_grid_tokens(group.order)
-    model.eval()
-    with torch.no_grad():
-        logits = model(tokens)[:, -1, :]
-        predictions = logits.argmax(dim=-1).cpu().numpy()
-    targets = group.cayley_table.reshape(-1)
-    return predictions == targets
-
-
-def _accuracy_in_flips(mask: np.ndarray, subset: np.ndarray | None) -> int:
-    if subset is None:
-        return int(mask.sum())
-    return int(mask[subset].sum())
-
-
-def _ablated_model(model: GroupModel, direction: np.ndarray) -> GroupModel:
-    """A copy of ``model`` with the unit ``direction`` (in ``d_model`` space)
-    projected out of every ``W_E`` row -- zero-ablation of one representational
-    axis."""
-    import copy
-
-    clone = copy.deepcopy(model)
-    unit = direction / (np.linalg.norm(direction) + 1e-12)
-    unit_t = torch.tensor(unit, dtype=clone.W_E.dtype)
-    with torch.no_grad():
-        projection = clone.W_E @ unit_t  # [d_vocab_in]
-        clone.W_E.sub_(torch.outer(projection, unit_t))
-    return clone
 
 
 def involution_direction_ablation(
@@ -669,19 +642,12 @@ def involution_direction_ablation(
     features = _feature_matrix(model, group, source)
     direction = features[involution].mean(axis=0) - features[~involution].mean(axis=0)
 
-    baseline_mask = model_correct_mask(model, group)
-    baseline = _accuracy_in_flips(baseline_mask, subset)
-    n_scored = group.order * group.order if subset is None else int(subset.size)
-
-    ablated_mask = model_correct_mask(_ablated_model(model, direction), group)
-    ablated = _accuracy_in_flips(ablated_mask, subset)
-
-    rng = np.random.default_rng(seed)
-    control_drops: list[int] = []
-    for _ in range(n_controls):
-        random_direction = np.asarray(rng.standard_normal(features.shape[1]))
-        control_mask = model_correct_mask(_ablated_model(model, random_direction), group)
-        control_drops.append(baseline - _accuracy_in_flips(control_mask, subset))
+    # The direction is instrument-specific; removing it and scoring the
+    # behavioural cost (in flips, against norm-matched random directions) is the
+    # shared I-07 harness's job.
+    harness = ablate_direction(
+        model, group, direction, subset=subset, n_controls=n_controls, seed=seed
+    )
 
     return {
         "instrument": "involution-direction-ablation",
@@ -689,14 +655,11 @@ def involution_direction_ablation(
         "rung": 3,
         "source": source,
         "status": "measured",
-        "n_scored_pairs": n_scored,
-        "baseline_correct": baseline,
-        "ablated_correct": ablated,
-        "involution_direction_drop_flips": baseline - ablated,
-        "random_direction_drop_flips": {
-            "mean": float(np.mean(control_drops)),
-            "per_control": control_drops,
-        },
+        "n_scored_pairs": harness["n_scored_pairs"],
+        "baseline_correct": harness["baseline_correct"],
+        "ablated_correct": harness["ablated_correct"],
+        "involution_direction_drop_flips": harness["direction_drop_flips"],
+        "random_direction_drop_flips": harness["random_direction_drop_flips"],
         "note": (
             "Effect size in flips (change in correctly-answered pairs). The "
             "involution-direction drop is read against the norm-matched random-"

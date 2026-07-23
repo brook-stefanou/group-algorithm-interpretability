@@ -65,6 +65,7 @@ from .. import stats
 from ..config import validate_config
 from ..manifest import get_git_commit, read_manifest
 from .checkpoints import parse_run_log, select_checkpoint
+from .nulls import chance_accuracy
 
 UNLEAKED_METRIC = "val/unleaked_accuracy"
 RAW_METRIC = "val/accuracy"
@@ -85,8 +86,9 @@ def _file_sha256(path: Path) -> str:
 def endpoint_code_hashes() -> dict[str, str]:
     """sha256 of the modules that compute the endpoint numbers, so a record
     pins the exact analysis code that produced it. Covers this module, the
-    checkpoint selector it reuses, and ``stats.py``; ``interventions.py`` is
-    hashed too when present."""
+    checkpoint selector it reuses, the shared null battery it draws the chance
+    anchor from, and ``stats.py``; ``interventions.py`` is hashed too when
+    present."""
     here = Path(__file__).resolve()
     package_dir = here.parent
     src_root = package_dir.parent
@@ -94,6 +96,7 @@ def endpoint_code_hashes() -> dict[str, str]:
         here,
         package_dir / "checkpoints.py",
         package_dir / "interventions.py",
+        package_dir / "nulls.py",
         src_root / "stats.py",
     ]
     return {path.name: _file_sha256(path) for path in candidates if path.is_file()}
@@ -106,16 +109,6 @@ def _utcnow() -> str:
 # ---------------------------------------------------------------------------
 # I-01: held-out generalisation series and epochs-to-grok
 # ---------------------------------------------------------------------------
-
-
-def chance_accuracy(order: int) -> float:
-    """The accuracy an untrained model sits at on the multiplication task:
-    ``1 / |G|`` over the ``|G|`` output classes. The bar for grok is set well
-    above this; reporting it lets a reader see how far above chance the endpoint
-    is (I-01's untrained-model anchor)."""
-    if order <= 0:
-        raise ValueError(f"group order must be positive, got {order}")
-    return 1.0 / order
 
 
 def metric_series(run_dir: Path, metric: str = UNLEAKED_METRIC) -> list[tuple[int, float]]:

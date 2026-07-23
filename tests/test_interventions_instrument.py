@@ -11,6 +11,7 @@ function of the weights.
 
 from __future__ import annotations
 
+import numpy as np
 import pytest
 import torch
 
@@ -18,9 +19,12 @@ from group_algorithm_interp.config import ProjectConfig
 from group_algorithm_interp.groups.catalog import resolve_group
 from group_algorithm_interp.instruments.interventions import (
     ablate_component,
+    ablate_direction,
     ablate_neurons,
+    model_correct_mask,
     patch_neurons,
 )
+from group_algorithm_interp.instruments.nulls import random_neuron_control
 from group_algorithm_interp.instruments.occupancy import cayley_grid_tokens
 from group_algorithm_interp.seed import set_seed
 from group_algorithm_interp.training.trainer import build_model
@@ -106,3 +110,34 @@ def test_component_ablation_rejects_fc():
     model, tokens, targets = _model_and_batch("fc")
     with pytest.raises(ValueError):
         ablate_component(model, tokens, targets, "mlp")
+
+
+def test_random_neuron_control_matches_the_inline_draw_it_replaced():
+    # The shared helper must reproduce, bit for bit, the draw ablate_neurons ran
+    # inline before the I-03 battery was consolidated.
+    d_mlp, n, seed = 32, 5, 7
+    expected = torch.randperm(d_mlp, generator=torch.Generator().manual_seed(seed))[:n]
+    got = random_neuron_control(d_mlp, n, seed=seed)
+    assert torch.equal(got, expected)
+
+
+def test_ablate_direction_reports_a_baseline_and_matched_random_controls():
+    model, _, _ = _model_and_batch("transformer")
+    group = resolve_group((ORDER, INDEX))
+    direction = np.zeros(model.d_model)
+    direction[0] = 1.0
+    record = ablate_direction(model, group, direction, n_controls=3, seed=0)
+    assert record["n_scored_pairs"] == group.order * group.order
+    assert record["baseline_correct"] == int(model_correct_mask(model, group).sum())
+    assert len(record["random_direction_drop_flips"]["per_control"]) == 3
+    # a zero direction cannot ablate anything: no correct answers are lost
+    assert record["direction_drop_flips"] == 0
+
+
+def test_ablate_direction_is_deterministic_for_a_fixed_seed():
+    model, _, _ = _model_and_batch("transformer")
+    group = resolve_group((ORDER, INDEX))
+    direction = np.arange(model.d_model, dtype=float) - model.d_model / 2
+    first = ablate_direction(model, group, direction, n_controls=4, seed=3)
+    second = ablate_direction(model, group, direction, n_controls=4, seed=3)
+    assert first == second
