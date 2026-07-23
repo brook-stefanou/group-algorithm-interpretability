@@ -77,9 +77,13 @@ def test_neuron_activations_shape_and_batching():
     model, group = _random_model(8, 3)
     full = neuron_activations(model, group.order)
     assert full.shape == (D_MLP, 8, 8)
-    # Chunked evaluation must be exactly the single-batch result.
+    # Chunked evaluation must match the single-batch result. Only the chunking
+    # bookkeeping (concat/reshape/transpose) is exact; the model forward runs in
+    # float32, and batched matmul picks a batch-shape-dependent reduction order,
+    # so the partial final chunk differs by float32 rounding (~1e-7) on some
+    # BLAS backends. Tolerance is float32-appropriate, not exact equality.
     chunked = neuron_activations(model, group.order, batch_size=7)
-    np.testing.assert_allclose(chunked, full, rtol=0, atol=0)
+    np.testing.assert_allclose(chunked, full, rtol=1e-5, atol=1e-6)
 
 
 def test_neuron_activations_require_an_mlp():
