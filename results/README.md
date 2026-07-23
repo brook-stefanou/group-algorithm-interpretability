@@ -11,7 +11,7 @@ reproduces it byte-for-byte.
 The mechanically-derived Fourier-falsifier screen over every group in
 `data/group_properties_full.jsonl` with 21 ≤ order ≤ 255 (6,958 groups).
 `genuine_clean_pairs` (370 pairs across 450 distinct groups) is the
-authoritative, complete clean-pair family that **defines claim C1**; the core
+authoritative, complete clean-pair family that **defines test C1**; the core
 study's selection rule is applied to that list.
 
 - Produced by: `scripts/derive_falsifiers.py` (drives `scripts/falsifier_lib.g`

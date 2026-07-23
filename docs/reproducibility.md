@@ -97,7 +97,7 @@ opt-in: `deterministic: true` drives
 in the harness overrides it. A run is reproducible in its configuration and
 provenance — same commit, lockfile, resolved config, seed, and data split —
 and its results are expected to be statistically equivalent across repeats.
-Claims are read as distributions over seeds.
+Results are read as distributions over seeds.
 
 `CUBLAS_WORKSPACE_CONFIG` is set at package import and at the top of
 `scripts/run.py`, before the first CUDA BLAS call can read it, which is what

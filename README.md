@@ -1,20 +1,63 @@
 # Group Algorithm Interp
 
-What algorithms do small neural networks learn for finite-group
-multiplication?  This repository is a pre-registered, reproducible study of
-that question.  The headline instrument is pairs of non-isomorphic groups
-with identical character tables: every account that reads the learned
-circuit through its representation theory predicts identical behaviour on
-both members of such a pair, so a reproducible within-pair difference
-falsifies that account.  [The core study](docs/core-study.md) registers five
-claims over 26 groups in 31 paired-seed cells (1,550 runs), reported
-estimation-first — effect sizes with confidence intervals, and every
+Two non-isomorphic finite groups can share a character table.  Every account
+that reads a network's learned circuit through representation theory — the
+Fourier account, the tensor-rank account, the coset account — predicts
+identical behaviour on both members of such a pair, so a reproducible
+within-pair difference falsifies that account.
+
+This repository is a pre-registered, reproducible study of what algorithm a
+small neural network learns for finite-group multiplication, built on that
+instrument.  [The core study](docs/core-study.md) registers five tests, fixed
+before any run, over 26 groups in 31 paired-seed cells (1,550 runs),
+reported estimation-first — effect sizes with confidence intervals, and every
 measurement taken ships.
 
 The design was fixed on 2026-07-15, with the epoch ceiling settled on
-2026-07-20, and the training and campaign machinery below runs end to end.
-No training run has started, no empirical result or mechanistic claim is
+2026-07-20.  The training and campaign machinery below runs end to end.  No
+training run has started: no empirical result or mechanistic finding is
 released here yet, and the analysis instruments are still being built.
+
+## The study
+
+- [The core study](docs/core-study.md) — the question, the five pre-registered
+  tests, the groups, the endpoints, and the run plan, registered before any
+  run.
+- [Extensions](docs/extensions.md) — the modules the study could grow into,
+  each with the measured trigger that would prompt running it.
+- [Methodology](docs/methodology.md) — group selection and the
+  estimation-first reporting discipline.
+- [Reproducibility](docs/reproducibility.md) — what the repository guarantees
+  about data, runs, and provenance.
+- [The invariant dataset](docs/dataset.md) — the full schema of
+  `data/group_properties_full.jsonl`: 153 columns for each of the 6,958
+  groups of orders 21–255, with null semantics and gotchas.
+- [Research log](docs/research-log.md) — research-direction decisions as
+  dated entries.
+
+## The five pre-registered tests
+
+Five tests, pre-registered before any run and specified in full in
+[the core study](docs/core-study.md).  Reporting is estimation-first
+throughout: every measurement taken ships as an effect size with a confidence
+interval, with no significance threshold and no result withheld — a null
+outcome on any of them ships too.
+
+| test | what it does |
+|---|---|
+| **C1** (headline) | eleven pairs of groups identical in character table, Frobenius–Schur data, and coset-template structure; measures the within-pair difference in epochs-to-grok and irrep-occupancy — the Fourier, tensor-rank, and coset accounts all forbid a difference |
+| **C2** | the D32/QD32/Q32 case study, with the coset route removed entirely (Q32 has no faithful action below \|G\|); builds a mechanistic account of the D32 circuit, with Q32 as a structural control |
+| **C3** | C128 against C2⁷ at fixed order; measures carry propagation as a causal cost, via a diagonal-versus-triangular ablation-cost matrix |
+| **C4** | satellite tiers over the same character-table-equal pair family; falsification-grade and direction tests at their best exemplars |
+| **C5** | GL(2,3) against SL(2,3).C2, a split/non-split extension pair; probes, ablates, and fits the 2-cocycle a non-split extension is predicted to force |
+
+The pair family behind the headline test comes from a re-runnable screen:
+`scripts/derive_falsifiers.py` reduced 7,274 same-fingerprint candidate pairs
+to 370 clean pairs, eleven of which the core study selects under a rule
+fixed before any run.  The screen's output is committed at
+[`results/falsifier_screen_results_full.json`](results/falsifier_screen_results_full.json),
+and [`results/README.md`](results/README.md) records the input and output
+hashes that make it reproducible byte-for-byte.
 
 ## Quickstart: run the training loop without SageMath
 
@@ -72,31 +115,6 @@ and `experiment.py`), and run provenance (`manifest.py`, `seed.py`,
 `configs/` their Hydra configuration, `docs/` the public study documents, and
 `results/` committed derivation outputs.
 
-## The study
-
-- [The core study](docs/core-study.md) — the question, the five claims, the
-  groups, the endpoints, and the run plan, registered before any run.
-- [Extensions](docs/extensions.md) — the modules the study could grow into,
-  each with the measured trigger that would prompt running it.
-- [Methodology](docs/methodology.md) — group selection and the
-  estimation-first reporting discipline.
-- [Reproducibility](docs/reproducibility.md) — what the repository guarantees
-  about data, runs, and provenance.
-- [The invariant dataset](docs/dataset.md) — the full schema of
-  `data/group_properties_full.jsonl`: 153 columns for each of the 6,958
-  groups of orders 21–255, with null semantics and gotchas.
-- [Research log](docs/research-log.md) — research-direction decisions as
-  dated entries.
-
-The pair family behind the headline claim comes from a re-runnable screen
-over that dataset: `scripts/derive_falsifiers.py` reduced 7,274
-same-fingerprint candidate pairs to 370 clean pairs, eleven of which the core
-study claims under a rule fixed before any run.  The screen's output is
-committed at
-[`results/falsifier_screen_results_full.json`](results/falsifier_screen_results_full.json),
-and [`results/README.md`](results/README.md) records the input and output
-hashes that make it reproducible byte-for-byte.
-
 ## Running the study
 
 A single run is `scripts/run.py` plus Hydra overrides, as in the quickstart;
@@ -128,11 +146,12 @@ uv run python scripts/run_campaign.py --keep-going --override logging.mode=onlin
 ```
 
 Two opt-in bonus phases (extension supply for E2 and E6, excluded from the
-pre-registered core counts) run only under `--include-bonus`.  On a
-multi-GPU pod, `--shard i/n` gives each worker a deterministic, disjoint,
-roughly cost-balanced slice of the cell list, so `CUDA_VISIBLE_DEVICES=$i uv
-run python scripts/run_campaign.py --shard $i/8` across eight GPUs covers
-every cell once.
+pre-registered core counts) sit in the campaign file as a follow-up worth
+returning to, and run only under `--include-bonus`.  On a multi-GPU pod,
+`--shard i/n` gives each worker a deterministic, disjoint, roughly
+cost-balanced slice of the cell list, so `CUDA_VISIBLE_DEVICES=$i uv run
+python scripts/run_campaign.py --shard $i/8` across eight GPUs covers every
+cell once.
 
 `uv run python scripts/preflight.py` checks whether a machine can do what is
 about to be asked of it: a CUDA device torch can see, the group artefact the

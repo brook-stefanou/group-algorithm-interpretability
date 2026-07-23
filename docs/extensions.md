@@ -1,7 +1,7 @@
 # Extensions
 
 [The core study](core-study.md) is deliberately small.  Each module below is
-something it could grow into, and each states the claim it would license,
+something it could grow into, and each states the test it would license,
 what it needs, and the measured trigger in the core's own results that would
 prompt running it.  Modules inherit the core's design — 50 paired seeds, the
 pinned split — unless stated, and they're ordered by promotion priority.  Ids
@@ -24,15 +24,16 @@ before conceding the account survives).
 ## E2 — dataset-wide clean-pair supply
 
 The falsifier screen found 370 clean pairs across 450 distinct groups in
-orders 21–255; the core's closed selection rule claims 11.  This module is
+orders 21–255; the core's closed selection rule selects 11.  This module is
 the remaining 359, 326 of them at order 128 in mutually clean cliques, some
 running to nine mutually clean groups — a much denser replication surface
 than the 11-pair core.  A cheapest-order-first partial sample scales down
 freely.  Worth running when the tier-1 intervals show an effect worth
 replicating at larger N, or come out too wide to report with confidence at
 N = 11.  A first slice of it, 10 order-128 pairs picked deterministically by
-file order, is scheduled to run alongside the core as an opportunistic
-extension.
+file order, sits in `configs/campaign/core.yaml` as an opt-in phase
+(`--include-bonus`) — a natural first follow-up if more time and compute were
+available, not part of this study's run plan.
 
 ## E3 — ambiguous completion
 
@@ -58,7 +59,7 @@ across orders is the first demand a reviewer will make of that result.
 
 ## E5 — reserved
 
-The GL(2,3) / SL(2,3).C2 cocycle experiment is core claim C5, so this slot is
+The GL(2,3) / SL(2,3).C2 cocycle experiment is core test C5, so this slot is
 empty; it's kept so module ids stay stable.  Its observational surround — ten
 substantive non-prime-power non-split groups — sits in E14's panel remainder.
 
@@ -71,8 +72,9 @@ with an order-192 corroborator, plus the Q8∘Q8 / Q8×Q8 pair as the
 central-product arm.  Needs two new instruments (factor decomposition with
 per-factor readout; factor-aligned ablation and patching).  Worth running if
 a novel axis is wanted over depth, or if core occupancy shows factor-shaped
-structure anywhere.  Three of the module's pairs are scheduled to run
-alongside the core as an opportunistic extension.
+structure anywhere.  Three of the module's pairs already sit in
+`configs/campaign/core.yaml` as an opt-in phase (`--include-bonus`), ready to
+pick up as a follow-up rather than as work this study runs.
 
 ## E7 — digit count at fixed everything
 
@@ -127,10 +129,10 @@ single-architecture caveat is the reviewer objection most worth pre-empting.
 ## E12 — the socle-calibration subtraction
 
 Prices the confound that shadows every representation-route-availability
-claim: groups lacking a faithful irrep systematically carry more minimal
+assertion: groups lacking a faithful irrep systematically carry more minimal
 normal subgroups, so this arm measures that effect with the representation
 route held off (33 disjoint pairs, 66 groups) and subtracts it.  The core
-contains no representation-route-availability claim, so there's nothing yet
+contains no representation-route-availability assertion, so there's nothing yet
 to price; the moment any promoted module makes one, this module becomes
 mandatory.
 

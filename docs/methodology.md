@@ -1,8 +1,8 @@
 # Methodology
 
 How the study is designed and how its results get reported. The core study —
-the groups it trains, the five claims it makes, and the instruments behind
-each claim — is specified in [core-study.md](core-study.md); the directions
+the groups it trains, the five pre-registered tests, and the instruments
+behind each — is specified in [core-study.md](core-study.md); the directions
 it could grow in are in [extensions.md](extensions.md). What follows are the
 commitments that hold across both.
 
@@ -34,7 +34,7 @@ unavailable, or differently costly — a Fourier route, a coset action, a carry
 chain, an extension cocycle — and because that difference separates competing
 accounts of what the network computes.
 
-The headline family (claim C1) is criterion-defined. A re-runnable screen
+The headline family (test C1) is criterion-defined. A re-runnable screen
 (`scripts/derive_falsifiers.py`, output committed at
 `results/falsifier_screen_results_full.json`) over the committed invariant
 dataset (`data/group_properties_full.jsonl`) finds pairs of groups with
@@ -103,7 +103,7 @@ persistence-under-embedding probes of that pair.
    raw test accuracy is never used for a cross-group number.
 3. Mechanism endpoints — irrep-occupancy vectors measured against each group's
    analytic null, and probe, ablation, and functional-form-fit outputs — are
-   specified per claim in [core-study.md](core-study.md), each with its own
+   specified per pre-registered test in [core-study.md](core-study.md), each with its own
    null and its effect size in behavioural units.
 
 ## Analysis from snapshots
@@ -124,15 +124,15 @@ offline, selecting each run's checkpoint through the dip-aware rule in
   fixes each cell's width). Every result is conditional on that regime. A
   fully connected replication is scoped to the C2 case study.
 - Cross-group contrasts are associations. No intervention inside one model can
-  test a claim about the difference between two models; only within-model
-  mechanism claims (the D32 circuit account, the carry ablation, the cocycle
+  test an assertion about the difference between two models; only within-model
+  mechanism tests (the D32 circuit account, the carry ablation, the cocycle
   probe) go beyond association.
 - A clean-pair difference falsifies without identifying a cause: the pairs
   still differ on element-order structure, automorphism-group order, and
   subgroup counts, so no single residual invariant is singled out.
 - Absolute difficulty numbers on abelian groups are never compared across
   groups — the transpose leak inflates them. Only the within-pair contrast is
-  claimed.
+  reported.
 - Grokking timing is reported separately from the inferred algorithm. Dynamics
-  are evidence about training; mechanism claims rest on the probe, ablation,
+  are evidence about training; mechanism tests rest on the probe, ablation,
   and fit instruments.
