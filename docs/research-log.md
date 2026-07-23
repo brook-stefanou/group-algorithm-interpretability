@@ -69,3 +69,16 @@ they were written.
     as extension supply.
 
 - Next: pilot run to fix the model width, then the campaign.
+
+## Jul 21
+
+<!-- learning: grokking-width-limited -->
+- Non-grokking at the 60k ceiling is undertraining, and it is width-limited.
+  - A quarter of completed runs are censored; about half of those are still climbing at the ceiling.
+  - Every width-128/256 pair grokked more often and sooner at 256 — width, not epochs, was the binding constraint for most.
+
+<!-- decision: c1-targeted-followup -->
+- Will close C1 with a targeted width-256 follow-up.
+  - Rescue the two below-floor tier-1 pairs at width 256 with a longer ceiling, plus a width-128 firm-up of the C2 pair; cells still short at the stop-line are reported as boundaries.
+  - Drop the five staged large-order p-group pairs — too expensive to run to convergence, and the same hard class as order-27, so likely boundaries regardless.
+  - C1 rests on the clean run pairs plus the rescues.
