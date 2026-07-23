@@ -1,5 +1,5 @@
-"""The C5 cocycle instrument: extension precompute (I-21) and the cocycle
-probe/ablation/fit (I-22/I-22b), T8.
+"""The C5 cocycle instrument: extension precompute (I-21), the cocycle
+probe/ablation/fit (I-22/I-22b), and the twisted-rule FVE fit (I-22c), T8.
 
 This is the one instrument built for a single claim -- C5, the
 ``(48,29)`` GL(2,3) [split] vs ``(48,28)`` SL(2,3).C2 [non-split] contrast --
@@ -37,11 +37,21 @@ cells -- never over ``(a, b)`` pairs, because many pairs share one cell and an
 uses the cocycle"; a norm- and dimension-matched random subspace is the control
 (I-03).
 
+The twisted-rule FVE fit (I-22c) regresses the model's logits onto the answer
+the twisted coordinate rule predicts and, on the same data, onto the untwisted
+(``f == e``) rule; the held-out FVE gap is the extra logit variance the cocycle
+term explains. Like the probe it is held out over ``(q1, q2)`` cells -- the
+cocycle label is constant within a cell, so an ``(a, b)``-pair split would leak
+it (banned practice 6). On a split member with the complement transversal the
+two rules coincide (``f == e``), so the gap is ~0 by construction; a non-split
+member needs the twist and the gap is positive.
+
 Pure group theory here uses only the exported Cayley table and never Sage/GAP.
 """
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -814,12 +824,193 @@ def cocycle_ablation(
     )
 
 
+# ---------------------------------------------------------------------------
+# I-22c: twisted-rule fraction-of-variance-explained (FVE) fit
+# ---------------------------------------------------------------------------
+
+
+def _predicted_products(
+    extension: Extension, table: np.ndarray, *, include_cocycle: bool
+) -> np.ndarray:
+    """Predicted product element for every grid row under the coordinate rule.
+
+    Row ``k = (g1, g2)`` in ``cayley_grid_tokens`` order (``g1 = k // |G|``,
+    ``g2 = k % |G|``), so the returned ``[|G|^2]`` array aligns with
+    :func:`cell_labels` and :func:`pair_features` row-for-row. With
+    ``include_cocycle=True`` this is the twisted rule and reproduces the whole
+    table; with ``include_cocycle=False`` it is the untwisted (``f == e``) rule,
+    which errs on every cell whose cocycle value is nontrivial. Applies the same
+    rule as :func:`coordinate_product_accuracy` without altering that function.
+    """
+    normal_array = np.array(extension.normal, dtype=np.int64)
+    n_of, q_of = coordinates(extension, table)
+    transversal = extension.transversal
+    action = extension.action
+    cocycle = extension.cocycle
+    qt = extension.quotient_table
+    order = extension.order
+    predicted = np.empty(order * order, dtype=np.int64)
+    for g1 in range(order):
+        n1, q1 = int(n_of[g1]), int(q_of[g1])
+        for g2 in range(order):
+            n2, q2 = int(n_of[g2]), int(q_of[g2])
+            phi = int(action[q1, n2])
+            n_res = _n_mul_local(table, normal_array, n1, phi)
+            if include_cocycle:
+                n_res = _n_mul_local(table, normal_array, n_res, int(cocycle[q1, q2]))
+            qk = int(qt[q1, q2])
+            predicted[g1 * order + g2] = int(table[normal_array[n_res], int(transversal[qk])])
+    return predicted
+
+
+def _rule_indicator_design(predicted: np.ndarray, n_classes: int) -> np.ndarray:
+    """One-hot design ``[N, n_classes, 1]`` -- the answer a coordinate rule
+    predicts per pair, the single closed-form feature (mirrors I-27's indicator
+    design in ``probes._signed_cyclic_forms``)."""
+    design = np.zeros((predicted.shape[0], n_classes, 1), dtype=np.float64)
+    design[np.arange(predicted.shape[0]), predicted, 0] = 1.0
+    return design
+
+
+def _leave_one_cell_out(cell: np.ndarray) -> Iterator[tuple[np.ndarray, np.ndarray]]:
+    """Yield ``(train_mask, test_mask)`` holding out one whole ``(q1, q2)`` cell
+    at a time.
+
+    A cell is the pseudoreplication unit -- many ``(a, b)`` rows share it and the
+    cocycle value is constant within it -- so it is never split across the
+    fit/held-out boundary. This is the same discipline :func:`probe_cocycle`
+    uses (banned practice 6).
+    """
+    for held in np.unique(cell):
+        test_mask = cell == held
+        yield ~test_mask, test_mask
+
+
+def _cell_held_out_fve(logits: np.ndarray, design: np.ndarray, cell: np.ndarray) -> float:
+    """Held-out FVE of a closed-form rule against the model's logits, held out
+    over ``(q1, q2)`` cells.
+
+    ``logits`` is ``[N, n_classes]`` and ``design`` is ``[N, n_classes,
+    n_features]``. Softmax is shift-invariant, so both are mean-centred across the
+    class axis first (a constant per-pair shift carries no information). For each
+    held-out cell the regression coefficients are fitted on every *other* cell's
+    rows and used to predict the held-out cell; the FVE pools all held-out
+    predictions. Mirrors ``probes._held_out_fve`` but with a leave-one-cell-out
+    split, never an ``(a, b)``-pair split.
+    """
+    y = logits - logits.mean(axis=1, keepdims=True)
+    x = design - design.mean(axis=1, keepdims=True)
+    preds = np.empty_like(y)
+    for train_mask, test_mask in _leave_one_cell_out(cell):
+        x_fit = x[train_mask].reshape(-1, x.shape[2])
+        y_fit = y[train_mask].reshape(-1)
+        coef, _, _, _ = np.linalg.lstsq(x_fit, y_fit, rcond=None)
+        preds[test_mask] = x[test_mask] @ coef
+    residual = (y - preds).reshape(-1)
+    y_flat = y.reshape(-1)
+    ss_res = float(residual @ residual)
+    centred = y_flat - y_flat.mean()
+    ss_tot = float(centred @ centred)
+    if ss_tot <= 0.0:
+        return 0.0
+    return 1.0 - ss_res / ss_tot
+
+
+@dataclass(frozen=True)
+class TwistedFveResult:
+    """I-22c: the twisted-rule fraction-of-variance-explained (FVE) fit.
+
+    ``twisted_fve`` and ``untwisted_fve`` are the held-out FVE of the model's
+    logits regressed onto the answer the twisted and the untwisted (``f == e``)
+    coordinate rules predict; ``twist_fve_gain`` (twisted minus untwisted) is the
+    extra logit variance the cocycle term explains. Both are held out over
+    ``(q1, q2)`` cells, never over ``(a, b)`` pairs (the cocycle label is cell-
+    constant, so a pair split would leak it -- banned practice 6).
+
+    ``twist_is_trivial`` records whether ``f == e`` for this transversal: on a
+    split member with the complement transversal the two rules coincide and the
+    gain is ~0 by construction (the split control); a non-split member needs the
+    twist and the gain is positive.
+    """
+
+    site: str
+    n_cells: int
+    n_features: int
+    twist_is_trivial: bool
+    twisted_fve: float
+    untwisted_fve: float
+    twist_fve_gain: float
+
+    def to_record(self) -> dict[str, Any]:
+        return {
+            "instrument": "cocycle_twisted_fve",
+            "status": "measured",
+            "site": self.site,
+            "n_cells": self.n_cells,
+            "n_features": self.n_features,
+            "twist_is_trivial": self.twist_is_trivial,
+            "twisted_fve": self.twisted_fve,
+            "untwisted_fve": self.untwisted_fve,
+            "twist_fve_gain": self.twist_fve_gain,
+        }
+
+
+def twisted_rule_fve(
+    model: GroupModel,
+    group: FiniteGroup,
+    extension: Extension,
+) -> TwistedFveResult:
+    """I-22c: fit the twisted multiplication rule to the model's logits and report
+    how much extra variance the cocycle term explains.
+
+    The FVE target is the model's read-position logits ``resid_final @ W_U``, the
+    network's own output -- both architectures compute the logits this way (the
+    same read :func:`cocycle_ablation` uses, so ``mlp_post`` is not a logit
+    source here). The twisted rule's one-hot answer indicator reproduces the
+    Cayley table exactly; the untwisted (``f == e``) indicator errs wherever the
+    cocycle is nontrivial, so the held-out FVE gap (``twist_fve_gain``) is the
+    twist's contribution. This is the GL(2,3) [split] vs SL(2,3).C2 [non-split]
+    contrast: on the split member the trivialising transversal makes ``f == e``
+    and the gain is ~0; on the non-split member no transversal trivialises ``f``
+    and the gain is positive.
+
+    Held out over ``(q1, q2)`` cells (the cocycle label is cell-constant, so an
+    ``(a, b)``-pair split would be pseudoreplication -- banned practice 6), the
+    same discipline :func:`probe_cocycle` uses. Deliberately *not*
+    ``probes.functional_form_fit``, which holds out over ``(a, b)`` pairs and
+    would reintroduce the banned practice.
+    """
+    features = pair_features(model, group.order, site="resid_final")
+    logits = features @ _unembed(model)
+    n_classes = logits.shape[1]
+    cell, _ = cell_labels(extension, group.order)
+    table = group.cayley_table
+    twisted_design = _rule_indicator_design(
+        _predicted_products(extension, table, include_cocycle=True), n_classes
+    )
+    untwisted_design = _rule_indicator_design(
+        _predicted_products(extension, table, include_cocycle=False), n_classes
+    )
+    twisted_fve = _cell_held_out_fve(logits, twisted_design, cell)
+    untwisted_fve = _cell_held_out_fve(logits, untwisted_design, cell)
+    return TwistedFveResult(
+        site="resid_final",
+        n_cells=int(np.unique(cell).size),
+        n_features=int(twisted_design.shape[2]),
+        twist_is_trivial=bool(cocycle_is_trivial(extension)),
+        twisted_fve=float(twisted_fve),
+        untwisted_fve=float(untwisted_fve),
+        twist_fve_gain=float(twisted_fve - untwisted_fve),
+    )
+
+
 __all__ = [
     "AblationResult",
     "CocycleFit",
     "Extension",
     "ProbeResult",
     "SplitResult",
+    "TwistedFveResult",
     "build_extension",
     "cell_labels",
     "cocycle_ablation",
@@ -834,4 +1025,5 @@ __all__ = [
     "split_status",
     "subgroup_closure",
     "trivialising_transversal",
+    "twisted_rule_fve",
 ]

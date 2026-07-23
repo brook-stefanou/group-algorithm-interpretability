@@ -290,3 +290,101 @@ def test_extension_to_record_is_serialisable():
     assert record["quotient_order"] == 2
     assert record["cocycle_trivial"] is False
     assert len(record["cocycle"]) == 2
+
+
+# ---------------------------------------------------------------------------
+# I-22c: twisted-rule FVE fit (held out over (q1, q2) cells)
+# ---------------------------------------------------------------------------
+
+
+def test_leave_one_cell_out_never_splits_a_cell():
+    """The FVE fold structure is the anti-pseudoreplication guard: each fold
+    holds out one whole (q1, q2) cell, so no (a, b) row of the held-out cell ever
+    appears in that fold's training set, and every row is held out exactly once
+    (leave-one-cell-out coverage)."""
+    q8 = resolve_group("Q8")
+    normal = _first_normal(q8, 4)
+    extension = C.build_extension(q8, normal)
+    cell, _ = C.cell_labels(extension, q8.order)
+    held_once = np.zeros(cell.size, dtype=bool)
+    n_folds = 0
+    for train_mask, test_mask in C._leave_one_cell_out(cell):
+        n_folds += 1
+        # The held-out rows are exactly one cell ...
+        test_cells = set(cell[test_mask].tolist())
+        assert len(test_cells) == 1
+        # ... and that whole cell is absent from the training rows: no (a, b)
+        # pair of the held-out cell leaks into training.
+        (held,) = test_cells
+        assert not np.any(cell[train_mask] == held)
+        # Train and test partition the rows.
+        assert np.array_equal(train_mask, ~test_mask)
+        held_once |= test_mask
+    assert n_folds == np.unique(cell).size == extension.quotient_order**2
+    assert held_once.all()  # every row held out in exactly one fold
+
+
+def test_cell_held_out_fve_positive_control():
+    """A known twisted signal: logits concentrated on the true answer. The
+    twisted design (which predicts the true answer) earns near-perfect FVE, while
+    the untwisted design (which predicts a different answer on every row) earns a
+    far lower FVE -- the fit tracks the twist, not an artefact."""
+    n_classes = 4
+    cell = np.array([0, 0, 1, 1, 2, 2, 3, 3], dtype=np.int64)
+    true = np.array([0, 1, 2, 3, 0, 1, 2, 3], dtype=np.int64)
+    wrong = np.array([1, 0, 3, 2, 1, 0, 3, 2], dtype=np.int64)  # differs on every row
+    logits = np.zeros((true.size, n_classes), dtype=np.float64)
+    logits[np.arange(true.size), true] = 10.0
+    twisted = C._rule_indicator_design(true, n_classes)
+    untwisted = C._rule_indicator_design(wrong, n_classes)
+    twisted_fve = C._cell_held_out_fve(logits, twisted, cell)
+    untwisted_fve = C._cell_held_out_fve(logits, untwisted, cell)
+    assert twisted_fve > 0.99
+    assert untwisted_fve < 0.5
+    assert twisted_fve - untwisted_fve > 0.5
+
+
+def test_twisted_rule_fve_gain_is_zero_on_split_positive_signal_on_nonsplit():
+    """The GL(2,3) [split] vs SL(2,3).C2 [non-split] contrast in miniature. On the
+    split member with the trivialising transversal f == e, so the twisted and
+    untwisted rules coincide and the gain is exactly 0. On the non-split member
+    the cocycle is nontrivial, so the two rules differ and the fit is a genuine
+    measurement (finite, held out over cells)."""
+    # Split S3: f == e under the complement transversal -> gain is 0.
+    s3 = resolve_group("S3")
+    normal = _first_normal(s3, 3)
+    transversal = C.trivialising_transversal(s3, normal)
+    extension = C.build_extension(s3, normal, transversal)
+    model, group = _model("S3", 6, 1)
+    result = C.twisted_rule_fve(model, group, extension)
+    assert result.twist_is_trivial is True
+    assert result.twist_fve_gain == pytest.approx(0.0, abs=1e-9)
+    assert result.twisted_fve == pytest.approx(result.untwisted_fve, abs=1e-9)
+    assert result.n_cells == extension.quotient_order**2
+    assert result.to_record()["status"] == "measured"
+
+    # Non-split Q8: the cocycle is nontrivial, so the two rules genuinely differ.
+    q8 = resolve_group("Q8")
+    q8_normal = _first_normal(q8, 4)
+    q8_extension = C.build_extension(q8, q8_normal)
+    q8_model, q8_group = _model("Q8", 8, 4)
+    q8_result = C.twisted_rule_fve(q8_model, q8_group, q8_extension)
+    assert q8_result.twist_is_trivial is False
+    assert q8_result.n_features == 1
+    assert q8_result.n_cells == q8_extension.quotient_order**2
+    for value in (q8_result.twisted_fve, q8_result.untwisted_fve, q8_result.twist_fve_gain):
+        assert np.isfinite(value)
+    assert q8_result.twisted_fve <= 1.0 + 1e-9
+    assert q8_result.untwisted_fve <= 1.0 + 1e-9
+
+
+def test_twisted_rule_fve_runs_on_the_fc_architecture():
+    """The FVE target ``resid_final @ W_U`` is the logit path of both
+    architectures; the FC model exercises the second one."""
+    q8 = resolve_group("Q8")
+    extension = C.build_extension(q8, _first_normal(q8, 4))
+    model, group = _model("Q8", 8, 4, arch="fc")
+    result = C.twisted_rule_fve(model, group, extension)
+    assert result.site == "resid_final"
+    assert result.twist_is_trivial is False
+    assert np.isfinite(result.twist_fve_gain)
