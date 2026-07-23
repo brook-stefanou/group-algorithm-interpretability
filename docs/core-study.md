@@ -1,14 +1,3 @@
-# The core study
-
-This registers the core study: the question, the five pre-registered tests
-the design can license, the groups, the endpoints, and the run plan.  The design was fixed
-on 2026-07-15, and the run plan below — the cell list, the widths, and the
-epoch ceiling — was settled on 2026-07-20.  No analysis has been read and no
-empirical result exists yet — every number below is a plan.  Selection and
-reporting rules are in [the methodology](methodology.md), provenance rules in
-[the reproducibility contract](reproducibility.md), and the directions the
-study could grow in are in [extensions](extensions.md).
-
 ## The question, and why it's open
 
 What algorithm does a small neural network learn when it's trained to
