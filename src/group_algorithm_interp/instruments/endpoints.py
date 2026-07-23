@@ -64,7 +64,7 @@ import yaml
 from .. import stats
 from ..config import validate_config
 from ..manifest import get_git_commit, read_manifest
-from .checkpoints import parse_run_log, select_checkpoint
+from .checkpoints import run_log_rows, select_checkpoint
 from .nulls import chance_accuracy
 
 UNLEAKED_METRIC = "val/unleaked_accuracy"
@@ -116,8 +116,10 @@ def metric_series(run_dir: Path, metric: str = UNLEAKED_METRIC) -> list[tuple[in
     ascending epoch order. Reuses the shared ``run.log`` parser; rows with no
     entry for ``metric`` are skipped. Non-finite values are passed through as-is
     (a degenerate run records NaN unleaked accuracy) so the grok logic can treat
-    them as failing the bar."""
-    rows = parse_run_log(run_dir / "run.log")
+    them as failing the bar. Reads whichever log the run carries -- a plain
+    ``run.log`` or the ship hook's gzipped ``run.log.gz`` -- and yields an empty
+    series when it carries neither."""
+    rows = run_log_rows(run_dir)
     return [(row.epoch, row.metrics[metric]) for row in rows if metric in row.metrics]
 
 
@@ -563,10 +565,17 @@ def measurement_vector(
         ),
     }
 
-    rows_list = parse_run_log(run_dir / "run.log") if (run_dir / "run.log").is_file() else []
+    rows_list = run_log_rows(run_dir)
     if not rows_list:
+        # No training log survives (the earliest flat-schema shipped runs kept
+        # none): the series-based endpoints cannot be computed. The record is
+        # still marked skipped, but the dip-aware checkpoint pick recorded in
+        # selection.json is attached so the run is not a total loss.
         record["status"] = "skipped"
         record["reason"] = "run.log absent or has no epoch metric rows"
+        record["checkpoint_selection"] = select_checkpoint(
+            run_dir, metric=endpoint_metric, threshold=threshold
+        ).to_record()
         return record
     rows = {row.epoch: row.metrics for row in rows_list}
 

@@ -19,6 +19,8 @@ present, e.g. in CI).
 
 from __future__ import annotations
 
+import gzip
+import json
 import math
 from pathlib import Path
 
@@ -28,7 +30,11 @@ from group_algorithm_interp.config import ExperimentConfig, LoggingConfig, Proje
 from group_algorithm_interp.experiment import GroupGeneralizationExperiment
 from group_algorithm_interp.instruments.checkpoints import (
     parse_run_log,
+    resolve_checkpoint,
+    resolve_run_log,
+    run_log_rows,
     select_checkpoint,
+    selection_from_json,
 )
 
 _ARCHIVE_RUN = (
@@ -255,6 +261,197 @@ def test_missing_run_log_selects_nothing(tmp_path, old_style_run):
 # ---------------------------------------------------------------------------
 # Real salvaged campaign run (parsing-path smoke on production data)
 # ---------------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------------
+# Curated shipped layout (flat checkpoints + selection.json; log gzipped/absent)
+#
+# The ship hook prunes each run into a curated layout the instruments must read
+# directly: checkpoints FLAT at the run-dir root (no ``checkpoints/``), the log
+# gzipped as ``run.log.gz`` or gone entirely, and the dip-aware pick recorded in
+# ``selection.json`` under one of two shapes. select_checkpoint takes the pick
+# straight from selection.json rather than recomputing over files that no longer
+# exist in that layout.
+# ---------------------------------------------------------------------------
+
+
+def _curated_run(run_dir: Path, *, selection: dict, window: int = 5) -> Path:
+    """A minimal curated run dir: a resolved config (so the rule can be named),
+    a ``selection.json``, and flat stub checkpoints for every filename the
+    selection references. No ``checkpoints/`` dir and no ``run.log``."""
+    run_dir.mkdir(parents=True, exist_ok=True)
+    (run_dir / "resolved_config.yaml").write_text(f"snapshot:\n  final_window_epochs: {window}\n")
+    (run_dir / "selection.json").write_text(json.dumps(selection))
+    names: set[str] = set()
+
+    def _collect(node: object) -> None:
+        if isinstance(node, dict):
+            filename = node.get("checkpoint") or node.get("filename")
+            if isinstance(filename, str):
+                names.add(filename)
+            for value in node.values():
+                _collect(value)
+
+    _collect(selection)
+    for name in names:
+        (run_dir / name).write_bytes(b"stub")
+    return run_dir
+
+
+def _selections_stable_end(checkpoint: str | None, *, reason: str | None = None) -> dict:
+    """Flat-shape selection.json: ``selections.stable_end`` is a full
+    CheckpointSelection.to_record()."""
+    return {
+        "selections": {
+            "stable_end": {
+                "rule": "final_window",
+                "metric": "val/accuracy",
+                "threshold": 0.99,
+                "checkpoint": checkpoint,
+                "epoch": 11 if checkpoint else None,
+                "metric_value": 1.0 if checkpoint else None,
+                "substitution": None,
+                "rejected": [],
+                "reason": reason,
+            }
+        }
+    }
+
+
+def _categories_stable_end(entry: dict | None, *, anomalies: list[str] | None = None) -> dict:
+    """ship_runs.py-shape selection.json: ``categories.stable_end`` is a lighter
+    curated entry (or None)."""
+    return {
+        "threshold": 0.99,
+        "leaked_metric_key": "val/accuracy",
+        "categories": {"stable_end": entry},
+        "anomalies": anomalies or [],
+    }
+
+
+def test_curated_selections_schema_grokked_takes_recorded_pick(tmp_path):
+    run = _curated_run(tmp_path / "sel-grok", selection=_selections_stable_end("final_epoch_11.pt"))
+    selection = select_checkpoint(run)
+    assert selection.path is not None and selection.path.name == "final_epoch_11.pt"
+    assert selection.path.parent == run  # resolved FLAT, not under checkpoints/
+    assert selection.epoch == 11
+    assert selection.metric_value == 1.0
+    assert selection.rule == "final_window"
+    assert selection.substitution is None
+    assert selection.reason is None
+
+
+def test_curated_selections_schema_censored_selects_nothing(tmp_path):
+    run = _curated_run(
+        tmp_path / "sel-cens",
+        selection=_selections_stable_end(None, reason="a censored or never-stable run"),
+    )
+    selection = select_checkpoint(run)
+    assert selection.path is None
+    assert selection.epoch is None
+    assert selection.reason == "a censored or never-stable run"
+
+
+def test_curated_categories_schema_grokked_fills_missing_fields(tmp_path):
+    entry = {
+        "epoch": 11,
+        "metric_key": "val/accuracy",
+        "metric_value": 0.995,
+        "filename": "step_11.pt",
+    }
+    run = _curated_run(tmp_path / "cat-grok", selection=_categories_stable_end(entry))
+    selection = select_checkpoint(run)
+    assert selection.path is not None and selection.path.name == "step_11.pt"
+    assert selection.epoch == 11
+    assert selection.metric_value == 0.995
+    assert selection.metric == "val/accuracy"
+    assert selection.threshold == 0.99
+    assert selection.rule == "final_window"  # inferred from the resolved config
+
+
+def test_curated_categories_schema_censored_uses_anomaly_reason(tmp_path):
+    run = _curated_run(
+        tmp_path / "cat-cens",
+        selection=_categories_stable_end(
+            None, anomalies=["stable_end: no checkpoint clears the bar"]
+        ),
+    )
+    selection = select_checkpoint(run)
+    assert selection.path is None
+    assert selection.reason == "stable_end: no checkpoint clears the bar"
+
+
+def test_curated_run_needs_no_run_log(tmp_path):
+    """The 288 earliest shipped runs kept no log at all; the pick still resolves
+    from selection.json, and the log resolvers degrade cleanly."""
+    run = _curated_run(tmp_path / "nolog", selection=_selections_stable_end("final_epoch_11.pt"))
+    assert not (run / "run.log").exists() and not (run / "run.log.gz").exists()
+    assert resolve_run_log(run) is None
+    assert run_log_rows(run) == []
+    selection = select_checkpoint(run)
+    assert selection.path is not None and selection.path.name == "final_epoch_11.pt"
+
+
+def test_curated_checkpoint_named_but_missing_on_disk(tmp_path):
+    run = tmp_path / "missing"
+    run.mkdir()
+    (run / "resolved_config.yaml").write_text("snapshot:\n  final_window_epochs: 5\n")
+    (run / "selection.json").write_text(json.dumps(_selections_stable_end("gone.pt")))
+    # Deliberately do not write gone.pt.
+    selection = select_checkpoint(run)
+    assert selection.path is None
+    assert selection.reason is not None and "not on disk" in selection.reason
+
+
+def test_selection_from_json_absent_returns_none(tmp_path):
+    run = tmp_path / "plain"
+    run.mkdir()
+    (run / "resolved_config.yaml").write_text("snapshot:\n  final_window_epochs: 5\n")
+    assert selection_from_json(run) is None
+
+
+# ---------------------------------------------------------------------------
+# Gzipped log reading + flat/nested checkpoint resolution
+# ---------------------------------------------------------------------------
+
+
+def test_parse_run_log_reads_gzip(tmp_path):
+    """The ship hook gzips the log; parse_run_log reads run.log.gz transparently."""
+    text = "epoch 0 | {'val/accuracy': 0.5}\nepoch 1 | {'val/accuracy': 0.9}\n"
+    gz_path = tmp_path / "run.log.gz"
+    with gzip.open(gz_path, "wt") as handle:
+        handle.write(text)
+    rows = parse_run_log(gz_path)
+    assert [row.epoch for row in rows] == [0, 1]
+    assert rows[1].metrics["val/accuracy"] == 0.9
+
+
+def test_resolve_run_log_prefers_plain_then_gz(tmp_path):
+    run = tmp_path / "logs"
+    run.mkdir()
+    assert resolve_run_log(run) is None
+    gz = run / "run.log.gz"
+    with gzip.open(gz, "wt") as handle:
+        handle.write("epoch 0 | {'val/accuracy': 1.0}\n")
+    assert resolve_run_log(run) == gz
+    plain = run / "run.log"
+    plain.write_text("epoch 0 | {'val/accuracy': 1.0}\n")
+    assert resolve_run_log(run) == plain  # plain wins when both are present
+    assert len(run_log_rows(run)) == 1
+
+
+def test_resolve_checkpoint_flat_first_then_nested(tmp_path):
+    run = tmp_path / "ckpts"
+    run.mkdir()
+    assert resolve_checkpoint(run, "final.pt") is None
+    assert resolve_checkpoint(run, None) is None
+    nested = run / "checkpoints"
+    nested.mkdir()
+    (nested / "final.pt").write_bytes(b"old")
+    assert resolve_checkpoint(run, "final.pt") == nested / "final.pt"  # old training layout
+    flat = run / "final.pt"
+    flat.write_bytes(b"new")
+    assert resolve_checkpoint(run, "final.pt") == flat  # curated layout wins when both exist
 
 
 @pytest.mark.skipif(not _ARCHIVE_RUN.is_dir(), reason="results-archive/ not present")

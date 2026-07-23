@@ -324,6 +324,55 @@ def test_measurement_vector_skips_empty_log(tmp_path):
     assert record["status"] == "skipped"
 
 
+def test_measurement_vector_reads_gzipped_log(tmp_path):
+    """A shipped run's log survives only as run.log.gz; the endpoint series is
+    read straight from it, so the run measures fully."""
+    import gzip
+
+    run = _write_run(tmp_path / "gz", unleaked_curve=_grok_curve(onset=30, total=200))
+    plain = run / "run.log"
+    with gzip.open(run / "run.log.gz", "wt") as handle:
+        handle.write(plain.read_text())
+    plain.unlink()
+    record = measurement_vector(run)
+    assert record["status"] == "measured"
+    assert record["epochs_to_grok"]["epoch"] == 30
+
+
+def test_measurement_vector_no_log_still_carries_selection(tmp_path):
+    """A curated run with no log at all degrades to skipped for the series-based
+    endpoints, but still attaches the checkpoint pick recorded in
+    selection.json rather than dropping the run entirely."""
+    import json
+
+    run = _write_run(tmp_path / "nolog2", unleaked_curve=_grok_curve(10, 50))
+    (run / "run.log").unlink()
+    (run / "final_epoch_49.pt").write_bytes(b"stub")  # flat curated checkpoint
+    (run / "selection.json").write_text(
+        json.dumps(
+            {
+                "selections": {
+                    "stable_end": {
+                        "rule": "final_gate",
+                        "metric": "val/accuracy",
+                        "threshold": 0.99,
+                        "checkpoint": "final_epoch_49.pt",
+                        "epoch": 49,
+                        "metric_value": 1.0,
+                        "substitution": None,
+                        "rejected": [],
+                        "reason": None,
+                    }
+                }
+            }
+        )
+    )
+    record = measurement_vector(run)
+    assert record["status"] == "skipped"
+    assert record["checkpoint_selection"]["checkpoint"] == "final_epoch_49.pt"
+    assert record["checkpoint_selection"]["epoch"] == 49
+
+
 def test_within_pair_endpoints_pairs_on_seed(tmp_path):
     a_dirs, b_dirs = [], []
     for seed in range(4):
