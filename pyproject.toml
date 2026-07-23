@@ -26,6 +26,10 @@ dependencies = [
     "scikit-learn>=1.4",
 ]
 
+[project.urls]
+Homepage = "https://github.com/brook-stefanou/group-algorithm-interpretability"
+Repository = "https://github.com/brook-stefanou/group-algorithm-interpretability"
+
 # SageMath/GAP is needed ONLY to *generate* group artifacts
 # (`scripts/export_group.py`). Training, analysis, and the whole test suite run
 # against already-exported `.npz` artifacts and never import Sage — so this is an
