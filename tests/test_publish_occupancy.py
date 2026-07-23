@@ -83,6 +83,232 @@ def test_load_campaign_lookup_missing_file(tmp_path):
     assert publish_module._load_campaign_lookup(tmp_path / "nope.yaml") == {}
 
 
+# ---------------------------------------------------------------------------
+# _grok_fields -- deriving grokked/censored/epochs_to_grok post hoc for an
+# already-finished run. Primary source is the durable selection.json (the
+# prune-time grok summary); run.log is a fallback only when it is absent.
+# ---------------------------------------------------------------------------
+
+
+def _write_selection_run_dir(
+    parent: Path,
+    name: str,
+    *,
+    selection: dict[str, Any],
+    generalize_metric: str = "unleaked_accuracy",
+) -> Path:
+    run_dir = parent / name
+    run_dir.mkdir()
+    (run_dir / "selection.json").write_text(json.dumps(selection))
+    (run_dir / "manifest.yaml").write_text(
+        f"dataset:\n  leakage:\n    generalize_metric: {generalize_metric}\n"
+    )
+    return run_dir
+
+
+def _write_categories_run_dir(
+    parent: Path,
+    name: str,
+    *,
+    censored: bool,
+    leaked_onset_epoch: int | None,
+    unleaked_onset_epoch: int | None,
+    unleaked_metric_key: str | None = "val/unleaked_accuracy",
+) -> Path:
+    """A run dir with the ship_runs.py `categories` selection.json shape (the
+    majority of the real campaign)."""
+    run_dir = parent / name
+    run_dir.mkdir()
+
+    def _onset(epoch: int | None, metric_key: str | None) -> dict[str, Any] | None:
+        if epoch is None:
+            return None
+        return {"epoch": epoch, "filename": f"step_{epoch}.pt", "metric_key": metric_key}
+
+    selection = {
+        "run_id": name,
+        "leaked_metric_key": "val/accuracy",
+        "unleaked_metric_key": unleaked_metric_key,
+        "threshold": 0.99,
+        "censored": censored,
+        "interrupted": False,
+        "categories": {
+            "first": {"epoch": 0, "filename": "step_0.pt"},
+            "intermediate": [],
+            "last": {"epoch": 59999, "filename": "final.pt"},
+            "leaked_onset": _onset(leaked_onset_epoch, "val/accuracy"),
+            "unleaked_onset": _onset(unleaked_onset_epoch, unleaked_metric_key),
+            "stable_end": _onset(leaked_onset_epoch, "val/accuracy"),
+        },
+        "anomalies": [],
+    }
+    (run_dir / "selection.json").write_text(json.dumps(selection))
+    return run_dir
+
+
+def _write_run_log_dir(
+    parent: Path, name: str, *, series: list[tuple[int, float]], ceiling: int
+) -> Path:
+    run_dir = parent / name
+    run_dir.mkdir()
+    (run_dir / "resolved_config.yaml").write_text(f"optim:\n  epochs: {ceiling}\n")
+    lines = [f"epoch {epoch} | {{'val/unleaked_accuracy': {value}}}\n" for epoch, value in series]
+    (run_dir / "run.log").write_text("".join(lines))
+    return run_dir
+
+
+def test_grok_fields_reads_the_unleaked_cross_epoch_from_selection_json(tmp_path):
+    """Unleaked is the study's canonical generalisation metric, so grok maps
+    to the unleaked fields even when the leaked ones would say otherwise."""
+    run_dir = _write_selection_run_dir(
+        tmp_path,
+        "grokked-run",
+        selection={
+            "censored_leaked": False,
+            "censored_unleaked": False,
+            "leaked_cross_epoch": 26228,
+            "unleaked_cross_epoch": 27142,
+        },
+    )
+    assert publish_module._grok_fields(run_dir) == {
+        "grokked": True,
+        "censored": False,
+        "epochs_to_grok": 27142,
+    }
+
+
+def test_grok_fields_reports_censored_from_selection_json(tmp_path):
+    """A run censored on the unleaked metric is censored, whatever the leaked
+    metric did -- and carries no epoch (null unleaked_cross_epoch)."""
+    run_dir = _write_selection_run_dir(
+        tmp_path,
+        "censored-run",
+        selection={
+            "censored_leaked": False,
+            "censored_unleaked": True,
+            "leaked_cross_epoch": 30000,
+            "unleaked_cross_epoch": None,
+        },
+    )
+    assert publish_module._grok_fields(run_dir) == {
+        "grokked": False,
+        "censored": True,
+        "epochs_to_grok": None,
+    }
+
+
+def test_grok_fields_uses_leaked_fields_when_unleaked_subset_was_empty(tmp_path):
+    """When the manifest declares the raw-accuracy fallback (empty unleaked
+    subset), the leaked grok fields are canonical -- matching the metric
+    training itself used."""
+    run_dir = _write_selection_run_dir(
+        tmp_path,
+        "raw-fallback-run",
+        selection={
+            "censored_leaked": False,
+            "censored_unleaked": True,
+            "leaked_cross_epoch": 1234,
+            "unleaked_cross_epoch": None,
+        },
+        generalize_metric="raw_test_accuracy",
+    )
+    assert publish_module._grok_fields(run_dir) == {
+        "grokked": True,
+        "censored": False,
+        "epochs_to_grok": 1234,
+    }
+
+
+def test_grok_fields_reads_unleaked_onset_from_categories_shape(tmp_path):
+    """ship_runs.py's `categories` shape: canonical grok comes from the
+    unleaked onset snapshot, not the leaked-based top-level `censored`."""
+    run_dir = _write_categories_run_dir(
+        tmp_path,
+        "grokked-run",
+        censored=False,
+        leaked_onset_epoch=35800,
+        unleaked_onset_epoch=37400,
+    )
+    assert publish_module._grok_fields(run_dir) == {
+        "grokked": True,
+        "censored": False,
+        "epochs_to_grok": 37400,
+    }
+
+
+def test_grok_fields_categories_unleaked_censored_despite_leaked_grok(tmp_path):
+    """A run that crossed the leaked bar (top-level censored False) but never
+    the unleaked one is censored on the canonical unleaked metric."""
+    run_dir = _write_categories_run_dir(
+        tmp_path,
+        "leaked-only-run",
+        censored=False,
+        leaked_onset_epoch=35800,
+        unleaked_onset_epoch=None,
+    )
+    assert publish_module._grok_fields(run_dir) == {
+        "grokked": False,
+        "censored": True,
+        "epochs_to_grok": None,
+    }
+
+
+def test_grok_fields_categories_fully_censored(tmp_path):
+    run_dir = _write_categories_run_dir(
+        tmp_path,
+        "censored-run",
+        censored=True,
+        leaked_onset_epoch=None,
+        unleaked_onset_epoch=None,
+    )
+    assert publish_module._grok_fields(run_dir) == {
+        "grokked": False,
+        "censored": True,
+        "epochs_to_grok": None,
+    }
+
+
+def test_grok_fields_categories_uses_leaked_when_unleaked_subset_empty(tmp_path):
+    """Null unleaked_metric_key (empty unleaked subset) makes the leaked onset
+    canonical, using the leaked-based top-level censored."""
+    run_dir = _write_categories_run_dir(
+        tmp_path,
+        "raw-fallback-run",
+        censored=False,
+        leaked_onset_epoch=1234,
+        unleaked_onset_epoch=None,
+        unleaked_metric_key=None,
+    )
+    assert publish_module._grok_fields(run_dir) == {
+        "grokked": True,
+        "censored": False,
+        "epochs_to_grok": 1234,
+    }
+
+
+def test_grok_fields_falls_back_to_run_log_without_selection_json(tmp_path):
+    """No selection.json (an un-shipped local run) -> the run.log sustained
+    onset rule, the live sidecar's approximation."""
+    series = [(e, 0.5) for e in range(5)] + [(e, 0.995) for e in range(5, 12)]
+    run_dir = _write_run_log_dir(tmp_path, "unshipped-run", series=series, ceiling=100)
+    assert publish_module._grok_fields(run_dir) == {
+        "grokked": True,
+        "censored": False,
+        "epochs_to_grok": 5,
+    }
+
+
+def test_grok_fields_is_none_without_selection_json_or_run_log(tmp_path):
+    run_dir = tmp_path / "bare"
+    run_dir.mkdir()
+    (run_dir / "resolved_config.yaml").write_text("optim:\n  epochs: 100\n")
+    assert publish_module._grok_fields(run_dir) is None
+
+
+def test_grok_fields_is_none_for_a_missing_run_dir(tmp_path):
+    assert publish_module._grok_fields(tmp_path / "does-not-exist") is None
+
+
 _SCRIPT_PATH = Path(__file__).resolve().parent.parent / "scripts" / "measure_occupancy.py"
 
 
@@ -303,6 +529,47 @@ def test_publish_records_never_touches_artifact_apis(measured):
     assert not hasattr(fake, "Table")
     for run in fake.runs:
         assert not hasattr(run, "log_artifact")
+
+
+def test_publish_records_adds_grok_fields_read_from_runs_root(tmp_path, measured):
+    """The published per-run summary carries the same grokked/censored/
+    epochs_to_grok fields the live sidecar writes, derived here from a durable
+    selection.json found under an explicit runs_root -- exercising the whole
+    wiring from publish_records down to _grok_fields."""
+    records, _ = measured
+    record = records[0]
+    runs_root = tmp_path / "runs"
+    runs_root.mkdir()
+    _write_selection_run_dir(
+        runs_root,
+        str(record["run_id"]),
+        selection={
+            "censored_leaked": False,
+            "censored_unleaked": False,
+            "leaked_cross_epoch": 26228,
+            "unleaked_cross_epoch": 27142,
+        },
+    )
+
+    fake = _FakeWandb()
+    publish_records([record], project="p", wandb_module=fake, runs_root=runs_root)
+    summary = fake.runs[0].summary
+    assert summary["grokked"] is True
+    assert summary["censored"] is False
+    assert summary["epochs_to_grok"] == 27142
+
+
+def test_publish_records_omits_grok_fields_without_a_matching_run_dir(tmp_path, measured):
+    """No matching run directory under runs_root (an empty root here) degrades
+    to simply omitting the fields -- never a failure."""
+    records, _ = measured
+    empty_runs_root = tmp_path / "empty-runs"
+    empty_runs_root.mkdir()
+    fake = _FakeWandb()
+    publish_records([records[0]], project="p", wandb_module=fake, runs_root=empty_runs_root)
+    assert "grokked" not in fake.runs[0].summary
+    assert "censored" not in fake.runs[0].summary
+    assert "epochs_to_grok" not in fake.runs[0].summary
 
 
 def test_publish_records_skips_unmeasured_records(measured):

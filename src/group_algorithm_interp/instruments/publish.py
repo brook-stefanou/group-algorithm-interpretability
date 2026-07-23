@@ -29,6 +29,29 @@ W&B afterwards. Hard constraints, in order of importance:
   ``(order, index, width)`` and added to config and tags; a
   ``"campaign-v2"`` tag marks every run this publisher writes as restart
   data.
+* **Grok fields line up with the live sidecar's.** Every per-run summary also
+  gets ``grokked``/``censored``/``epochs_to_grok`` -- the same three fields
+  ``scripts/stream_runs.py``'s ``GrokTracker`` writes for a run it streamed
+  live. Since every run this publisher measures has already finished (and its
+  ``run.log`` is discarded at prune/ship time, surviving nowhere for the
+  campaign), these are derived post hoc from the run's **durable**
+  ``selection.json`` -- the prune-time grok summary present for every shipped
+  run (:func:`_grok_fields`). The study's canonical generalisation metric is
+  the transpose-**unleaked** accuracy (the default ``endpoints`` /
+  live-sidecar key), so grok is reported on the unleaked signal -- except on a
+  run whose unleaked held-out subset was empty (training then used the
+  leaked/raw bar), where the leaked signal is canonical, mirroring
+  ``scripts/stream_runs.py``'s own metric selection. Two ``selection.json``
+  shapes coexist in the campaign and both are read (:func:`_grok_fields_from_selection`):
+  the flat shape's ``unleaked_cross_epoch`` (exact first crossing) and
+  ``scripts/ship_runs.py``'s current ``categories.unleaked_onset`` (the
+  snapshot at/after onset). Either is a first-crossing/onset proxy for -- not
+  identical to -- the sustained-onset ``endpoints.epochs_to_grok`` would
+  compute from a (now absent) ``run.log``. ``run.log`` is used only as a
+  fallback when ``selection.json`` is absent (an un-shipped local run).
+  Looked up under ``runs_root`` (default: the repository's ``runs/``) by the
+  record's own ``run_id``; a run with neither ``selection.json`` nor a
+  readable ``run.log`` publishes without these fields rather than failing.
 
 ``wandb`` is imported lazily and only past the credential gate; the module
 import itself never touches the network or requires the package.
@@ -36,6 +59,7 @@ import itself never touches the network or requires the package.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 from pathlib import Path
@@ -43,10 +67,23 @@ from typing import Any
 
 import yaml
 
+from .endpoints import RAW_METRIC, UNLEAKED_METRIC, epochs_to_grok, metric_series
 from .report import ARGUMENTS, FORMS
+
+# The manifest's declared generalisation metric whose presence means the
+# transpose-unleaked held-out subset was empty, so training fell back to the
+# leaked (raw) accuracy bar -- the one case the leaked grok fields, not the
+# unleaked ones, are canonical (mirrors scripts/stream_runs.py's build_run_spec).
+_RAW_FALLBACK_GENERALIZE_METRIC = "raw_test_accuracy"
 
 OCCUPANCY_JOB_TYPE = "occupancy"
 POOLED_JOB_TYPE = "occupancy-pooled"
+
+# The repository's own runs/ directory, resolved the same way
+# DEFAULT_CAMPAIGN_CONFIG is (relative to this file, not the caller's cwd) --
+# where a record's run_id resolves to a run directory unless runs_root is
+# overridden.
+DEFAULT_RUNS_ROOT = Path(__file__).resolve().parents[3] / "runs"
 
 # The same pre-registered cell list `scripts/stream_runs.py` reads, used here
 # only to enrich published runs with cosmetic-but-useful campaign metadata
@@ -181,6 +218,128 @@ def _flat_summary(record: dict[str, Any]) -> dict[str, Any]:
     return summary
 
 
+def _canonical_grok_is_leaked(run_dir: Path) -> bool:
+    """Whether the leaked (raw) accuracy is the run's canonical generalisation
+    metric -- true only when its manifest declares
+    ``dataset.leakage.generalize_metric == "raw_test_accuracy"`` (the empty
+    unleaked-subset case training itself fell back on). Defaults to ``False``
+    (unleaked canonical, the study default) when the manifest is absent or
+    unreadable, mirroring ``scripts/stream_runs.py``'s own default."""
+    try:
+        manifest = yaml.safe_load((run_dir / "manifest.yaml").read_text()) or {}
+    except (OSError, yaml.YAMLError):
+        return False
+    leakage = ((manifest.get("dataset") or {}).get("leakage")) or {}
+    return leakage.get("generalize_metric") == _RAW_FALLBACK_GENERALIZE_METRIC
+
+
+def _grok_result(censored: bool, epoch: Any) -> dict[str, Any]:
+    return {"grokked": not censored, "censored": censored, "epochs_to_grok": epoch}
+
+
+def _grok_fields_from_selection(run_dir: Path) -> dict[str, Any] | None:
+    """``grokked``/``censored``/``epochs_to_grok`` read from a run's durable
+    ``selection.json`` (the prune-time grok summary), or ``None`` when it is
+    absent, unreadable, or in neither recognised shape.
+
+    Canonical metric is the transpose-unleaked accuracy -- the study default
+    and the live sidecar's key -- so grok is reported on the unleaked signal,
+    except on a run whose unleaked held-out subset was empty (training then
+    used the leaked/raw bar), detected from the manifest
+    (:func:`_canonical_grok_is_leaked`) or a null ``unleaked_metric_key``.
+
+    Two selection.json shapes exist in the campaign and both are handled:
+
+    * The flat shape (``*_cross_epoch`` + ``censored_*`` per metric): the
+      ``*_cross_epoch`` is the exact first epoch that crossed the ``0.99``
+      bar, mapped straight through.
+    * ``scripts/ship_runs.py``'s current shape (a ``categories`` block whose
+      ``leaked_onset``/``unleaked_onset`` entries are the snapshot at/after
+      the onset, or ``None`` when that metric never crossed). Its top-level
+      ``censored`` is leaked-based, so the canonical unleaked grok is read
+      from whether ``categories.unleaked_onset`` landed, and its epoch is the
+      snapshot-aligned onset.
+
+    Either way the reported epoch is a first-crossing / onset-snapshot proxy
+    for the sustained-onset ``endpoints.epochs_to_grok`` would compute from a
+    (now discarded, campaign-wide) ``run.log``."""
+    selection_path = run_dir / "selection.json"
+    if not selection_path.is_file():
+        return None
+    try:
+        data = json.loads(selection_path.read_text())
+    except (OSError, ValueError):
+        return None
+    if not isinstance(data, dict):
+        return None
+
+    # Flat shape: exact per-metric cross epochs.
+    if "unleaked_cross_epoch" in data or "leaked_cross_epoch" in data:
+        prefix = "leaked" if _canonical_grok_is_leaked(run_dir) else "unleaked"
+        if f"censored_{prefix}" not in data or f"{prefix}_cross_epoch" not in data:
+            return None
+        return _grok_result(bool(data[f"censored_{prefix}"]), data[f"{prefix}_cross_epoch"])
+
+    # ship_runs.py shape: onset snapshots under `categories`.
+    categories = data.get("categories")
+    if isinstance(categories, dict):
+        use_leaked = data.get("unleaked_metric_key") is None or _canonical_grok_is_leaked(run_dir)
+        if use_leaked:
+            # ship_runs' top-level `censored` is exactly `leaked_onset is None`.
+            onset = categories.get("leaked_onset")
+            censored = bool(data.get("censored", onset is None))
+        else:
+            onset = categories.get("unleaked_onset")
+            censored = onset is None
+        epoch = onset.get("epoch") if isinstance(onset, dict) else None
+        return _grok_result(censored, epoch)
+
+    return None
+
+
+def _grok_fields_from_run_log(run_dir: Path) -> dict[str, Any] | None:
+    """Fallback grok fields for a run with no ``selection.json`` (an un-shipped
+    local run): the pre-registered sustained-onset rule
+    (:func:`group_algorithm_interp.instruments.endpoints.epochs_to_grok`) run
+    over the run's own ``run.log`` -- the same onset the live sidecar's
+    ``GrokTracker`` approximates online. Falls back to the raw accuracy series
+    when the transpose-unleaked series has no rows at all (an empty unleaked
+    held-out subset), mirroring :func:`endpoints.measurement_vector`'s own
+    fallback. ``None`` when there is nothing to read -- no ``run.log``, or an
+    unreadable/missing ``optim.epochs``."""
+    log_path = run_dir / "run.log"
+    config_path = run_dir / "resolved_config.yaml"
+    if not log_path.is_file() or not config_path.is_file():
+        return None
+    try:
+        ceiling = int(yaml.safe_load(config_path.read_text())["optim"]["epochs"])
+    except (OSError, KeyError, TypeError, ValueError, yaml.YAMLError):
+        return None
+    series = metric_series(run_dir, metric=UNLEAKED_METRIC)
+    metric = UNLEAKED_METRIC
+    if not series:
+        series = metric_series(run_dir, metric=RAW_METRIC)
+        metric = RAW_METRIC
+    grok = epochs_to_grok(series, ceiling=ceiling, metric=metric)
+    return {
+        "grokked": not grok.censored,
+        "censored": grok.censored,
+        "epochs_to_grok": grok.epoch,
+    }
+
+
+def _grok_fields(run_dir: Path) -> dict[str, Any] | None:
+    """The live sidecar's ``grokked``/``censored``/``epochs_to_grok`` summary
+    fields for one already-finished run, derived from its **durable**
+    ``selection.json`` (the prune-time grok summary present for every shipped
+    run) so a run whose ``run.log`` no longer survives -- true of the whole
+    campaign -- still carries them. Falls back to the ``run.log``-based
+    sustained-onset rule only when ``selection.json`` is absent (an un-shipped
+    local run). ``None`` when neither source can be read, so a publish never
+    fails for want of these extra fields."""
+    return _grok_fields_from_selection(run_dir) or _grok_fields_from_run_log(run_dir)
+
+
 def _run_config(record: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
     provenance = record.get("provenance", {})
     return {
@@ -266,6 +425,7 @@ def publish_records(
     tags: list[str] | None = None,
     wandb_module: Any | None = None,
     campaign_config: Path | None = None,
+    runs_root: Path | None = None,
 ) -> dict[str, int]:
     """Publish measured occupancy records (and optionally pooled records) as
     metrics-only W&B runs. Skipped records are counted, never published --
@@ -281,11 +441,17 @@ def publish_records(
     quarantined v1 replays carry ``"quarantined-v1"``/``"campaign-v1"``
     instead, from a separate one-off tagging pass).
 
+    Every per-run summary also gets ``grokked``/``censored``/``epochs_to_grok``
+    (:func:`_grok_fields`), looked up under ``runs_root`` (default:
+    :data:`DEFAULT_RUNS_ROOT`) by the record's own ``run_id`` -- absent when
+    that run's directory or ``run.log`` cannot be found, never a failure.
+
     ``wandb_module`` is an injectable seam for tests (mirroring the injectable
     boundaries of ``scripts/sync_runs.py``); production callers leave it
     ``None`` and get the real SDK via :func:`_import_wandb`."""
     wandb = wandb_module if wandb_module is not None else _import_wandb()
     lookup = _load_campaign_lookup(campaign_config or DEFAULT_CAMPAIGN_CONFIG)
+    resolved_runs_root = runs_root or DEFAULT_RUNS_ROOT
     published = 0
     skipped = 0
     for record in records:
@@ -303,6 +469,10 @@ def publish_records(
             f"s{_format_seed(record.get('seed'))}",
         )
         computed_tags = _computed_tags(context, context["cell_name"] or group_info.get("name"))
+        run_summary = _flat_summary(record)
+        grok = _grok_fields(resolved_runs_root / str(record["run_id"]))
+        if grok is not None:
+            run_summary.update(grok)
         _publish_one(
             wandb,
             run_id=record["run_id"],
@@ -314,7 +484,7 @@ def publish_records(
             tags=list(dict.fromkeys([*(tags or []), *computed_tags])),
             config=_run_config(record, context),
             record=record,
-            summary=_flat_summary(record),
+            summary=run_summary,
         )
         published += 1
 
