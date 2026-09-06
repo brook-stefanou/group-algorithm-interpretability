@@ -1,0 +1,561 @@
+{
+  "instrument": "c1-occupancy-within-pair-contrast",
+  "statistic": "tv_to_own_analytic_null_paired_difference_a_minus_b",
+  "note": "Mirrors report.null_gate's statistic on trained models; paired over seeds measured in both members; CI via stats.bootstrap_ci.",
+  "pairs": [
+    {
+      "pair": "(27,3)/(27,4) w256",
+      "tier": "C1 (pinned width; below floor \u2014 thin)",
+      "member_a": {
+        "order": 27,
+        "index": 3,
+        "width": 256
+      },
+      "member_b": {
+        "order": 27,
+        "index": 4,
+        "width": 256
+      },
+      "n_a_measured": 6,
+      "n_b_measured": 3,
+      "n_paired": 0,
+      "differences": {
+        "left_full": {
+          "mean": null,
+          "std": null,
+          "bootstrap_ci_95": [
+            null,
+            null
+          ],
+          "n": 0
+        },
+        "left_nontrivial": {
+          "mean": null,
+          "std": null,
+          "bootstrap_ci_95": [
+            null,
+            null
+          ],
+          "n": 0
+        },
+        "right_full": {
+          "mean": null,
+          "std": null,
+          "bootstrap_ci_95": [
+            null,
+            null
+          ],
+          "n": 0
+        },
+        "right_nontrivial": {
+          "mean": null,
+          "std": null,
+          "bootstrap_ci_95": [
+            null,
+            null
+          ],
+          "n": 0
+        }
+      }
+    },
+    {
+      "pair": "(64,74)/(64,80)",
+      "tier": "C1",
+      "member_a": {
+        "order": 64,
+        "index": 74,
+        "width": 128
+      },
+      "member_b": {
+        "order": 64,
+        "index": 80,
+        "width": 128
+      },
+      "n_a_measured": 50,
+      "n_b_measured": 50,
+      "n_paired": 50,
+      "differences": {
+        "left_full": {
+          "mean": 1.7490953994330205e-05,
+          "std": 0.05006059349885354,
+          "bootstrap_ci_95": [
+            -0.013916822932744146,
+            0.013687211681060962
+          ],
+          "n": 50
+        },
+        "left_nontrivial": {
+          "mean": -0.004241597679711391,
+          "std": 0.06888911947528736,
+          "bootstrap_ci_95": [
+            -0.023208523592158498,
+            0.013969785325808235
+          ],
+          "n": 50
+        },
+        "right_full": {
+          "mean": 0.00012435671324729337,
+          "std": 0.047835621567500715,
+          "bootstrap_ci_95": [
+            -0.01314107520710289,
+            0.01304336661345973
+          ],
+          "n": 50
+        },
+        "right_nontrivial": {
+          "mean": -0.00666615125936818,
+          "std": 0.06926750592995291,
+          "bootstrap_ci_95": [
+            -0.02574467470678337,
+            0.011841384578160197
+          ],
+          "n": 50
+        }
+      }
+    },
+    {
+      "pair": "(64,228)/(64,229)",
+      "tier": "C1",
+      "member_a": {
+        "order": 64,
+        "index": 228,
+        "width": 128
+      },
+      "member_b": {
+        "order": 64,
+        "index": 229,
+        "width": 128
+      },
+      "n_a_measured": 50,
+      "n_b_measured": 49,
+      "n_paired": 49,
+      "differences": {
+        "left_full": {
+          "mean": 0.002816669478657783,
+          "std": 0.05669461217654716,
+          "bootstrap_ci_95": [
+            -0.012967347593142673,
+            0.018887373110591472
+          ],
+          "n": 49
+        },
+        "left_nontrivial": {
+          "mean": 0.007948053973391645,
+          "std": 0.05807194889160205,
+          "bootstrap_ci_95": [
+            -0.007740908865950385,
+            0.024230889238835825
+          ],
+          "n": 49
+        },
+        "right_full": {
+          "mean": 0.004086316591253322,
+          "std": 0.05689252572786188,
+          "bootstrap_ci_95": [
+            -0.011734507967747679,
+            0.019888053207172702
+          ],
+          "n": 49
+        },
+        "right_nontrivial": {
+          "mean": 0.010236195607204606,
+          "std": 0.05745560754778706,
+          "bootstrap_ci_95": [
+            -0.005430293609795198,
+            0.026382592667373823
+          ],
+          "n": 49
+        }
+      }
+    },
+    {
+      "pair": "(64,236)/(64,240)",
+      "tier": "C1",
+      "member_a": {
+        "order": 64,
+        "index": 236,
+        "width": 128
+      },
+      "member_b": {
+        "order": 64,
+        "index": 240,
+        "width": 128
+      },
+      "n_a_measured": 33,
+      "n_b_measured": 35,
+      "n_paired": 26,
+      "differences": {
+        "left_full": {
+          "mean": -0.005486492386789473,
+          "std": 0.05469512917719156,
+          "bootstrap_ci_95": [
+            -0.02573488264111436,
+            0.0150859461697166
+          ],
+          "n": 26
+        },
+        "left_nontrivial": {
+          "mean": -0.014212256476823244,
+          "std": 0.04537731251611558,
+          "bootstrap_ci_95": [
+            -0.03148137743400244,
+            0.0030924632810866905
+          ],
+          "n": 26
+        },
+        "right_full": {
+          "mean": -0.008905544879471471,
+          "std": 0.05571001870117352,
+          "bootstrap_ci_95": [
+            -0.029645717547095204,
+            0.012358813340758616
+          ],
+          "n": 26
+        },
+        "right_nontrivial": {
+          "mean": -0.014489390511194756,
+          "std": 0.05138555921518653,
+          "bootstrap_ci_95": [
+            -0.03372741629356337,
+            0.005414060617530931
+          ],
+          "n": 26
+        }
+      }
+    },
+    {
+      "pair": "(64,241)/(64,242) w128",
+      "tier": "C1 (pinned width; below floor \u2014 thin)",
+      "member_a": {
+        "order": 64,
+        "index": 241,
+        "width": 128
+      },
+      "member_b": {
+        "order": 64,
+        "index": 242,
+        "width": 128
+      },
+      "n_a_measured": 7,
+      "n_b_measured": 7,
+      "n_paired": 4,
+      "differences": {
+        "left_full": {
+          "mean": -0.06547963262988257,
+          "std": 0.10749249326908,
+          "bootstrap_ci_95": [
+            -0.14128123480509008,
+            0.03013071817015664
+          ],
+          "n": 4
+        },
+        "left_nontrivial": {
+          "mean": -0.10196407933653717,
+          "std": 0.15828315320509012,
+          "bootstrap_ci_95": [
+            -0.23551755023929546,
+            0.046125004355026394
+          ],
+          "n": 4
+        },
+        "right_full": {
+          "mean": -0.060824169348247775,
+          "std": 0.09589626506317317,
+          "bootstrap_ci_95": [
+            -0.12591604740957427,
+            0.03598405057404408
+          ],
+          "n": 4
+        },
+        "right_nontrivial": {
+          "mean": -0.13791956092297636,
+          "std": 0.12646957739743678,
+          "bootstrap_ci_95": [
+            -0.23216999353298842,
+            -0.028489162848786748
+          ],
+          "n": 4
+        }
+      }
+    },
+    {
+      "pair": "(216,106)/(216,107)",
+      "tier": "C4 tier-2",
+      "member_a": {
+        "order": 216,
+        "index": 106,
+        "width": 128
+      },
+      "member_b": {
+        "order": 216,
+        "index": 107,
+        "width": 128
+      },
+      "n_a_measured": 48,
+      "n_b_measured": 48,
+      "n_paired": 46,
+      "differences": {
+        "left_full": {
+          "mean": 0.007047812624845903,
+          "std": 0.04107854411392,
+          "bootstrap_ci_95": [
+            -0.00428566599786856,
+            0.018853061592997166
+          ],
+          "n": 46
+        },
+        "left_nontrivial": {
+          "mean": 0.003850516602785519,
+          "std": 0.06492087503932507,
+          "bootstrap_ci_95": [
+            -0.013691020538572993,
+            0.02332814864557502
+          ],
+          "n": 46
+        },
+        "right_full": {
+          "mean": 0.007761548521944763,
+          "std": 0.040023479537180315,
+          "bootstrap_ci_95": [
+            -0.003163488017670951,
+            0.019243114352673094
+          ],
+          "n": 46
+        },
+        "right_nontrivial": {
+          "mean": 0.006233703221316097,
+          "std": 0.0634106617053507,
+          "bootstrap_ci_95": [
+            -0.011007772063764784,
+            0.025290354521186924
+          ],
+          "n": 46
+        }
+      }
+    },
+    {
+      "pair": "(64,60)/(64,65)",
+      "tier": "C4 tier-3",
+      "member_a": {
+        "order": 64,
+        "index": 60,
+        "width": 128
+      },
+      "member_b": {
+        "order": 64,
+        "index": 65,
+        "width": 128
+      },
+      "n_a_measured": 50,
+      "n_b_measured": 50,
+      "n_paired": 50,
+      "differences": {
+        "left_full": {
+          "mean": 0.005850860134113695,
+          "std": 0.03780967624116015,
+          "bootstrap_ci_95": [
+            -0.0045607106295726015,
+            0.0162308656249798
+          ],
+          "n": 50
+        },
+        "left_nontrivial": {
+          "mean": 0.001775155672256934,
+          "std": 0.04237227327345957,
+          "bootstrap_ci_95": [
+            -0.010334542449735968,
+            0.013081563003087273
+          ],
+          "n": 50
+        },
+        "right_full": {
+          "mean": 0.005520893675426007,
+          "std": 0.039145072104943196,
+          "bootstrap_ci_95": [
+            -0.005092689908873991,
+            0.01618597736005338
+          ],
+          "n": 50
+        },
+        "right_nontrivial": {
+          "mean": 0.0007017765856715719,
+          "std": 0.04151876415844211,
+          "bootstrap_ci_95": [
+            -0.010731756345922583,
+            0.011992776007411563
+          ],
+          "n": 50
+        }
+      }
+    },
+    {
+      "pair": "(54,10)/(54,11) w256",
+      "tier": "C1 embedding probe",
+      "member_a": {
+        "order": 54,
+        "index": 10,
+        "width": 256
+      },
+      "member_b": {
+        "order": 54,
+        "index": 11,
+        "width": 256
+      },
+      "n_a_measured": 43,
+      "n_b_measured": 40,
+      "n_paired": 33,
+      "differences": {
+        "left_full": {
+          "mean": 0.03175498893435866,
+          "std": 0.1133449040553421,
+          "bootstrap_ci_95": [
+            -0.007997092603718796,
+            0.0680195559633618
+          ],
+          "n": 33
+        },
+        "left_nontrivial": {
+          "mean": 0.017693117790053378,
+          "std": 0.1036071909866985,
+          "bootstrap_ci_95": [
+            -0.016418872444236315,
+            0.05283732791542187
+          ],
+          "n": 33
+        },
+        "right_full": {
+          "mean": 0.015101973095678884,
+          "std": 0.10494475794787365,
+          "bootstrap_ci_95": [
+            -0.020881296610220347,
+            0.04958559528687773
+          ],
+          "n": 33
+        },
+        "right_nontrivial": {
+          "mean": 0.021712449732739534,
+          "std": 0.10857152496864216,
+          "bootstrap_ci_95": [
+            -0.014959105336866124,
+            0.058097065004349475
+          ],
+          "n": 33
+        }
+      }
+    },
+    {
+      "pair": "(27,3)/(27,4) w512 (operative width; e60k ceiling)",
+      "tier": "C1 (rescued; operative width)",
+      "member_a": {
+        "order": 27,
+        "index": 3,
+        "width": 512,
+        "epochs": 60000
+      },
+      "member_b": {
+        "order": 27,
+        "index": 4,
+        "width": 512,
+        "epochs": 60000
+      },
+      "n_a_measured": 32,
+      "n_b_measured": 28,
+      "n_paired": 17,
+      "differences": {
+        "left_full": {
+          "mean": -0.002774631428548662,
+          "std": 0.06971661866990002,
+          "bootstrap_ci_95": [
+            -0.03592982091363272,
+            0.027430855235456214
+          ],
+          "n": 17
+        },
+        "left_nontrivial": {
+          "mean": 0.014283851591063941,
+          "std": 0.13018270174691374,
+          "bootstrap_ci_95": [
+            -0.047777551270534235,
+            0.07155969990966653
+          ],
+          "n": 17
+        },
+        "right_full": {
+          "mean": -0.0027924332546755675,
+          "std": 0.05284179042075414,
+          "bootstrap_ci_95": [
+            -0.02772090046388289,
+            0.021332176307028494
+          ],
+          "n": 17
+        },
+        "right_nontrivial": {
+          "mean": 0.012631199272621366,
+          "std": 0.12441686448232685,
+          "bootstrap_ci_95": [
+            -0.047347365042142174,
+            0.0663750257747644
+          ],
+          "n": 17
+        }
+      }
+    },
+    {
+      "pair": "(64,241)/(64,242) w256 (operative width; e400k ceiling)",
+      "tier": "C1 (rescued; operative width)",
+      "member_a": {
+        "order": 64,
+        "index": 241,
+        "width": 256,
+        "epochs": 400000
+      },
+      "member_b": {
+        "order": 64,
+        "index": 242,
+        "width": 256,
+        "epochs": 400000
+      },
+      "n_a_measured": 50,
+      "n_b_measured": 50,
+      "n_paired": 50,
+      "differences": {
+        "left_full": {
+          "mean": 0.011826269213405767,
+          "std": 0.09306980623297854,
+          "bootstrap_ci_95": [
+            -0.014049780475379763,
+            0.03700097741747988
+          ],
+          "n": 50
+        },
+        "left_nontrivial": {
+          "mean": 0.0037141499219645224,
+          "std": 0.10522788914921226,
+          "bootstrap_ci_95": [
+            -0.025862631603892145,
+            0.03244365827532451
+          ],
+          "n": 50
+        },
+        "right_full": {
+          "mean": 0.0012066304543082195,
+          "std": 0.0909602826191265,
+          "bootstrap_ci_95": [
+            -0.024277769864475093,
+            0.02594300675700981
+          ],
+          "n": 50
+        },
+        "right_nontrivial": {
+          "mean": -0.0010444470598898548,
+          "std": 0.11091403545981231,
+          "bootstrap_ci_95": [
+            -0.03208712990656273,
+            0.029284044081360962
+          ],
+          "n": 50
+        }
+      }
+    }
+  ]
+}

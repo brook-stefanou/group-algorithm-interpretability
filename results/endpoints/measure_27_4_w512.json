@@ -1,0 +1,4304 @@
+{
+  "runs": [
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045008_905197_core_bda79d",
+      "seed": 0,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "53bcbf0fd2e8f609",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:11.564406+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.4038461744785309,
+          "raw": 0.45890411734580994,
+          "loss": 5.871442794799805
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045009_055732_core_0ec27c",
+      "seed": 1,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "33fb73f258757b86",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:13.789028+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 9067,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.9711538553237915,
+          "raw": 0.9794520735740662,
+          "loss": 0.03309345245361328
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045009_228596_core_5100f3",
+      "seed": 2,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "20402970d301d706",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:15.940751+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 13431,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.015847740694880486
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045009_400635_core_be031d",
+      "seed": 3,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "1d78c092a493fe95",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:18.074346+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.38461539149284363,
+          "raw": 0.4178082048892975,
+          "loss": 8.800436973571777
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045009_557077_core_ff566d",
+      "seed": 4,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c88311d0fa05e280",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:20.198754+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.8750000596046448,
+          "raw": 0.9109588861465454,
+          "loss": 0.3510085344314575
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045009_719437_core_fbce77",
+      "seed": 5,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "eb6fc5b0928402d7",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:22.443814+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.942307710647583,
+          "raw": 0.9589040875434875,
+          "loss": 0.26952633261680603
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045009_897472_core_348f21",
+      "seed": 6,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "82ce8201e0679d07",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:24.626303+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 20927,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 7.186609764175955e-06
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045010_092524_core_528528",
+      "seed": 7,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "e17626f5d71c1ec7",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:26.715490+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 19971,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 4.970130248693749e-05
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045010_257974_core_67d867",
+      "seed": 8,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "d1aa262ec7774b59",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:28.855617+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 10971,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.00039766152622178197
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045010_445295_core_4af802",
+      "seed": 9,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "25a42697119a529d",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:30.933774+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 55917,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.9711538553237915,
+          "raw": 0.9794520735740662,
+          "loss": 0.08906414359807968
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045010_627770_core_4fee60",
+      "seed": 10,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "78450a6829428774",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:33.233766+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 8297,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.0047309016808867455
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045010_787857_core_e44006",
+      "seed": 11,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "32b836366c0b8df9",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:35.499999+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 20390,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.00016123938257806003
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045010_969775_core_8bbb14",
+      "seed": 12,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "bb58ecd0dc1fd03a",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:37.747357+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.4326923191547394,
+          "raw": 0.5410959124565125,
+          "loss": 4.818321704864502
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045011_157999_core_817f18",
+      "seed": 13,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "bd56a278ee954840",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:40.105729+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 10321,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.9711538553237915,
+          "raw": 0.9794520735740662,
+          "loss": 0.09174910932779312
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045011_329765_core_2c97af",
+      "seed": 14,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "e0886ed3f368938d",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:42.384037+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 8491,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.004916418809443712
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045011_501533_core_dc7632",
+      "seed": 15,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "91c8b5c7b87676fa",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:44.540072+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.5192307829856873,
+          "raw": 0.5890411138534546,
+          "loss": 2.1277410984039307
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045011_669082_core_36f1ff",
+      "seed": 16,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "67d9a56455b965ea",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:46.724260+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 15026,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.0017033056356012821
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045011_847942_core_473ebc",
+      "seed": 17,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "e3e0a7809f6cdd27",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:48.992560+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.7692307829856873,
+          "raw": 0.8219177722930908,
+          "loss": 0.4665106236934662
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045012_030427_core_f53566",
+      "seed": 18,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "4ef2eb1a42f968c4",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:51.405206+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 14739,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.00181012402754277
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045012_218699_core_e30cde",
+      "seed": 19,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "be361d0285125588",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:53.637902+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 7215,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 1.0057179679279216e-05
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045012_389859_core_a778fe",
+      "seed": 20,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "2c86a046e63402c2",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:55.898543+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 13139,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 4.377245204523206e-06
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045012_596292_core_c82b47",
+      "seed": 21,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c6d3b597d653070d",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:42:58.199017+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 7126,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.00037159144994802773
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045012_781308_core_7574cc",
+      "seed": 22,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "f1783671da8e7c49",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:00.335167+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 17969,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.0019301959546282887
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045012_965558_core_5f359d",
+      "seed": 23,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "aea8f4fb32838e5f",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:02.566415+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 7998,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.00890156626701355
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045013_147280_core_9475e3",
+      "seed": 24,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "447bacf6b406af99",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:04.826610+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 8968,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 2.718128598644398e-06
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045013_326792_core_471349",
+      "seed": 25,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "d70a70c70089087c",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:06.991161+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 38498,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.9807692766189575,
+          "raw": 0.9863013625144958,
+          "loss": 0.014614575542509556
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045013_493629_core_13b675",
+      "seed": 26,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "5fde2c4b2d4baa03",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:09.179455+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.7115384936332703,
+          "raw": 0.7260273694992065,
+          "loss": 5.192070007324219
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045013_667902_core_59d7b8",
+      "seed": 27,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c754ea37ea855146",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:11.351643+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.942307710647583,
+          "raw": 0.9246575236320496,
+          "loss": 0.21946962177753448
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045013_835371_core_d0d67f",
+      "seed": 28,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "cf1dfe1a1b259ea4",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:13.560053+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 54085,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 5.619122021016665e-06
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045013_997392_core_b5392a",
+      "seed": 29,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "d435d44d89605d85",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:15.700497+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 12125,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.0017902685794979334
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045014_194527_core_c62101",
+      "seed": 30,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "a9f4b1a15d44d6c0",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:17.859092+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 12281,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 2.3923499270495086e-07
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045014_372591_core_7dbd4c",
+      "seed": 31,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "a5f023332e3dab6c",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:19.989878+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.884615421295166,
+          "raw": 0.9178082346916199,
+          "loss": 0.36271780729293823
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045014_551199_core_46275a",
+      "seed": 32,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "38eb1b2b866e88b9",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:22.147838+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 27911,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 5.1055387302767485e-05
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045014_730383_core_0690c6",
+      "seed": 33,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "33660ed587aa144d",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:24.295924+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 13026,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.004774020053446293
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045014_931402_core_b924c9",
+      "seed": 34,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "ea2d80f949b3c247",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:26.478508+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 13821,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 9.457359738007654e-06
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045015_125452_core_344bb4",
+      "seed": 35,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "6ffb968c1c505a3f",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:28.636335+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.39423078298568726,
+          "raw": 0.4931506812572479,
+          "loss": 2.937636375427246
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045015_299571_core_123975",
+      "seed": 36,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "4bc61821f845dda4",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:30.759674+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 12996,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.00038996204966679215
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045015_487934_core_7add1f",
+      "seed": 37,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "8fd9931767e2416e",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:32.881925+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 11680,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.0008654564735479653
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045015_662452_core_ea4771",
+      "seed": 38,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "2599b8dec23e94bc",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:34.960529+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 9115,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 8.736562904232414e-07
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045015_848833_core_e5b32e",
+      "seed": 39,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "0bd20f5ca28fc3c7",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:37.120778+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.6538462042808533,
+          "raw": 0.6849315166473389,
+          "loss": 1.7526148557662964
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045016_062860_core_491c52",
+      "seed": 40,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "aaa110ddeceed7bd",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:39.287929+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.35576924681663513,
+          "raw": 0.4931506812572479,
+          "loss": 2.742466926574707
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045016_248453_core_0040a9",
+      "seed": 41,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "49c12c34e14f3164",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:41.435040+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 28280,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 1.0,
+          "raw": 1.0,
+          "loss": 0.004046393558382988
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045016_431000_core_349c7e",
+      "seed": 42,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "059b63a8e3a48663",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:43.806045+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.35576924681663513,
+          "raw": 0.45890411734580994,
+          "loss": 3.144026041030884
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045016_620063_core_228f2a",
+      "seed": 43,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "4853593ff00fd848",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:46.076974+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.8461538553237915,
+          "raw": 0.8835616111755371,
+          "loss": 0.35581448674201965
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045016_818714_core_703640",
+      "seed": 44,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "9ffac8e58d863288",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:48.336061+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.567307710647583,
+          "raw": 0.6164383292198181,
+          "loss": 4.087801933288574
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045016_992829_core_e6ec7d",
+      "seed": 45,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "ad74b7995b0cb5c5",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:50.572480+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.7403846383094788,
+          "raw": 0.8150684833526611,
+          "loss": 0.5029664039611816
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045017_173725_core_552d73",
+      "seed": 46,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "0bdd4c89a0255be7",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:52.795897+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": 7253,
+        "censored": false,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": 0.9903846383094788,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.951923131942749,
+          "raw": 0.9383561611175537,
+          "loss": 0.136189267039299
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045017_356011_core_101242",
+      "seed": 47,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "260e55bcc83a25ca",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:55.024345+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.46153849363327026,
+          "raw": 0.5205479264259338,
+          "loss": 5.192081451416016
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045017_544367_core_092900",
+      "seed": 48,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "28cb0f04a0dba7d4",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:57.270447+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.5576923489570618,
+          "raw": 0.6232876777648926,
+          "loss": 2.0975568294525146
+        }
+      }
+    },
+    {
+      "instrument": "endpoints",
+      "run_id": "2026-07-23_045017_729254_core_e4b35b",
+      "seed": 49,
+      "group": {
+        "order": 27,
+        "index": 4,
+        "name": "SmallGroup(27,4)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 512,
+        "d_mlp": 1024,
+        "activation": "relu"
+      },
+      "endpoint_metric": "val/unleaked_accuracy",
+      "endpoint_metric_is_fallback": false,
+      "leak_covariate": {
+        "transpose_leak_fraction": 0.2876712328767123,
+        "commuting_probability": 0.4074074074074074,
+        "train_frac": 0.8,
+        "leak_estimate_trainfrac_times_commuting": 0.32592592592592595,
+        "realised_minus_estimate": -0.03825469304921364,
+        "test_size": 146,
+        "unleaked_test_size": 104,
+        "unleaked_empty": false,
+        "generalize_metric": "unleaked_accuracy"
+      },
+      "chance_accuracy": 0.037037037037037035,
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "9ef7c62250b882c1",
+        "config_group_hash": "c15e32d67c970616",
+        "campaign_id": null,
+        "dataset_spec_hash": "24ecbaf42c5c9689",
+        "analysis_git_commit": "baba7a2",
+        "analysed_at": "2026-07-24T04:43:59.960408+00:00",
+        "endpoint_code_sha256": {
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+        }
+      },
+      "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+      "status": "measured",
+      "epochs_to_grok": {
+        "epoch": null,
+        "censored": true,
+        "ceiling": 60000,
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "sustain": 5,
+        "grok_value": null,
+        "n_evaluated_rows": 60000,
+        "max_epoch_recorded": 59999,
+        "reached_ceiling": true
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/unleaked_accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "no checkpoint has a run.log row with val/unleaked_accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "accuracy": {
+        "at_selected_checkpoint": {
+          "epoch": null,
+          "unleaked": null,
+          "raw": null,
+          "loss": null
+        },
+        "at_final_epoch": {
+          "epoch": 59999,
+          "unleaked": 0.701923131942749,
+          "raw": 0.732876718044281,
+          "loss": 0.9600294828414917
+        }
+      }
+    }
+  ]
+}
