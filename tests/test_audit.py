@@ -62,6 +62,21 @@ def s3_fc():
     return _trained_model("S3", 6, 1, "fc")
 
 
+@pytest.fixture(scope="module")
+def d8_transformer():
+    """D8 has core-free subgroups (``coset_target`` is not ``None``), the same
+    split as D32 in the C2 case study -- the group :func:`A.coset_circuit_neurons`
+    is defined on."""
+    return _trained_model("D8", 8, 3, "transformer")
+
+
+@pytest.fixture(scope="module")
+def q8_transformer():
+    """Q8's only core-free subgroup is trivial (``coset_target`` is ``None``),
+    the same theorem as Q32 -- the negative control for the coset-block bridge."""
+    return _trained_model("Q8", 8, 4, "transformer")
+
+
 # ---------------------------------------------------------------------------
 # Held-out subset and KL primitives
 # ---------------------------------------------------------------------------
@@ -83,6 +98,23 @@ def test_kl_divergence_hand_values():
     # KL is non-negative and positive between different distributions.
     other = np.array([[0.0, 2.0], [3.0, 0.0]])
     assert (A.kl_divergence(logits, other) > 0.0).all()
+
+
+def test_ablate_post_mean_mode_hand_values():
+    """Mean-mode semantics, exactly: an ablated column collapses to the mean of
+    its own original values, unlike zero-mode (collapses to 0)."""
+    post = torch.tensor([[1.0, 10.0], [2.0, 20.0], [3.0, 30.0]])
+    columns = np.array([0])
+    ablated = A._ablate_post(post, columns, "mean", seed=0)
+    assert torch.allclose(ablated[:, 0], torch.full((3,), 2.0))  # mean of [1, 2, 3]
+    assert torch.allclose(ablated[:, 1], post[:, 1])  # untouched column
+    zeroed = A._ablate_post(post, columns, "zero", seed=0)
+    assert torch.allclose(zeroed[:, 0], torch.zeros(3))
+
+
+def test_mean_ci_rejects_empty_input():
+    with pytest.raises(ValueError, match="at least one value"):
+        A._mean_ci([])
 
 
 # ---------------------------------------------------------------------------
@@ -135,6 +167,58 @@ def test_circuit_audit_validates_inputs(s3_transformer):
         A.circuit_audit(model, group, inside_neurons=[0], ablation_mode="scale")
 
 
+def test_circuit_audit_rejects_non_integral_neuron_indices(s3_transformer):
+    """``2.7`` used to be silently truncated to neuron 2 via ``int(2.7)``; it
+    must now be rejected rather than ablating the wrong neuron with no error.
+    A whole-valued float (``2.0``) is still accepted."""
+    model, group = s3_transformer
+    with pytest.raises(ValueError, match="integral"):
+        A.circuit_audit(model, group, inside_neurons=[0, 2.7])
+    record = A.circuit_audit(model, group, inside_neurons=[0, 2.0])
+    assert record.n_inside == 2
+
+
+def test_circuit_audit_records_seed_and_ablation_mode(s3_transformer):
+    model, group = s3_transformer
+    record = A.circuit_audit(
+        model, group, inside_neurons=[0, 1, 2], ablation_mode="resample", seed=7
+    ).to_record()
+    assert record["seed"] == 7
+    assert record["ablation_mode"] == "resample"
+    assert record["causal_scrubbing"]["resample_seed"] == 8
+
+
+def test_resample_mode_scrubbing_draw_is_independent_of_completeness_draw(s3_transformer):
+    """In ``ablation_mode="resample"`` the completeness ablation (outside,
+    ablation_mode's seed) and the causal-scrubbing draw (outside, seed + 1) must
+    be independent permutations, not the same computation reported twice under
+    two criterion names -- the historical bug made
+    ``baseline - completeness_drop == scrubbing_accuracy`` exactly."""
+    model, group = s3_transformer
+    record = A.circuit_audit(
+        model, group, inside_neurons=[0, 1, 2], ablation_mode="resample", seed=3
+    )
+    baseline = record.baseline_accuracy["mean"]
+    completeness_drop = record.completeness["accuracy_drop"]["mean"]
+    scrubbing_accuracy = record.causal_scrubbing["accuracy_resample_outside"]["mean"]
+    assert (baseline - completeness_drop) != pytest.approx(scrubbing_accuracy)
+
+
+def test_resample_mode_is_deterministic_given_the_same_seed(s3_transformer):
+    """Same seed -> identical record numbers, so resample-mode results are
+    reproducible from the recorded ``seed`` alone."""
+    model, group = s3_transformer
+    record_a = A.circuit_audit(
+        model, group, inside_neurons=[0, 1, 2], ablation_mode="resample", seed=5
+    ).to_record()
+    record_b = A.circuit_audit(
+        model, group, inside_neurons=[0, 1, 2], ablation_mode="resample", seed=5
+    ).to_record()
+    assert record_a["completeness"] == record_b["completeness"]
+    assert record_a["minimality"] == record_b["minimality"]
+    assert record_a["causal_scrubbing"] == record_b["causal_scrubbing"]
+
+
 def test_circuit_audit_rejects_too_small_a_held_out_set():
     """An abelian group's test subset is almost entirely transpose-leaked, so the
     unleaked held-out set can be empty -- the audit refuses rather than reporting
@@ -167,6 +251,41 @@ def test_circuit_audit_accepts_the_fc_architecture(s3_fc):
 
 
 # ---------------------------------------------------------------------------
+# Coset-block -> neuron bridge (coset_circuit_neurons)
+# ---------------------------------------------------------------------------
+
+
+def test_coset_circuit_neurons_returns_none_without_a_coset_target(q8_transformer):
+    """Q8's only core-free subgroup is trivial (the same theorem as Q32), so
+    ``coset_target`` is ``None`` and the bridge must not fabricate a circuit."""
+    model, group = q8_transformer
+    assert A.coset_circuit_neurons(model, group) is None
+
+
+def test_coset_circuit_neurons_selects_a_valid_neuron_subset_on_d8(d8_transformer):
+    """D8 has a coset target, so the bridge returns an in-range neuron list (not
+    ``None``) whose indices are valid ``inside_neurons`` for :func:`A.circuit_audit`."""
+    model, group = d8_transformer
+    inside = A.coset_circuit_neurons(model, group)
+    assert inside is not None
+    assert all(0 <= i < model.d_mlp for i in inside)
+    assert len(set(inside)) == len(inside)  # no duplicates
+    # The selection must be usable as circuit_audit's inside_neurons directly.
+    record = A.circuit_audit(model, group, inside_neurons=inside)
+    assert record.n_inside == len(inside)
+
+
+def test_coset_circuit_neurons_selection_shrinks_as_the_threshold_rises(d8_transformer):
+    """A neuron selected at a high ``min_top_share`` must also be selected at a
+    lower one -- the threshold only ever removes candidates, never adds them."""
+    model, group = d8_transformer
+    loose = A.coset_circuit_neurons(model, group, min_top_share=0.0)
+    strict = A.coset_circuit_neurons(model, group, min_top_share=0.9)
+    assert loose is not None and strict is not None
+    assert set(strict).issubset(set(loose))
+
+
+# ---------------------------------------------------------------------------
 # I-36: architecture-confound replication
 # ---------------------------------------------------------------------------
 
@@ -185,11 +304,34 @@ def test_replication_does_not_flag_overlapping_distributions():
 
 
 def test_replication_handles_a_single_value_per_arch():
-    """The n < 2 branch: a single value gives a degenerate (zero-width) CI."""
+    """The n < 2 branch: a single value gives a degenerate (zero-width) CI, and
+    ``architecture_conditional`` is undetermined (``None``), not a point-wise
+    inequality between two degenerate CIs."""
     record = A.replicate_across_architectures([0.8], [0.8])
     assert record.transformer["ci_low"] == record.transformer["ci_high"] == pytest.approx(0.8)
     assert record.transformer["n"] == pytest.approx(1.0)
-    assert record.architecture_conditional is False
+    assert record.architecture_conditional is None
+
+
+def test_replication_flags_none_at_n1_even_when_values_differ():
+    """n=1 per side with clearly different values (1.0 vs 1.000001) must not be
+    read as a strict inequality -- the flag is undetermined, not True."""
+    record = A.replicate_across_architectures([1.0], [1.000001])
+    assert record.transformer["n"] == pytest.approx(1.0)
+    assert record.fc["n"] == pytest.approx(1.0)
+    assert record.architecture_conditional is None
+
+
+def test_replication_flags_none_when_only_one_side_is_degenerate():
+    record = A.replicate_across_architectures([1.0], [5.0, 5.1, 4.9])
+    assert record.architecture_conditional is None
+
+
+def test_replication_rejects_empty_values():
+    with pytest.raises(ValueError, match="at least one value"):
+        A.replicate_across_architectures([], [1.0, 2.0])
+    with pytest.raises(ValueError, match="at least one value"):
+        A.replicate_across_architectures([1.0, 2.0], [])
 
 
 def test_measure_over_models_runs_a_scalar_measurement(s3_transformer):
@@ -228,3 +370,27 @@ def test_dla_rejects_too_small_a_held_out_set():
     model = build_model(_config(4, 1), group)
     with pytest.raises(ValueError, match="too small"):
         A.direct_logit_attribution(model, group)
+
+
+def test_dla_record_carries_provenance(s3_transformer, tmp_path):
+    """The DLA record must trace to code and data like I-34's: analysis git
+    commit, instrument-code hashes, the held-out subset's train_frac/split_seed,
+    and (when given) the checkpoint's sha256."""
+    model, group = s3_transformer
+    checkpoint = tmp_path / "final.pt"
+    torch.save({"model_state_dict": model.state_dict()}, checkpoint)
+    record = A.direct_logit_attribution(
+        model, group, train_frac=0.7, split_seed=2, checkpoint_path=checkpoint
+    )
+    provenance = record["provenance"]
+    assert "instrument_code_sha256" in provenance
+    assert "analysis_git_commit" in provenance
+    assert provenance["train_frac"] == pytest.approx(0.7)
+    assert provenance["split_seed"] == 2
+    assert "checkpoint_sha256" in provenance
+
+
+def test_dla_record_provenance_omits_checkpoint_hash_when_not_given(s3_transformer):
+    model, group = s3_transformer
+    record = A.direct_logit_attribution(model, group)
+    assert "checkpoint_sha256" not in record["provenance"]

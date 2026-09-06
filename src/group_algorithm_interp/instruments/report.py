@@ -20,14 +20,19 @@ a vector of signals with nulls and provenance attached, never a verdict label:
   reader; the record carries the measurements.
 
 Provenance per record: the run's manifest hashes (config, config-group,
-dataset) and git commit, the analysis-time git commit, the selected
-checkpoint's sha256, and the sha256 of every instrument module that computed
-the numbers -- so any reported figure traces back to code and data.
+dataset) and git commit, the analysis-time git commit and dirty flag, the
+group artifact's repo-relative path and sha256, the selected checkpoint's
+sha256, and the sha256 of every instrument module that computed the numbers --
+so any reported figure traces back to code and data. Pooled records carry the
+same analysis-side provenance plus their members' shared checkpoint
+metric/threshold and per-member selected epochs.
 """
 
 from __future__ import annotations
 
 import hashlib
+import math
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -46,8 +51,9 @@ from ..config import (
     validate_config,
 )
 from ..groups.catalog import resolve_group
+from ..groups.data import artifact_path
 from ..groups.group import FiniteGroup
-from ..manifest import get_git_commit, read_manifest
+from ..manifest import get_git_commit, get_git_dirty, read_manifest
 from ..model import GroupModel
 from ..seed import set_seed
 from ..training.trainer import build_model
@@ -68,6 +74,8 @@ from .templates import TemplateLibrary, template_library
 ARGUMENTS = ("left", "right")
 FORMS = ("full", "nontrivial")
 
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+
 
 def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -82,6 +90,59 @@ def instrument_code_hashes() -> dict[str, str]:
 
 def _utcnow() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _analysis_provenance() -> dict[str, Any]:
+    """The analysis-side provenance every record shares: the analysis-time git
+    commit and dirty flag (so a figure produced from an uncommitted tree is
+    flagged, not silently attributed to a clean commit), the timestamp, and the
+    sha256 of every instrument module that computed the numbers."""
+    return {
+        "analysis_git_commit": get_git_commit(),
+        "analysis_git_dirty": get_git_dirty(),
+        "analysed_at": _utcnow(),
+        "instrument_code_sha256": instrument_code_hashes(),
+    }
+
+
+def _relative_to_repo(path: Path) -> str:
+    """``path`` relative to the repo root when possible, else its absolute form
+    (an ``--artifacts-dir`` override or a test's tmp directory outside the repo)
+    -- so the provenance block is always a valid path, matching the probes/coset
+    convention."""
+    try:
+        return str(path.resolve().relative_to(_REPO_ROOT))
+    except ValueError:
+        return str(path.resolve())
+
+
+def _group_artifact_provenance(order: int, index: int) -> dict[str, Any]:
+    """The group artifact this measurement is analysed against -- its repo-
+    relative path and sha256 -- pinned the same way ``measure_probes`` and
+    ``coset.measure_coset_run`` pin it, since the artifact is the one input the
+    block projectors and analytic null are computed from."""
+    path = artifact_path(order, index)
+    return {
+        "group_artifact_path": _relative_to_repo(path),
+        "group_artifact_sha256": file_sha256(path) if path.is_file() else None,
+    }
+
+
+def sanitise_nonfinite(value: Any) -> Any:
+    """Recursively replace non-finite floats (NaN, +/-Inf) with ``None`` so a
+    record serialises as RFC-8259 JSON. Bare ``NaN``/``Infinity`` tokens (what
+    ``json.dumps`` emits by default) are rejected by ``jq`` and strict parsers;
+    a non-finite metric value is reachable here via a rejected checkpoint
+    candidate's metric. ``None`` in the output therefore reads as "non-finite",
+    and the caller dumps with ``allow_nan=False`` so any missed case fails loudly
+    rather than re-emitting a bare token."""
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    if isinstance(value, dict):
+        return {k: sanitise_nonfinite(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [sanitise_nonfinite(v) for v in value]
+    return value
 
 
 def _tv_block(occupancy: np.ndarray, null: np.ndarray, n_units: int) -> dict[str, Any]:
@@ -139,13 +200,18 @@ def _occupancy_block(
     model: GroupModel,
     group: FiniteGroup,
     library: TemplateLibrary,
-    n_units_for_floor: int,
 ) -> tuple[dict[str, Any], dict[str, list[float]]]:
     """Both arguments' occupancy measurements for one model, plus the raw
     per-block energy totals the pooling path accumulates. Per-neuron
     concentration (I-09) is computed over the nontrivial blocks -- the DC-heavy
     trivial block would otherwise be almost every random-init neuron's top
-    block -- with each neuron's trivial share reported alongside."""
+    block -- with each neuron's trivial share reported alongside.
+
+    The Dirichlet floor's ``N`` is the count of *nonzero-energy* units, not the
+    raw ``d_mlp``: a dead (zero-energy) neuron carries no occupancy signal, so
+    counting it inflates ``N`` and shrinks the floor in the unconservative
+    direction. Both ``n_units`` (raw ``d_mlp``) and ``n_zero_energy_units`` stay
+    in the record so an older reader can recover either count."""
     pi0 = analytic_null(group)
     trivial = trivial_block_index(group)
     activations = neuron_activations(model, group.order)
@@ -154,6 +220,9 @@ def _occupancy_block(
     for argument in ARGUMENTS:
         energies = isotypic_energies(activations, group, argument=argument)
         occupancy = population_occupancy(energies)
+        n_units = int(energies.shape[0])
+        n_zero_energy = int((energies.sum(axis=1) <= 0.0).sum())
+        n_nonzero_energy = n_units - n_zero_energy
         nontrivial_energies = np.delete(energies, trivial, axis=1)
         top_share, top_block = per_neuron_concentration(nontrivial_energies)
         # Remap argmax indices back into full-block-list numbering.
@@ -163,8 +232,10 @@ def _occupancy_block(
             totals = energies.sum(axis=1)
             trivial_share = np.where(totals > 0.0, energies[:, trivial] / totals, np.nan)
         per_argument[argument] = {
-            **_occupancy_forms(occupancy, pi0, trivial, library, n_units_for_floor),
-            "n_zero_energy_units": int((energies.sum(axis=1) <= 0.0).sum()),
+            **_occupancy_forms(occupancy, pi0, trivial, library, n_nonzero_energy),
+            "n_units": n_units,
+            "n_zero_energy_units": n_zero_energy,
+            "n_nonzero_energy_units": n_nonzero_energy,
             "per_neuron_top_share": [None if np.isnan(v) else float(v) for v in top_share],
             "per_neuron_top_block": top_block_full.tolist(),
             "per_neuron_trivial_share": [None if np.isnan(v) else float(v) for v in trivial_share],
@@ -208,9 +279,8 @@ def measure_run(
             "config_group_hash": manifest.get("provenance", {}).get("config_group_hash"),
             "campaign_id": manifest.get("provenance", {}).get("campaign_id"),
             "dataset_spec_hash": manifest.get("dataset", {}).get("spec_hash"),
-            "analysis_git_commit": get_git_commit(),
-            "analysed_at": _utcnow(),
-            "instrument_code_sha256": instrument_code_hashes(),
+            **_analysis_provenance(),
+            **_group_artifact_provenance(config.data.group.order, config.data.group.index),
         },
     }
     if selection.path is None:
@@ -222,7 +292,7 @@ def measure_run(
     model = build_model(config, group)
     model.load_state_dict(checkpoint["model_state_dict"])
     library = template_library(group)
-    per_argument, block_energy = _occupancy_block(model, group, library, config.model.d_mlp)
+    per_argument, block_energy = _occupancy_block(model, group, library)
 
     record["status"] = "measured"
     record["provenance"]["checkpoint_sha256"] = file_sha256(selection.path)
@@ -237,23 +307,100 @@ def measure_run(
     return record
 
 
+def _member_nonzero_units(member: dict[str, Any], argument: str) -> int:
+    """The nonzero-energy neuron count this member contributes to the pooled
+    floor's ``N`` for ``argument``. Prefers the per-argument
+    ``n_nonzero_energy_units`` field; an older record without it degrades to
+    ``n_units - n_zero_energy_units`` and finally to the raw ``n_units``, so
+    pooling a mixed-vintage record set never crashes -- it only loses the
+    dead-neuron correction on the records that predate it."""
+    block = member["occupancy"][argument]
+    if "n_nonzero_energy_units" in block:
+        return int(block["n_nonzero_energy_units"])
+    if "n_zero_energy_units" in block:
+        return int(member["n_units"]) - int(block["n_zero_energy_units"])
+    return int(member["n_units"])
+
+
 def pool_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Pool measured records over seeds within one experiment configuration.
 
     The pooling key is the manifest's ``config_group_hash`` -- two runs share
     it iff they define the same experiment apart from the seed -- so seeds are
-    never pooled across groups, widths, or optimiser settings. Pooled
-    occupancy is the total energy per block over every pooled neuron,
-    normalised; the noise floor is recomputed at ``N = neurons x seeds``."""
+    never pooled across groups, widths, or optimiser settings. Pooled occupancy
+    is the total energy per block over every pooled neuron, normalised; the
+    noise floor is recomputed at ``N = nonzero-energy neurons x seeds``.
+
+    Every measured record must be a distinct canonical run: a duplicate
+    ``run_id`` (the same record passed twice) or a duplicate
+    ``(config_group_hash, seed)`` within a pool would double ``N`` and shrink
+    the floor by ``1/sqrt(2)``, so both raise ``ValueError`` naming the
+    offenders -- the corpus has same-seed reruns, so pass one canonical run per
+    seed (e.g. ``scripts/dedup_runs.py``'s output). Members with differing
+    checkpoint metrics/thresholds cannot be pooled like-for-like and also raise.
+    Members are sorted by ``run_id`` before accumulation so the same record set
+    yields byte-identical pooled output regardless of caller order (modulo the
+    intentional ``analysed_at``)."""
+    measured = [record for record in records if record.get("status") == "measured"]
+
+    seen_run_ids: set[Any] = set()
+    duplicate_run_ids: set[Any] = set()
+    for record in measured:
+        run_id = record["run_id"]
+        if run_id in seen_run_ids:
+            duplicate_run_ids.add(run_id)
+        seen_run_ids.add(run_id)
+    if duplicate_run_ids:
+        raise ValueError(
+            "pool_records: duplicate run_id(s) among measured records: "
+            f"{sorted(map(str, duplicate_run_ids))} -- pass one canonical run per "
+            "seed (e.g. scripts/dedup_runs.py's output), not the same record twice"
+        )
+
     pools: dict[str, list[dict[str, Any]]] = {}
-    for record in records:
-        if record.get("status") != "measured":
-            continue
-        key = record["provenance"].get("config_group_hash") or record["run_id"]
+    fallback_keys: set[str] = set()
+    for record in measured:
+        config_group_hash = record["provenance"].get("config_group_hash")
+        if config_group_hash:
+            key = config_group_hash
+        else:
+            key = record["run_id"]
+            fallback_keys.add(key)
+            print(
+                "[occupancy] WARNING: record "
+                f"{record['run_id']!r} has no config_group_hash; pooling it alone "
+                "under its run_id (pool_key_fallback)",
+                file=sys.stderr,
+            )
         pools.setdefault(key, []).append(record)
 
     pooled: list[dict[str, Any]] = []
-    for key, members in sorted(pools.items()):
+    for key, unsorted_members in sorted(pools.items()):
+        members = sorted(unsorted_members, key=lambda m: str(m["run_id"]))
+
+        seeds = [member["seed"] for member in members]
+        duplicate_seeds = sorted({s for s in seeds if seeds.count(s) > 1})
+        if duplicate_seeds:
+            raise ValueError(
+                f"pool_records: duplicate seed(s) {duplicate_seeds} within pool {key!r} "
+                "-- a rerun of an already-pooled seed doubles the floor's N; pass one "
+                "canonical run per seed (e.g. scripts/dedup_runs.py's output)"
+            )
+
+        metrics_thresholds = {
+            (
+                member["checkpoint_selection"]["metric"],
+                member["checkpoint_selection"]["threshold"],
+            )
+            for member in members
+        }
+        if len(metrics_thresholds) > 1:
+            raise ValueError(
+                f"pool_records: pool {key!r} mixes checkpoint metrics/thresholds "
+                f"{sorted(metrics_thresholds)} -- members must be measured at one "
+                "(metric, threshold) to pool like-for-like"
+            )
+
         first = members[0]
         pi0 = np.asarray(first["analytic_null"], dtype=np.float64)
         trivial = int(first["trivial_block_index"])
@@ -261,8 +408,10 @@ def pool_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         per_argument: dict[str, Any] = {}
         for argument in ARGUMENTS:
             energy = np.zeros_like(pi0)
+            n_floor = 0
             for member in members:
                 energy += np.asarray(member["block_energy"][argument], dtype=np.float64)
+                n_floor += _member_nonzero_units(member, argument)
             occupancy = energy / float(energy.sum())
             occupancy_nt = restrict_to_nontrivial(occupancy, trivial)
             pi0_nt = restrict_to_nontrivial(pi0, trivial)
@@ -291,31 +440,41 @@ def pool_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "occupancy": occupancy.tolist(),
                 "trivial_block_index": trivial,
                 "trivial_block_share": float(occupancy[trivial]),
-                "full": _tv_block(occupancy, pi0, n_units),
+                "n_nonzero_energy_units": n_floor,
+                "full": _tv_block(occupancy, pi0, n_floor),
                 "nontrivial": {
                     "occupancy": occupancy_nt.tolist(),
                     "null": pi0_nt.tolist(),
-                    **_tv_block(occupancy_nt, pi0_nt, n_units),
+                    **_tv_block(occupancy_nt, pi0_nt, n_floor),
                 },
                 "template_comparisons": comparisons,
             }
-        pooled.append(
-            {
-                "instrument": "occupancy-pooled",
-                "config_group_hash": key,
-                "group": first["group"],
-                "model": first["model"],
-                "n_runs": len(members),
-                "run_ids": [member["run_id"] for member in members],
-                "seeds": [member["seed"] for member in members],
-                "n_units": n_units,
-                "analytic_null": first["analytic_null"],
-                "block_ranks": first["block_ranks"],
-                "trivial_block_index": trivial,
-                "templates": first["templates"],
-                "occupancy": per_argument,
-            }
-        )
+        pooled_record: dict[str, Any] = {
+            "instrument": "occupancy-pooled",
+            "config_group_hash": key,
+            "group": first["group"],
+            "model": first["model"],
+            "n_runs": len(members),
+            "run_ids": [member["run_id"] for member in members],
+            "seeds": seeds,
+            "n_units": n_units,
+            "analytic_null": first["analytic_null"],
+            "block_ranks": first["block_ranks"],
+            "trivial_block_index": trivial,
+            "templates": first["templates"],
+            "occupancy": per_argument,
+            "provenance": {
+                **_analysis_provenance(),
+                "member_metric": next(iter(metrics_thresholds))[0],
+                "member_threshold": next(iter(metrics_thresholds))[1],
+                "member_checkpoint_epochs": [
+                    member["checkpoint_selection"]["epoch"] for member in members
+                ],
+            },
+        }
+        if key in fallback_keys:
+            pooled_record["pool_key_fallback"] = True
+        pooled.append(pooled_record)
     return pooled
 
 
@@ -361,13 +520,34 @@ def null_gate(
     whether the two analytic nulls agree as multisets (the CT-equal free pass
     is asserted, not assumed). No verdict is emitted: a statistic whose null
     differs across conditions does not ship, and that reading is made from the
-    interval."""
+    interval.
+
+    The full model configuration ``build_model`` consumed is recorded (arch,
+    d_model, n_heads, activation, d_mlp), not just the width -- a gate run at
+    the wrong architecture or width could otherwise be filed as a campaign's
+    calibration with nothing to catch the mismatch. At least two seeds are
+    required: the paired difference's bootstrap CI is undefined for one seed,
+    which is validated up front rather than dying deep in ``stats.bootstrap_ci``
+    with a bare 'need at least 2 values'."""
+    if len(seeds) < 2:
+        raise ValueError(
+            f"null_gate needs at least 2 seeds for the paired-difference bootstrap CI, "
+            f"got {len(seeds)}: {seeds}"
+        )
+    model = ModelConfig(**(model_config or {}))
+    model_record = {
+        "arch": model.arch,
+        "d_model": model.d_model,
+        "n_heads": model.n_heads,
+        "activation": model.activation,
+        "d_mlp": model.d_mlp,
+    }
     conditions: dict[str, dict[str, Any]] = {}
     for label, (order, index) in (("a", group_a), ("b", group_b)):
         config = ProjectConfig(
             device="cpu",
             data=DataConfig(group=GroupSpec(order=order, index=index)),
-            model=ModelConfig(**(model_config or {})),
+            model=model,
             logging=LoggingConfig(mode="disabled"),
         )
         group = resolve_group(config.data.group)
@@ -425,14 +605,11 @@ def null_gate(
         "instrument": "occupancy-null-calibration",
         "statistic": "tv_to_own_analytic_null",
         "seeds": seeds,
+        "model": model_record,
         "conditions": conditions,
         "pi0_equal_as_multisets": pi0_equal,
         "paired_difference_a_minus_b": differences,
-        "provenance": {
-            "analysis_git_commit": get_git_commit(),
-            "analysed_at": _utcnow(),
-            "instrument_code_sha256": instrument_code_hashes(),
-        },
+        "provenance": _analysis_provenance(),
         "note": (
             "Estimation-first record of the I-11 gate inputs: a statistic whose "
             "null differs across the two conditions is disqualified and does not "
@@ -450,4 +627,5 @@ __all__ = [
     "measure_run",
     "null_gate",
     "pool_records",
+    "sanitise_nonfinite",
 ]

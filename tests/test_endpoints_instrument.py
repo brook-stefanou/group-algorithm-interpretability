@@ -97,6 +97,30 @@ def test_paired_sign_flip_permutation_hand_value():
     assert result["p_two_sided"] == pytest.approx(0.25)
 
 
+def test_paired_sign_flip_permutation_sampled_branch_is_deterministic_and_sane():
+    # n = 50 > exact_max_n (22): the campaign's real pair size, and the branch
+    # with no prior test coverage anywhere. A strong, all-positive signal (a
+    # real effect) should land at the sampled floor p = 1/(n_resamples + 1),
+    # and the result must be exactly reproducible for a fixed seed.
+    diffs = [10.0 + 0.1 * i for i in range(50)]
+    result_1 = paired_sign_flip_permutation(diffs, seed=0, n_resamples=2000)
+    result_2 = paired_sign_flip_permutation(diffs, seed=0, n_resamples=2000)
+    assert result_1 == result_2  # same seed -> bit-identical result
+    assert result_1["exact"] == 0.0
+    assert result_1["n_permutations"] == 2000.0
+    assert result_1["p_two_sided"] == pytest.approx(1.0 / 2001.0)
+
+    # A different seed still explores the same null and lands at the same
+    # floor for this strongly-separated signal, but need not match exactly.
+    result_3 = paired_sign_flip_permutation(diffs, seed=1, n_resamples=2000)
+    assert result_3["p_two_sided"] == pytest.approx(1.0 / 2001.0)
+
+    # A null (mean-zero, symmetric) signal should NOT sit at the floor.
+    null_diffs = [((-1.0) ** i) * 1.0 for i in range(50)]
+    result_null = paired_sign_flip_permutation(null_diffs, seed=0, n_resamples=2000)
+    assert result_null["p_two_sided"] > 1.0 / 2001.0
+
+
 def test_paired_difference_hand_values():
     result = paired_difference([2.0, 3.0, 4.0], [1.0, 1.0, 1.0])
     assert result["per_seed_difference"] == [1.0, 2.0, 3.0]
@@ -116,18 +140,30 @@ def test_paired_difference_rejects_unequal_lengths():
         paired_difference([1.0, 2.0], [1.0])
 
 
-def _grok(epoch, ceiling=1000):
+def test_paired_difference_rejects_nan_and_none():
+    # A fallback member's unleaked accuracy is NaN; paired_difference must
+    # raise a clear error rather than crash cryptically in the bootstrap or
+    # silently emit a NaN mean/CI.
+    with pytest.raises(ValueError, match="non-finite or missing"):
+        paired_difference([1.0, float("nan")], [0.5, 0.5])
+    with pytest.raises(ValueError, match="non-finite or missing"):
+        paired_difference([1.0, 0.9], [0.5, None])  # type: ignore[list-item]
+    with pytest.raises(ValueError, match="non-finite or missing"):
+        paired_difference([1.0, float("inf")], [0.5, 0.5])
+
+
+def _grok(epoch, ceiling=1000, *, reached_ceiling=True, metric="val/unleaked_accuracy"):
     return GrokTime(
         epoch=epoch,
         censored=epoch is None,
         ceiling=ceiling,
-        metric="val/unleaked_accuracy",
+        metric=metric,
         threshold=0.99,
         sustain=5,
         grok_value=None if epoch is None else 0.995,
         n_evaluated_rows=ceiling,
         max_epoch_recorded=ceiling - 1,
-        reached_ceiling=True,
+        reached_ceiling=reached_ceiling,
     )
 
 
@@ -161,6 +197,48 @@ def test_paired_grok_difference_all_both_censored_is_all_ties():
     assert result["n_both_censored_ties"] == 2
     assert result["sign_test"]["n"] == 0.0
     assert result["numeric_both_grokked"]["bootstrap_ci_95"] is None
+
+
+def test_paired_grok_difference_truncated_censored_member_is_excluded_not_signed():
+    # Pair 0: a is censored but its log stopped short of the ceiling (a crash) --
+    # its true grok time is unknown, so it must not be counted as a known
+    # "slower" sign. Pair 1: both grokked normally, an ordinary numeric diff.
+    a = [_grok(None, reached_ceiling=False), _grok(60)]
+    b = [_grok(50), _grok(80)]
+    result = paired_grok_difference(a, b)
+
+    assert result["n_truncated_pairs"] == 1
+    assert result["n_a_censored_only"] == 0
+    assert result["n_b_censored_only"] == 0
+    assert result["n_both_grokked"] == 1
+    # Only the both-grokked pair contributes a sign; the truncated pair is gone.
+    assert result["sign_test"]["n"] == 1.0
+    numeric = result["numeric_both_grokked"]
+    assert numeric["per_seed_difference"] == [-20.0]
+
+
+def test_paired_grok_difference_truncated_b_member_is_excluded_not_signed():
+    a = [_grok(50)]
+    b = [_grok(None, reached_ceiling=False)]
+    result = paired_grok_difference(a, b)
+    assert result["n_truncated_pairs"] == 1
+    assert result["n_b_censored_only"] == 0
+    assert result["sign_test"]["n"] == 0.0
+    assert result["n_pairs"] == 1
+
+
+def test_paired_grok_difference_rejects_mixed_ceiling():
+    a = [_grok(100), _grok(60)]
+    b = [_grok(50, ceiling=500), _grok(80, ceiling=500)]
+    with pytest.raises(ValueError, match="ceiling"):
+        paired_grok_difference(a, b)
+
+
+def test_paired_grok_difference_rejects_mixed_metric():
+    a = [_grok(100, metric="val/unleaked_accuracy"), _grok(60, metric="val/accuracy")]
+    b = [_grok(50), _grok(80)]
+    with pytest.raises(ValueError, match="metric"):
+        paired_grok_difference(a, b)
 
 
 # ---------------------------------------------------------------------------
@@ -324,6 +402,21 @@ def test_measurement_vector_skips_empty_log(tmp_path):
     assert record["status"] == "skipped"
 
 
+def test_measurement_vector_rows_without_endpoint_metric_is_skipped_not_censored(tmp_path):
+    """Finding 1's second route: run.log rows exist but none carry the endpoint
+    metric, so the grok series is empty. An empty series must not silently
+    yield a measured-censored record -- indistinguishable from a genuine
+    non-grokker once written -- it must be marked skipped instead."""
+    run = _write_run(tmp_path / "nometric", unleaked_curve=_grok_curve(10, 50))
+    lines = [f"epoch {e} | {{'train/loss': 0.01}}" for e in range(50)]
+    (run / "run.log").write_text("\n".join(lines) + "\n")
+    record = measurement_vector(run)
+    assert record["status"] == "skipped"
+    assert "val/unleaked_accuracy" in record["reason"]
+    # The dip-aware checkpoint pick is still attached, as with the other skip path.
+    assert "checkpoint_selection" in record
+
+
 def test_measurement_vector_reads_gzipped_log(tmp_path):
     """A shipped run's log survives only as run.log.gz; the endpoint series is
     read straight from it, so the run measures fully."""
@@ -402,6 +495,72 @@ def test_within_pair_endpoints_pairs_on_seed(tmp_path):
     assert grok_diff["sign_test"]["n_positive"] == 4.0
 
 
+def test_within_pair_endpoints_rejects_duplicate_seed(tmp_path):
+    # The corpus has same-seed reruns; a member with two measured records for
+    # the same seed must raise rather than silently collapsing to one via a
+    # dict comprehension.
+    a0 = _write_run(tmp_path / "a0", seed=0, unleaked_curve=_grok_curve(30, 200))
+    a0_rerun = _write_run(tmp_path / "a0_rerun", seed=0, unleaked_curve=_grok_curve(40, 200))
+    b0 = _write_run(tmp_path / "b0", seed=0, unleaked_curve=_grok_curve(20, 200))
+    records_a = [measurement_vector(a0), measurement_vector(a0_rerun)]
+    records_b = [measurement_vector(b0)]
+    with pytest.raises(ValueError, match="duplicate seeds"):
+        within_pair_endpoints(records_a, records_b)
+
+
+def test_within_pair_endpoints_excludes_metric_mismatched_seed_from_both_arms(tmp_path):
+    # Seed 0: both members on the normal unleaked metric. Seed 1: member A's
+    # unleaked subset was empty for that seed (a per-seed fallback), so it used
+    # raw accuracy while member B used unleaked -- not a like-for-like
+    # comparison on either arm, so seed 1 must be excluded from both rather
+    # than silently comparing raw to unleaked (or reading a fallback member's
+    # NaN unleaked accuracy).
+    a0 = _write_run(tmp_path / "a0", seed=0, unleaked_curve=_grok_curve(30, 200))
+    b0 = _write_run(tmp_path / "b0", seed=0, unleaked_curve=_grok_curve(20, 200))
+    a1 = _write_run(
+        tmp_path / "a1",
+        seed=1,
+        unleaked_curve=[(e, float("nan")) for e in range(200)],
+        unleaked_empty=True,
+    )
+    b1 = _write_run(tmp_path / "b1", seed=1, unleaked_curve=_grok_curve(25, 200))
+
+    records_a = [measurement_vector(a0), measurement_vector(a1)]
+    records_b = [measurement_vector(b0), measurement_vector(b1)]
+    assert records_a[1]["endpoint_metric_is_fallback"] is True
+
+    pair = within_pair_endpoints(records_a, records_b)
+    assert pair["paired_seeds"] == [0, 1]
+    assert pair["metric_mismatched_seeds"] == [1]
+    # Both arms computed over seed 0 only.
+    assert pair["epochs_to_grok_difference"]["n_pairs"] == 1
+    assert pair["final_unleaked_accuracy_difference"]["n_pairs"] == 1
+
+
+def test_within_pair_endpoints_reports_seeds_skipped_in_both_members(tmp_path):
+    a0 = _write_run(tmp_path / "a0", seed=0, unleaked_curve=_grok_curve(30, 200))
+    b0 = _write_run(tmp_path / "b0", seed=0, unleaked_curve=_grok_curve(20, 200))
+    # Seed 1 exists on both sides but neither run kept a log -- skipped on
+    # both members, so it must show up in dropped_unmatched_seeds rather than
+    # vanishing (the seed is absent from *both* by_seed dicts, so the plain
+    # set differences that catch a_only/b_only never see it).
+    a1 = _write_run(tmp_path / "a1", seed=1, unleaked_curve=_grok_curve(30, 200))
+    (a1 / "run.log").write_text("startup banner, no epoch rows\n")
+    b1 = _write_run(tmp_path / "b1", seed=1, unleaked_curve=_grok_curve(20, 200))
+    (b1 / "run.log").write_text("startup banner, no epoch rows\n")
+
+    records_a = [measurement_vector(a0), measurement_vector(a1)]
+    records_b = [measurement_vector(b0), measurement_vector(b1)]
+    assert records_a[1]["status"] == "skipped"
+    assert records_b[1]["status"] == "skipped"
+
+    pair = within_pair_endpoints(records_a, records_b)
+    assert pair["paired_seeds"] == [0]
+    assert pair["dropped_unmatched_seeds"]["skipped_in_both"] == [1]
+    assert pair["dropped_unmatched_seeds"]["a_only"] == []
+    assert pair["dropped_unmatched_seeds"]["b_only"] == []
+
+
 # ---------------------------------------------------------------------------
 # Salvaged v1 smoke tests (skipped when the archive is absent)
 # ---------------------------------------------------------------------------
@@ -423,3 +582,122 @@ def test_archive_censored_run_is_censored():
     assert record["epochs_to_grok"]["ceiling"] == 30000
     assert record["accuracy"]["at_final_epoch"]["unleaked"] == pytest.approx(0.9189, abs=1e-3)
     assert not math.isnan(record["accuracy"]["at_final_epoch"]["unleaked"])
+
+
+# ---------------------------------------------------------------------------
+# scripts/measure_endpoints.py: the entry point itself, exercised end-to-end
+# ---------------------------------------------------------------------------
+
+
+def _load_measure_endpoints_script():
+    """The script is an executable entry point, not part of the installed
+    package, so it is loaded by file path (mirroring tests/test_preflight.py)."""
+    import importlib.util
+    import sys
+    from types import ModuleType
+
+    root = Path(__file__).resolve().parent.parent
+    spec = importlib.util.spec_from_file_location(
+        "measure_endpoints_script", root / "scripts" / "measure_endpoints.py"
+    )
+    assert spec is not None and spec.loader is not None
+    module: ModuleType = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_measure_endpoints_script_measure_and_pair_end_to_end(tmp_path):
+    """No prior test in this suite ever runs scripts/measure_endpoints.py
+    itself; this drives both subcommands against synthesised run dirs and
+    checks the exit codes and the JSON each one writes."""
+    import json
+
+    script = _load_measure_endpoints_script()
+
+    a_dirs, b_dirs = [], []
+    for seed_val in range(3):
+        a_dirs.append(
+            _write_run(
+                tmp_path / f"a{seed_val}",
+                seed=seed_val,
+                index=3,
+                unleaked_curve=_grok_curve(onset=30 + 5 * seed_val, total=200),
+            )
+        )
+        b_dirs.append(
+            _write_run(
+                tmp_path / f"b{seed_val}",
+                seed=seed_val,
+                index=4,
+                unleaked_curve=_grok_curve(onset=20 + 5 * seed_val, total=200),
+            )
+        )
+
+    measure_out = tmp_path / "measure.json"
+    rc = script.main(
+        [
+            "measure",
+            *[str(d) for d in a_dirs],
+            *[str(d) for d in b_dirs],
+            "--out",
+            str(measure_out),
+        ]
+    )
+    assert rc == 0
+    payload = json.loads(measure_out.read_text())
+    assert len(payload["runs"]) == 6
+    assert all(r["status"] == "measured" for r in payload["runs"])
+    for d in a_dirs + b_dirs:  # each run also writes its own analysis/endpoints.json
+        assert (d / "analysis" / "endpoints.json").is_file()
+
+    pair_out = tmp_path / "pair.json"
+    rc = script.main(
+        [
+            "pair",
+            "--member-a",
+            *[str(d) for d in a_dirs],
+            "--member-b",
+            *[str(d) for d in b_dirs],
+            "--out",
+            str(pair_out),
+        ]
+    )
+    assert rc == 0
+    pair_record = json.loads(pair_out.read_text())
+    assert pair_record["instrument"] == "endpoints-pair"
+    assert pair_record["paired_seeds"] == [0, 1, 2]
+
+
+def test_measure_endpoints_script_measure_exits_1_on_skip(tmp_path):
+    script = _load_measure_endpoints_script()
+    good = _write_run(tmp_path / "good", seed=0, unleaked_curve=_grok_curve(30, 200))
+    bad = _write_run(tmp_path / "bad", seed=1, unleaked_curve=_grok_curve(30, 200))
+    (bad / "run.log").write_text("startup banner, no epoch rows\n")
+    rc = script.main(["measure", str(good), str(bad)])
+    assert rc == 1
+
+
+def test_measure_endpoints_script_pair_exits_1_when_a_member_run_is_skipped(tmp_path):
+    """Finding 5: the `pair` subcommand must not exit 0 when a member run was
+    skipped -- aligning its exit-code contract with `measure`, which already
+    exits 1 in this situation."""
+    script = _load_measure_endpoints_script()
+    a0 = _write_run(tmp_path / "a0", seed=0, unleaked_curve=_grok_curve(30, 200))
+    a1 = _write_run(tmp_path / "a1", seed=1, unleaked_curve=_grok_curve(30, 200))
+    (a1 / "run.log").write_text("startup banner, no epoch rows\n")
+    b0 = _write_run(tmp_path / "b0", seed=0, unleaked_curve=_grok_curve(20, 200))
+    b1 = _write_run(tmp_path / "b1", seed=1, unleaked_curve=_grok_curve(20, 200))
+
+    rc = script.main(
+        [
+            "pair",
+            "--member-a",
+            str(a0),
+            str(a1),
+            "--member-b",
+            str(b0),
+            str(b1),
+        ]
+    )
+    assert rc == 1

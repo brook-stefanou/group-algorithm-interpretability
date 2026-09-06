@@ -38,7 +38,7 @@ import gzip
 import json
 import math
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -158,10 +158,21 @@ class CheckpointSelection:
     last window epoch, or ``final.pt``), ``"window"`` when an earlier
     final-window epoch was selected because later ones were dipped, and
     ``"trajectory"`` when the rule fell back to a trajectory snapshot.
-    ``rejected`` lists every dipped or unassessable candidate that was passed
-    over, newest first, each with the metric value that disqualified it
+    ``substitution_recorded`` is ``False`` only for a curated ``categories``-shape
+    reconstruction where the underlying substitution genuinely could not be
+    determined (an unreadable/malformed config, or an unrecognised checkpoint
+    filename) -- in that case ``substitution`` is ``None`` as a placeholder, not
+    a claim that no substitution occurred; every other path (a live recompute,
+    or a flat-shape/full-record reconstruction) knows the answer, so it stays
+    ``True``. ``rejected`` lists every dipped or unassessable candidate that was
+    passed over, newest first, each with the metric value that disqualified it
     (``None`` when no ``run.log`` row exists at that epoch). ``path`` is
     ``None`` -- with ``reason`` set -- when no stable checkpoint exists at all.
+    ``requested_metric``/``requested_threshold`` are set only when a curated
+    run's ``selection.json`` short-circuit returned a pick gated on a different
+    metric/threshold than the caller asked for (see :func:`select_checkpoint`):
+    the divergence between what was asked and what was recorded is then visible
+    as data rather than silently substituted.
     """
 
     run_dir: Path
@@ -174,10 +185,13 @@ class CheckpointSelection:
     substitution: str | None
     rejected: list[dict[str, Any]] = field(default_factory=list)
     reason: str | None = None
+    substitution_recorded: bool = True
+    requested_metric: str | None = None
+    requested_threshold: float | None = None
 
     def to_record(self) -> dict[str, Any]:
         """JSON-serialisable form for embedding in an analysis output."""
-        return {
+        record: dict[str, Any] = {
             "rule": self.rule,
             "metric": self.metric,
             "threshold": self.threshold,
@@ -185,23 +199,36 @@ class CheckpointSelection:
             "epoch": self.epoch,
             "metric_value": self.metric_value,
             "substitution": self.substitution,
+            "substitution_recorded": self.substitution_recorded,
             "rejected": list(self.rejected),
             "reason": self.reason,
         }
+        if self.requested_metric is not None or self.requested_threshold is not None:
+            record["requested_metric"] = self.requested_metric
+            record["requested_threshold"] = self.requested_threshold
+        return record
 
 
-def _snapshot_epochs(ckpt_dir: Path, patterns: tuple[str, ...]) -> list[tuple[int, Path]]:
+def _snapshot_epochs(run_dir: Path, patterns: tuple[str, ...]) -> list[tuple[int, Path]]:
     """``(epoch, path)`` pairs for every snapshot matching ``patterns``, sorted
-    by ascending epoch. ``generalized_step_*.pt`` does not match ``step_*.pt``
-    under fnmatch (the prefix differs), so each family is globbed explicitly;
-    when two files share an epoch they hold identical weights and either
-    serves."""
+    by ascending epoch, discovered both FLAT at ``run_dir`` (the curated
+    shipped layout) and under ``run_dir/checkpoints/`` (the local training
+    layout) -- mirroring :func:`resolve_checkpoint`'s flat-first resolution, so
+    the recompute fallback (used when ``selection.json`` is missing or
+    unreadable) still finds a curated run's snapshots rather than seeing an
+    empty ``checkpoints/`` directory that was never there. ``generalized_step_*.pt``
+    does not match ``step_*.pt`` under fnmatch (the prefix differs), so each
+    family is globbed explicitly; when two files share an epoch they hold
+    identical weights and either serves (the flat one is kept when both exist)."""
     found: dict[int, Path] = {}
-    for pattern in patterns:
-        prefix = pattern[: pattern.index("*")]
-        for path in ckpt_dir.glob(pattern):
-            epoch = int(path.name[len(prefix) : -len(".pt")])
-            found.setdefault(epoch, path)
+    for directory in (run_dir / CHECKPOINTS_DIRNAME, run_dir):  # flat overrides nested
+        if not directory.is_dir():
+            continue
+        for pattern in patterns:
+            prefix = pattern[: pattern.index("*")]
+            for path in directory.glob(pattern):
+                epoch = int(path.name[len(prefix) : -len(".pt")])
+                found[epoch] = path
     return sorted(found.items())
 
 
@@ -219,6 +246,51 @@ def _stability(
     return value >= threshold, value
 
 
+def _read_resolved_config(run_dir: Path) -> dict[str, Any] | None:
+    """The parsed ``resolved_config.yaml``, or ``None`` when it is missing,
+    unreadable, or not a mapping. A single degrade point so a missing config
+    behaves the same way on every path that reads it, rather than silently
+    defaulting on one and raising an uncaught ``FileNotFoundError`` on
+    another."""
+    try:
+        resolved = yaml.safe_load((run_dir / RESOLVED_CONFIG_NAME).read_text())
+    except (OSError, yaml.YAMLError):
+        return None
+    return resolved if isinstance(resolved, dict) else None
+
+
+def _snapshot_window(resolved: dict[str, Any] | None) -> tuple[bool, int]:
+    """``(has_window, final_window_epochs)`` from a parsed resolved config's
+    ``snapshot`` block. Tolerates a malformed value -- a scalar ``snapshot:
+    true`` (not a mapping) or a non-numeric ``final_window_epochs`` -- by
+    degrading to "no window" rather than raising ``AttributeError``/``ValueError``."""
+    if resolved is None:
+        return False, 0
+    raw_snapshot = resolved.get("snapshot")
+    snapshot_cfg = raw_snapshot if isinstance(raw_snapshot, dict) else {}
+    raw_window = snapshot_cfg.get("final_window_epochs")
+    try:
+        window_epochs = int(raw_window) if raw_window is not None else 0
+    except (TypeError, ValueError):
+        return False, 0
+    has_window = "final_window_epochs" in snapshot_cfg and window_epochs > 0
+    return has_window, window_epochs
+
+
+def _optim_epochs(resolved: dict[str, Any] | None) -> int | None:
+    """``optim.epochs`` (the run's epoch ceiling) from a parsed resolved
+    config, or ``None`` when absent, unreadable, or non-numeric."""
+    if resolved is None:
+        return None
+    raw_optim = resolved.get("optim")
+    optim_cfg = raw_optim if isinstance(raw_optim, dict) else {}
+    raw_epochs = optim_cfg.get("epochs")
+    try:
+        return int(raw_epochs) if raw_epochs is not None else None
+    except (TypeError, ValueError):
+        return None
+
+
 def _rule_from_config(run_dir: Path) -> str:
     """The dip-aware rule name (``"final_window"`` | ``"final_gate"``) implied by
     a run's resolved config, used to label a selection reconstructed from
@@ -227,16 +299,133 @@ def _rule_from_config(run_dir: Path) -> str:
     restarted-campaign window run; anything else takes the final-gate rule.
     Defaults to ``"final_window"`` when the config cannot be read (the shipped
     campaign is entirely window runs)."""
-    try:
-        resolved = yaml.safe_load((run_dir / RESOLVED_CONFIG_NAME).read_text())
-    except (OSError, yaml.YAMLError):
+    resolved = _read_resolved_config(run_dir)
+    if resolved is None:
         return "final_window"
-    if not isinstance(resolved, dict):
-        return "final_window"
-    snapshot_cfg = resolved.get("snapshot") or {}
-    window_epochs = int(snapshot_cfg.get("final_window_epochs") or 0)
-    has_window = "final_window_epochs" in snapshot_cfg and window_epochs > 0
+    has_window, _ = _snapshot_window(resolved)
     return "final_window" if has_window else "final_gate"
+
+
+def _epoch_from_filename(filename: str) -> tuple[str, int | None]:
+    """``(kind, epoch)`` parsed from a checkpoint filename: ``kind`` is one of
+    ``"final_epoch"``, ``"step"``, ``"generalized_step"``, ``"final"`` (no
+    epoch in the name), or ``"other"`` when the name matches none of the known
+    snapshot-naming families."""
+    if filename == "final.pt":
+        return "final", None
+    for prefix, kind in (
+        ("final_epoch_", "final_epoch"),
+        ("generalized_step_", "generalized_step"),
+        ("step_", "step"),
+    ):
+        if filename.startswith(prefix) and filename.endswith(".pt"):
+            tail = filename[len(prefix) : -len(".pt")]
+            if tail.isdigit():
+                return kind, int(tail)
+    return "other", None
+
+
+def _recompute_curated_substitution(
+    run_dir: Path,
+    entry: dict[str, Any],
+    rule: str,
+) -> tuple[str | None, list[dict[str, Any]], bool]:
+    """Best-effort honest recomputation of a ``categories``-shape ``stable_end``
+    entry's ``substitution``/``rejected`` fields for a shipped run whose
+    ``selection.json`` predates the ship hook recording them directly (finding:
+    the curated ``categories`` shape used to store no substitution info at
+    all, so every reconstruction fabricated ``substitution=None, rejected=[]``
+    -- indistinguishable from a genuine no-substitution pick).
+
+    Uses only the deterministic final-window epoch arithmetic
+    (``{ceiling - N, ..., ceiling - 1}``, from ``optim.epochs`` and
+    ``snapshot.final_window_epochs`` in ``resolved_config.yaml`` --
+    :mod:`training.ensemble`'s snapshot condition is exact arithmetic, no
+    runtime state) plus ``run.log``/``run.log.gz`` lookups -- never the pruned
+    ``checkpoints/`` directory, which the curated layout does not keep these
+    files under.
+
+    Returns ``(substitution, rejected, recomputed)``. ``recomputed`` is
+    ``False`` when the substitution genuinely cannot be determined (an
+    unreadable/malformed config needed to place a ``final_epoch_*`` pick within
+    its window, or a filename outside the known snapshot-naming families); the
+    caller then records ``substitution_recorded=False`` rather than presenting
+    a guess as fact. A ``step_*``/``generalized_step_*`` pick is always a
+    trajectory substitution regardless of config (a trajectory file is never a
+    final-window one), so that classification needs no config at all -- only
+    its ``rejected`` window trail does. When the pick fell to a trajectory
+    snapshot from the ``final_gate`` rule, only the single ``final.pt``
+    rejection is recoverable: which other trajectory candidates were tried
+    first is data-dependent, event-based snapshot timing that a filename-plus-
+    config computation cannot recover, so ``rejected`` stays a partial (never
+    fabricated) trail there.
+    """
+    filename = entry.get("filename")
+    if not filename:
+        return None, [], True  # no checkpoint recorded; no substitution question applies
+    kind, epoch = _epoch_from_filename(str(filename))
+    metric_key = str(entry.get("metric_key") or "val/accuracy")
+
+    if rule == "final_gate":
+        if kind == "final":
+            return None, [], True
+        if kind in ("step", "generalized_step"):
+            rows = {row.epoch: row.metrics for row in run_log_rows(run_dir)}
+            last_epoch = max(rows) if rows else None
+            rejected: list[dict[str, Any]] = []
+            if last_epoch is not None:
+                rejected.append(
+                    {
+                        "checkpoint": "final.pt",
+                        "epoch": last_epoch,
+                        "value": rows.get(last_epoch, {}).get(metric_key),
+                    }
+                )
+            return "trajectory", rejected, True
+        return None, [], False
+
+    if rule == "final_window":
+        if kind == "final_epoch" and epoch is not None:
+            resolved = _read_resolved_config(run_dir)
+            ceiling = _optim_epochs(resolved)
+            has_window, window_n = _snapshot_window(resolved)
+            if ceiling is None or not has_window:
+                return None, [], False  # can't place this epoch within the window
+            window_epochs = list(range(max(ceiling - window_n, 0), ceiling))
+            if epoch not in window_epochs:
+                return None, [], False  # inconsistent with the config; don't guess
+            if epoch == window_epochs[-1]:
+                return None, [], True
+            rows = {row.epoch: row.metrics for row in run_log_rows(run_dir)}
+            rejected = [
+                {
+                    "checkpoint": f"final_epoch_{e}.pt",
+                    "epoch": e,
+                    "value": rows.get(e, {}).get(metric_key),
+                }
+                for e in sorted((e for e in window_epochs if e > epoch), reverse=True)
+            ]
+            return "window", rejected, True
+        if kind in ("step", "generalized_step"):
+            rejected = []
+            resolved = _read_resolved_config(run_dir)
+            ceiling = _optim_epochs(resolved)
+            has_window, window_n = _snapshot_window(resolved)
+            if ceiling is not None and has_window:
+                rows = {row.epoch: row.metrics for row in run_log_rows(run_dir)}
+                window_epochs = list(range(max(ceiling - window_n, 0), ceiling))
+                rejected = [
+                    {
+                        "checkpoint": f"final_epoch_{e}.pt",
+                        "epoch": e,
+                        "value": rows.get(e, {}).get(metric_key),
+                    }
+                    for e in sorted(window_epochs, reverse=True)
+                ]
+            return "trajectory", rejected, True
+        return None, [], False
+
+    return None, [], False
 
 
 _NO_STABLE_REASON = "selection.json recorded no stable checkpoint (censored/never-stable run)"
@@ -310,7 +499,29 @@ def _selection_from_full_record(
     metric: str,
     threshold: float,
 ) -> CheckpointSelection | None:
-    """Rebuild a selection from the flat shape's full ``stable_end`` record."""
+    """Rebuild a selection from the flat shape's full ``stable_end`` record.
+
+    ``record`` is ``None`` for a run that recorded no stable checkpoint at all
+    -- an explicit JSON ``null``, not a missing key. That is itself a complete
+    answer, not an unrecognised shape, so it returns the no-checkpoint
+    selection directly rather than returning ``None`` here and sending the
+    caller to the curated-layout-blind recompute fallback (which used to
+    misclassify these as censored for the wrong reason). Any other
+    non-``dict`` value is still treated as an unrecognised shape."""
+    if record is None:
+        return CheckpointSelection(
+            run_dir=run_dir,
+            rule=rule,
+            metric=metric,
+            threshold=threshold,
+            path=None,
+            epoch=None,
+            metric_value=None,
+            substitution=None,
+            substitution_recorded=True,
+            rejected=[],
+            reason=_NO_STABLE_REASON,
+        )
     if not isinstance(record, dict):
         return None
     filename = record.get("checkpoint")
@@ -341,7 +552,19 @@ def _selection_from_curated_entry(
     rule: str,
     threshold: float,
 ) -> CheckpointSelection:
-    """Rebuild a selection from ``ship_runs.py``'s lighter curated entry."""
+    """Rebuild a selection from ``ship_runs.py``'s lighter curated entry.
+
+    A ship predating the fixed :func:`scripts.ship_runs.build_curated_selection`
+    recorded no substitution info at all for this category -- reconstructing
+    that older entry used to fabricate ``substitution=None, rejected=[]``,
+    indistinguishable from a genuine no-substitution pick (70 of 2,290 shipped
+    runs affected). A ship that already carries ``substitution``/``rejected``
+    keys (the fixed hook writes them for every future ship) is read straight
+    through instead. Only when neither is available does
+    :func:`_recompute_curated_substitution` attempt an honest best-effort
+    recomputation from ``run.log`` plus the deterministic window arithmetic,
+    marking ``substitution_recorded=False`` when even that is not feasible.
+    """
     top_threshold = data.get("threshold")
     resolved_threshold = float(top_threshold) if top_threshold is not None else threshold
     leaked_key = str(data.get("leaked_metric_key") or "val/accuracy")
@@ -355,6 +578,7 @@ def _selection_from_curated_entry(
             epoch=None,
             metric_value=None,
             substitution=None,
+            substitution_recorded=True,
             rejected=[],
             reason=_stable_end_anomaly(data) or _NO_STABLE_REASON,
         )
@@ -363,6 +587,16 @@ def _selection_from_curated_entry(
     reason = None
     if filename and ckpt_path is None:
         reason = f"selection.json names {filename!r} but the checkpoint is not on disk"
+
+    if "substitution" in entry:
+        substitution = entry.get("substitution")
+        rejected = list(entry.get("rejected") or [])
+        substitution_recorded = True
+    else:
+        substitution, rejected, substitution_recorded = _recompute_curated_substitution(
+            run_dir, entry, rule
+        )
+
     return CheckpointSelection(
         run_dir=run_dir,
         rule=rule,
@@ -371,8 +605,9 @@ def _selection_from_curated_entry(
         path=ckpt_path,
         epoch=entry.get("epoch") if ckpt_path is not None else None,
         metric_value=entry.get("metric_value") if ckpt_path is not None else None,
-        substitution=None,
-        rejected=[],
+        substitution=substitution,
+        substitution_recorded=substitution_recorded,
+        rejected=rejected,
         reason=reason,
     )
 
@@ -390,24 +625,47 @@ def select_checkpoint(
     same rule at prune time, and the curated layout has no ``checkpoints/`` dir
     or plain ``run.log`` to recompute over. A freshly trained local run has no
     ``selection.json`` and falls through to the recomputation below over its
-    ``checkpoints/`` snapshots and ``run.log`` rows.
+    ``checkpoints/`` snapshots and ``run.log`` rows (also discovering a curated
+    run's FLAT snapshots, so a missing/corrupt ``selection.json`` does not
+    misclassify a grokked curated run as censored).
+
+    This short-circuit is gated on whatever metric/threshold the ship hook
+    used at prune time (leaked ``val/accuracy``), not on ``metric``/``threshold``
+    as passed here -- an open call on whether to recompute the pick for a
+    different metric (e.g. the unleaked one) instead. Until that is decided,
+    a caller asking for a different metric/threshold still gets the recorded
+    pick, but the divergence is made visible: the returned selection's
+    ``requested_metric``/``requested_threshold`` carry what was actually asked
+    for whenever it differs from what got used.
     """
     from_json = selection_from_json(run_dir, metric=metric, threshold=threshold)
     if from_json is not None:
+        if metric != from_json.metric or threshold != from_json.threshold:
+            from_json = replace(from_json, requested_metric=metric, requested_threshold=threshold)
         return from_json
 
-    ckpt_dir = run_dir / CHECKPOINTS_DIRNAME
     log_path = resolve_run_log(run_dir)
 
-    resolved = yaml.safe_load((run_dir / RESOLVED_CONFIG_NAME).read_text())
-    if not isinstance(resolved, dict):
-        raise ValueError(f"resolved_config.yaml in {run_dir} is not a mapping")
-    snapshot_cfg = resolved.get("snapshot") or {}
+    resolved = _read_resolved_config(run_dir)
+    if resolved is None:
+        return CheckpointSelection(
+            run_dir=run_dir,
+            rule="final_window",
+            metric=metric,
+            threshold=threshold,
+            path=None,
+            epoch=None,
+            metric_value=None,
+            substitution=None,
+            reason="resolved_config.yaml missing, unreadable, or not a mapping; "
+            "cannot determine the dip-aware rule",
+        )
     # Presence of the field is what distinguishes a restarted-campaign run from
     # a terminated-campaign one; a run that explicitly configured 0 window
     # epochs has the field but no window files, and takes the final-gate rule.
-    window_epochs = int(snapshot_cfg.get("final_window_epochs") or 0)
-    has_window = "final_window_epochs" in snapshot_cfg and window_epochs > 0
+    # A malformed value (a scalar `snapshot: true`, a non-numeric
+    # final_window_epochs) degrades to "no window" rather than raising.
+    has_window, _window_epochs = _snapshot_window(resolved)
     rule = "final_window" if has_window else "final_gate"
 
     def _empty(reason: str, rejected: list[dict[str, Any]] | None = None) -> CheckpointSelection:
@@ -433,7 +691,7 @@ def select_checkpoint(
     rejected: list[dict[str, Any]] = []
 
     if has_window:
-        window = _snapshot_epochs(ckpt_dir, ("final_epoch_*.pt",))
+        window = _snapshot_epochs(run_dir, ("final_epoch_*.pt",))
         for position, (epoch, path) in enumerate(reversed(window)):
             stable, value = _stability(rows, epoch, metric, threshold)
             if stable:
@@ -450,9 +708,9 @@ def select_checkpoint(
                 )
             rejected.append({"checkpoint": path.name, "epoch": epoch, "value": value})
     else:
-        final = ckpt_dir / "final.pt"
+        final = resolve_checkpoint(run_dir, "final.pt")
         last_epoch = max(rows)
-        if final.is_file():
+        if final is not None:
             stable, value = _stability(rows, last_epoch, metric, threshold)
             if stable:
                 return CheckpointSelection(
@@ -472,7 +730,7 @@ def select_checkpoint(
 
     # Fallback shared by both rules: the nearest (latest) stable trajectory
     # snapshot, assessed against the run.log row at its own epoch.
-    trajectory = _snapshot_epochs(ckpt_dir, ("step_*.pt", "generalized_step_*.pt"))
+    trajectory = _snapshot_epochs(run_dir, ("step_*.pt", "generalized_step_*.pt"))
     for epoch, path in reversed(trajectory):
         stable, value = _stability(rows, epoch, metric, threshold)
         if stable:

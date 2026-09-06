@@ -21,9 +21,16 @@ The battery has four members, and where each lives:
   entry points construct it and pass it in. The occupancy arm's own analytic
   companion is ``occupancy.analytic_null`` (``block_rank_j / |G|``), left where
   it is.
-* **random-subspace control** -- a norm/dimension-matched random subspace, used
-  by the cocycle (I-22b) and involution-direction (I-28b) ablations; those keep
-  their own draws so the two remain bit-identical to their pre-registered form.
+* **random-subspace control** -- a norm/dimension-matched random subspace,
+  used by the cocycle ablation (I-22b, ``cocycle.py``), the isotypic-block
+  ablation (I-15, ``coset.py``), and the involution-direction ablation (I-28b).
+  I-15 and I-22b each keep their own draw so they remain bit-identical to
+  their pre-registered form. I-28b's draw is not a separate probes.py
+  implementation: it is the same random-direction control the intervention
+  harness runs for every ``ablate_direction`` call (``interventions.py``,
+  the loop that builds ``random_direction_drop_flips``); ``probes.py`` only
+  picks the involution direction and delegates the ablation and its control
+  to that harness.
 
 Everything here is deterministic for a fixed seed and never perturbs a global
 RNG stream.
@@ -40,6 +47,8 @@ def chance_accuracy(order: int) -> float:
     untrained-model anchor within the I-03 battery). The grok bar is set well
     above this; reporting it lets a reader see how far above chance an endpoint
     is."""
+    if isinstance(order, bool) or not isinstance(order, int):
+        raise TypeError(f"group order must be an integer, got {order!r}")
     if order <= 0:
         raise ValueError(f"group order must be positive, got {order}")
     return 1.0 / order
@@ -49,7 +58,14 @@ def random_neuron_control(d_mlp: int, n: int, *, seed: int) -> torch.Tensor:
     """A matched-size random neuron set: ``n`` distinct MLP-neuron indices drawn
     from ``range(d_mlp)`` with a private seeded generator, so the draw never
     perturbs the global torch stream. This is the I-03 permuted-neuron / random-
-    subset control the intervention harness reads an ablation effect against."""
+    subset control the intervention harness reads an ablation effect against.
+
+    ``n`` must be within ``[0, d_mlp]``: the matched-size contract is that the
+    control set is a subset of the same ``d_mlp`` neurons, and ``randperm``
+    would otherwise silently truncate or reinterpret an out-of-range ``n``
+    instead of failing."""
+    if n < 0 or n > d_mlp:
+        raise ValueError(f"n must be between 0 and d_mlp ({d_mlp}), got {n}")
     generator = torch.Generator().manual_seed(seed)
     return torch.randperm(d_mlp, generator=generator)[:n]
 

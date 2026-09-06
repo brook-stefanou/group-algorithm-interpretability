@@ -133,7 +133,9 @@ class GrokTime:
     the ceiling. ``ceiling`` is the run's own ``optim.epochs``. ``reached_ceiling``
     records whether the log actually reached the ceiling: a censored run whose
     log stops early (a crash, not a genuine non-grok) is flagged, not silently
-    treated as a clean non-grokker.
+    treated as a clean non-grokker. :func:`paired_grok_difference` honours the
+    flag: a one-side-censored pair only gets a known sign when the censored
+    member actually reached its ceiling.
     """
 
     epoch: int | None
@@ -344,15 +346,29 @@ def paired_difference(
     descriptive supplements.
 
     ``a_values`` and ``b_values`` are the same seeds' measurements on the two
-    members, aligned by position (the caller pairs by seed). The bootstrap
-    resamples the per-pair differences — the seed within the pair, which is the
-    unit the pair-level claim is about — so it never pseudoreplicates. The
-    interval is the statement; the p-values are supplements and gate nothing.
+    members, aligned by position (the caller pairs by seed). Every value must be
+    present and finite — a fallback-metric member's raw accuracy read against
+    another member's unleaked accuracy, or any other missing/NaN measurement,
+    raises rather than silently propagating a NaN (or crashing cryptically
+    downstream in the bootstrap); the caller is expected to exclude such seeds
+    from the pairing first, with the exclusion recorded (see
+    :func:`within_pair_endpoints`). The bootstrap resamples the per-pair
+    differences — the seed within the pair, which is the unit the pair-level
+    claim is about — so it never pseudoreplicates. The interval is the
+    statement; the p-values are supplements and gate nothing.
     """
     if len(a_values) != len(b_values):
         raise ValueError(f"unequal seed counts: {len(a_values)} vs {len(b_values)}")
     if not a_values:
         raise ValueError("need at least one paired observation")
+    bad_a = [i for i, v in enumerate(a_values) if v is None or not math.isfinite(v)]
+    bad_b = [i for i, v in enumerate(b_values) if v is None or not math.isfinite(v)]
+    if bad_a or bad_b:
+        raise ValueError(
+            "paired_difference: non-finite or missing values at a-indices "
+            f"{bad_a}, b-indices {bad_b} -- exclude these seeds before pairing "
+            "rather than passing NaN/None through"
+        )
     diffs = [float(a) - float(b) for a, b in zip(a_values, b_values, strict=True)]
     n = len(diffs)
     mean = statistics.fmean(diffs)
@@ -398,21 +414,51 @@ def paired_grok_difference(
 
     * both members grokked — the numeric difference, which feeds the effect
       size and the bootstrap interval;
-    * one member censored — the censored member is at least the ceiling and the
-      other is below it, so the sign is known (the censored member is slower);
-      the pair keeps its sign for the sign test but is left out of the numeric
-      interval, whose magnitude it would only bound;
+    * one member censored and its log actually reached the ceiling — the
+      censored member is at least the ceiling and the other is below it, so the
+      sign is known (the censored member is slower); the pair keeps its sign
+      for the sign test but is left out of the numeric interval, whose
+      magnitude it would only bound;
+    * one member censored but ``reached_ceiling`` is ``False`` — its log
+      stopped short of the ceiling (a crash, not a genuine non-grok), so its
+      true grok time is unknown and the sign is *not* known either; the pair
+      is excluded from both the sign test and the numeric interval and counted
+      in ``n_truncated_pairs`` instead;
     * both censored — a tie, dropped from the sign test.
 
     The censoring fraction of each member is reported as its own measurement. The
     numeric interval covers the both-grokked subset only, with the excluded count
     stated so the reader sees how much of the pair is censored rather than
     estimated. Units are epochs. No verdict, no threshold.
+
+    All ``GrokTime``s passed in (both members, every seed) must share the same
+    ``ceiling``, ``metric``, ``threshold``, and ``sustain`` — mixing, say, a
+    30,000-epoch v1 ceiling with a 60,000-epoch restart ceiling, or an
+    unleaked-accuracy onset with a raw-accuracy fallback onset, makes the sign
+    rule above meaningless (a "censored" member under one ceiling/metric is not
+    comparable to a grokked member under another). A mismatch raises
+    ``ValueError`` naming the disagreeing values rather than silently reporting
+    a comparison that mixes bases.
     """
     if len(a_times) != len(b_times):
         raise ValueError(f"unequal seed counts: {len(a_times)} vs {len(b_times)}")
     if not a_times:
         raise ValueError("need at least one paired observation")
+
+    reference = a_times[0]
+    reference_key = (reference.ceiling, reference.metric, reference.threshold, reference.sustain)
+    for member_label, times in (("a", a_times), ("b", b_times)):
+        for i, t in enumerate(times):
+            key = (t.ceiling, t.metric, t.threshold, t.sustain)
+            if key != reference_key:
+                raise ValueError(
+                    "paired_grok_difference: GrokTime members disagree on "
+                    "(ceiling, metric, threshold, sustain) -- expected "
+                    f"{reference_key} (from a_times[0]) but member {member_label}"
+                    f"[{i}] has {key}. Mixing ceilings/metrics makes the "
+                    "censoring sign rule meaningless; pass only GrokTimes "
+                    "computed under one consistent config."
+                )
 
     signed_for_sign_test: list[float] = []
     finite_diffs: list[float] = []
@@ -420,6 +466,7 @@ def paired_grok_difference(
     n_a_censored_only = 0
     n_b_censored_only = 0
     n_both_censored = 0
+    n_truncated_pairs = 0
     for a, b in zip(a_times, b_times, strict=True):
         if not a.censored and not b.censored:
             assert a.epoch is not None and b.epoch is not None
@@ -428,12 +475,21 @@ def paired_grok_difference(
             signed_for_sign_test.append(d)
             n_both_finite += 1
         elif a.censored and not b.censored:
-            # a is at least the ceiling, b grokked below it: a - b > 0.
-            signed_for_sign_test.append(1.0)
-            n_a_censored_only += 1
+            if a.reached_ceiling:
+                # a is at least the ceiling, b grokked below it: a - b > 0.
+                signed_for_sign_test.append(1.0)
+                n_a_censored_only += 1
+            else:
+                # a's log stopped short of the ceiling (a crash, not a clean
+                # non-grok): its true grok time is unknown, so "a is slower"
+                # is not a known sign either. Exclude rather than assume it.
+                n_truncated_pairs += 1
         elif b.censored and not a.censored:
-            signed_for_sign_test.append(-1.0)
-            n_b_censored_only += 1
+            if b.reached_ceiling:
+                signed_for_sign_test.append(-1.0)
+                n_b_censored_only += 1
+            else:
+                n_truncated_pairs += 1
         else:
             n_both_censored += 1
 
@@ -461,16 +517,16 @@ def paired_grok_difference(
         numeric["bootstrap_ci_95"] = None
         numeric["sign_flip_permutation"] = None
 
-    ceiling = a_times[0].ceiling
     return {
         "label": label,
         "units": "epochs",
-        "ceiling": ceiling,
+        "ceiling": reference.ceiling,
         "n_pairs": n_pairs,
         "n_both_grokked": n_both_finite,
         "n_a_censored_only": n_a_censored_only,
         "n_b_censored_only": n_b_censored_only,
         "n_both_censored_ties": n_both_censored,
+        "n_truncated_pairs": n_truncated_pairs,
         "censoring_fraction_a": sum(1 for t in a_times if t.censored) / n_pairs,
         "censoring_fraction_b": sum(1 for t in b_times if t.censored) / n_pairs,
         # Censoring-robust: signs are well-defined for every non-both-censored
@@ -508,8 +564,11 @@ def measurement_vector(
     checkpoint and the final recorded epoch, the chance-accuracy anchor, the
     I-02 realised-leak covariate, and the dip-aware checkpoint selection (which
     may legitimately find no stable checkpoint for a censored seed — recorded as
-    data, not an error). A run whose ``run.log`` has no metric rows is returned
-    with ``status: "skipped"``.
+    data, not an error). A run whose ``run.log`` has no metric rows at all, or
+    whose rows never carry the endpoint metric (so the grok series would be
+    empty), is returned with ``status: "skipped"`` rather than a spuriously
+    measured-censored record — an empty series is not evidence of a genuine
+    non-grokker.
 
     Grok is measured on the transpose-unleaked subset. In the degenerate case
     where that subset is empty (``unleaked_empty``) the run's own training used
@@ -584,6 +643,19 @@ def measurement_vector(
         for row in rows_list
         if endpoint_metric in row.metrics
     ]
+    if not series:
+        # rows_list is non-empty, but none of its rows carry endpoint_metric:
+        # the series-based endpoints (grok onset) have nothing to compute over.
+        # An empty series would otherwise produce a GrokTime with censored=True
+        # and reached_ceiling=False, indistinguishable from a genuine censored
+        # non-grokker once recorded -- mark the run unassessable instead of
+        # measured-censored, so it cannot silently enter pairing as one.
+        record["status"] = "skipped"
+        record["reason"] = f"run.log rows carry no {endpoint_metric!r} values"
+        record["checkpoint_selection"] = select_checkpoint(
+            run_dir, metric=endpoint_metric, threshold=threshold
+        ).to_record()
+        return record
     grok = epochs_to_grok(
         series, ceiling=ceiling, threshold=threshold, sustain=sustain, metric=endpoint_metric
     )
@@ -626,15 +698,54 @@ def within_pair_endpoints(
     difference, over the seeds present in both members.
 
     Seeds are matched on the ``seed`` field; a seed present on only one member is
-    dropped to preserve the pairing (banned practice 6). Both members must be
-    measured records. The aggregation unit is the pair; the CIs are paired
-    bootstraps over the matched seeds.
+    dropped to preserve the pairing (banned practice 6), and one skipped in both
+    members is reported too (``dropped_unmatched_seeds["skipped_in_both"]``) so
+    it leaves a trace rather than silently vanishing from both set differences.
+    Both members must be measured records; a member with duplicate seeds among
+    its measured records raises ``ValueError`` naming them (the corpus has
+    same-seed reruns -- pass the canonical one run per seed, e.g. via
+    ``scripts/dedup_runs.py``). The aggregation unit is the pair; the CIs are
+    paired bootstraps over the matched seeds.
+
+    Both arms additionally exclude any seed pair where either member's endpoint
+    metric is the raw-accuracy fallback, or the two members disagree on which
+    metric they used: such a pair's ``at_final_epoch.unleaked`` value is NaN (a
+    fallback member's unleaked subset is empty) and its grok onset would be
+    computed against a different bar on each side (raw accuracy vs unleaked
+    accuracy), neither of which is a like-for-like comparison. Excluded seeds
+    are named in ``metric_mismatched_seeds``; this is also what keeps
+    :func:`paired_grok_difference`'s own ceiling/metric consistency check (see
+    its docstring) from ever firing on a legitimate per-seed fallback here --
+    it is fed only the metric-agreeing seeds, and remains a defence against
+    genuinely inconsistent input reaching this function directly.
     """
-    by_seed_a = {r["seed"]: r for r in records_a if r.get("status") == "measured"}
-    by_seed_b = {r["seed"]: r for r in records_b if r.get("status") == "measured"}
+
+    def _dedupe_measured(records: list[dict[str, Any]], member: str) -> dict[Any, dict[str, Any]]:
+        by_seed: dict[Any, dict[str, Any]] = {}
+        duplicates: set[Any] = set()
+        for r in records:
+            if r.get("status") != "measured":
+                continue
+            s = r["seed"]
+            if s in by_seed:
+                duplicates.add(s)
+            by_seed[s] = r
+        if duplicates:
+            raise ValueError(
+                f"within_pair_endpoints: member {member} has duplicate seeds among "
+                f"its measured records: {sorted(duplicates)} -- pass one canonical "
+                "run per seed (e.g. scripts/dedup_runs.py's output)"
+            )
+        return by_seed
+
+    all_seeds_a = {r["seed"] for r in records_a}
+    all_seeds_b = {r["seed"] for r in records_b}
+    by_seed_a = _dedupe_measured(records_a, "a")
+    by_seed_b = _dedupe_measured(records_b, "b")
     shared = sorted(set(by_seed_a) & set(by_seed_b))
     dropped_a = sorted(set(by_seed_a) - set(by_seed_b))
     dropped_b = sorted(set(by_seed_b) - set(by_seed_a))
+    skipped_in_both = sorted((all_seeds_a - set(by_seed_a)) & (all_seeds_b - set(by_seed_b)))
     if not shared:
         raise ValueError("the two members share no measured seed; cannot pair")
 
@@ -653,10 +764,31 @@ def within_pair_endpoints(
             reached_ceiling=g["reached_ceiling"],
         )
 
-    a_grok = [_grok(by_seed_a[s]) for s in shared]
-    b_grok = [_grok(by_seed_b[s]) for s in shared]
-    a_acc = [by_seed_a[s]["accuracy"]["at_final_epoch"]["unleaked"] for s in shared]
-    b_acc = [by_seed_b[s]["accuracy"]["at_final_epoch"]["unleaked"] for s in shared]
+    def _metric_mismatched(s: Any) -> bool:
+        ra, rb = by_seed_a[s], by_seed_b[s]
+        return bool(
+            ra["endpoint_metric_is_fallback"]
+            or rb["endpoint_metric_is_fallback"]
+            or ra["endpoint_metric"] != rb["endpoint_metric"]
+        )
+
+    metric_mismatched_seeds = [s for s in shared if _metric_mismatched(s)]
+    metric_consistent_seeds = [s for s in shared if s not in set(metric_mismatched_seeds)]
+    if not metric_consistent_seeds:
+        raise ValueError(
+            "within_pair_endpoints: every shared seed has a metric mismatch "
+            f"between members ({metric_mismatched_seeds}); nothing left to pair "
+            "on either arm"
+        )
+
+    a_grok = [_grok(by_seed_a[s]) for s in metric_consistent_seeds]
+    b_grok = [_grok(by_seed_b[s]) for s in metric_consistent_seeds]
+    a_acc = [
+        by_seed_a[s]["accuracy"]["at_final_epoch"]["unleaked"] for s in metric_consistent_seeds
+    ]
+    b_acc = [
+        by_seed_b[s]["accuracy"]["at_final_epoch"]["unleaked"] for s in metric_consistent_seeds
+    ]
 
     def _member(records: list[dict[str, Any]]) -> dict[str, Any]:
         first = records[0]
@@ -671,7 +803,12 @@ def within_pair_endpoints(
         "member_a": _member(records_a),
         "member_b": _member(records_b),
         "paired_seeds": shared,
-        "dropped_unmatched_seeds": {"a_only": dropped_a, "b_only": dropped_b},
+        "dropped_unmatched_seeds": {
+            "a_only": dropped_a,
+            "b_only": dropped_b,
+            "skipped_in_both": skipped_in_both,
+        },
+        "metric_mismatched_seeds": metric_mismatched_seeds,
         "epochs_to_grok_difference": paired_grok_difference(a_grok, b_grok, seed=seed),
         "final_unleaked_accuracy_difference": paired_difference(
             a_acc, b_acc, label="a_minus_b", units="unleaked accuracy", seed=seed

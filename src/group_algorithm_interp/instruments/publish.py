@@ -17,7 +17,7 @@ W&B afterwards. Hard constraints, in order of importance:
   prints why and does nothing, so the offline gate and every test stay
   network-free.
 * **Published runs are identifiable.** Each measured record becomes -- or, via
-  ``resume="allow"``, updates -- a W&B run whose id is the training run's own
+  ``resume="allow"``, resumes -- a W&B run whose id is the training run's own
   ``run_id`` and whose name is ``"<cell> (<order>,<index>) w<width>
   s<seed>"`` (zero-padded seed), with ``job_type="occupancy"``, grouped by
   the manifest's ``config_group_hash`` so every seed of one experiment lands
@@ -29,6 +29,20 @@ W&B afterwards. Hard constraints, in order of importance:
   ``(order, index, width)`` and added to config and tags; a
   ``"campaign-v2"`` tag marks every run this publisher writes as restart
   data.
+* **What "resume" actually does to a republished record.** ``resume="allow"``
+  only updates a run's ``summary`` and ``config`` in place -- W&B history
+  (the per-block ``occupancy/*`` metrics :func:`_log_per_block_metrics`
+  writes, stepped against ``occupancy/block``) is append-only under every
+  resume mode, so republishing a re-measured record does *not* replace its
+  earlier per-block rows; it appends a second copy alongside them. Each
+  publish call is tagged with an ``occupancy/publish_index`` counter -- read
+  back from the run's own (resume-restored) summary and written to every
+  per-block row and to ``summary["occupancy/publish_count"]`` -- so the two
+  generations are distinguishable (filter or group by
+  ``occupancy/publish_index`` in the UI) rather than silently blending. There
+  is no way to make history overwrite in place from this side of the wire;
+  the remedy for a clean single-generation history is to delete the W&B run
+  before republishing.
 * **Grok fields line up with the live sidecar's.** Every per-run summary also
   gets ``grokked``/``censored``/``epochs_to_grok`` -- the same three fields
   ``scripts/stream_runs.py``'s ``GrokTracker`` writes for a run it streamed
@@ -47,11 +61,12 @@ W&B afterwards. Hard constraints, in order of importance:
   ``scripts/ship_runs.py``'s current ``categories.unleaked_onset`` (the
   snapshot at/after onset). Either is a first-crossing/onset proxy for -- not
   identical to -- the sustained-onset ``endpoints.epochs_to_grok`` would
-  compute from a (now absent) ``run.log``. ``run.log`` is used only as a
+  compute from a (now absent) ``run.log``. The training log (plain
+  ``run.log`` or the ship hook's gzipped ``run.log.gz``) is used only as a
   fallback when ``selection.json`` is absent (an un-shipped local run).
   Looked up under ``runs_root`` (default: the repository's ``runs/``) by the
   record's own ``run_id``; a run with neither ``selection.json`` nor a
-  readable ``run.log`` publishes without these fields rather than failing.
+  readable training log publishes without these fields rather than failing.
 
 ``wandb`` is imported lazily and only past the credential gate; the module
 import itself never touches the network or requires the package.
@@ -62,11 +77,13 @@ from __future__ import annotations
 import json
 import os
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 import yaml
 
+from .checkpoints import resolve_run_log
 from .endpoints import RAW_METRIC, UNLEAKED_METRIC, epochs_to_grok, metric_series
 from .report import ARGUMENTS, FORMS
 
@@ -101,10 +118,16 @@ def publish_skip_reason() -> str | None:
     The gate is deliberately environmental, mirroring ``scripts/sync_runs.py``:
     no ``WANDB_API_KEY`` means no credentials to publish with, and a
     ``disabled``/``offline`` ``WANDB_MODE`` (the test suite forces
-    ``disabled`` process-wide) means the operator asked for no syncing."""
+    ``disabled`` process-wide) means the operator asked for no syncing. The
+    legacy ``WANDB_DISABLED`` environment variable is honoured too: under it
+    ``wandb.init`` returns a disabled stub that accepts every call and pushes
+    nothing, so without this check publishing would claim success while
+    nothing reached the server."""
     mode = os.environ.get("WANDB_MODE", "").strip().lower()
     if mode in ("disabled", "dryrun", "offline"):
         return f"WANDB_MODE={mode}; publishing is online-only"
+    if os.environ.get("WANDB_DISABLED", "").strip().lower() in ("true", "1"):
+        return "WANDB_DISABLED is set; publishing is online-only"
     if not os.environ.get("WANDB_API_KEY"):
         return "WANDB_API_KEY is not set; the publisher does nothing without it"
     return None
@@ -126,14 +149,33 @@ def _sanitise_run_id(run_id: str) -> str:
 def _load_campaign_lookup(path: Path) -> dict[tuple[int, int, int], dict[str, Any]]:
     """``(order, index, width) -> cell``, mirroring ``scripts/stream_runs.py``'s
     ``load_campaign_lookup`` so both publishers enrich runs from the same
-    source."""
+    source. A missing, unreadable, malformed (bad YAML, a non-mapping top
+    level), or partially malformed (a cell missing a required key) file
+    degrades to metadata-free naming/tags rather than failing the whole
+    publish -- the same graceful-degradation contract the docstring already
+    promises for a missing file, extended to cover a present-but-broken one."""
     try:
         data = yaml.safe_load(path.read_text())
-    except OSError:
+    except (OSError, yaml.YAMLError):
+        return {}
+    if not isinstance(data, dict):
+        print(
+            f"[publish] {path}: campaign config is not a mapping; "
+            "publishing without campaign metadata",
+            file=sys.stderr,
+        )
         return {}
     lookup: dict[tuple[int, int, int], dict[str, Any]] = {}
-    for cell in (data or {}).get("cells", []):
-        lookup.setdefault((cell["order"], cell["index"], cell["width"]), cell)
+    for cell in data.get("cells") or []:
+        try:
+            key = (cell["order"], cell["index"], cell["width"])
+        except (TypeError, KeyError) as exc:
+            print(
+                f"[publish] {path}: skipping a malformed campaign cell entry ({exc})",
+                file=sys.stderr,
+            )
+            continue
+        lookup.setdefault(key, cell)
     return lookup
 
 
@@ -223,13 +265,21 @@ def _canonical_grok_is_leaked(run_dir: Path) -> bool:
     metric -- true only when its manifest declares
     ``dataset.leakage.generalize_metric == "raw_test_accuracy"`` (the empty
     unleaked-subset case training itself fell back on). Defaults to ``False``
-    (unleaked canonical, the study default) when the manifest is absent or
-    unreadable, mirroring ``scripts/stream_runs.py``'s own default."""
+    (unleaked canonical, the study default) when the manifest is absent,
+    unreadable, malformed YAML, or -- at any level -- not the mapping this
+    reads through (``manifest``, ``dataset``, or ``leakage`` each checked
+    before ``.get`` is called on it), mirroring ``scripts/stream_runs.py``'s
+    own default."""
     try:
-        manifest = yaml.safe_load((run_dir / "manifest.yaml").read_text()) or {}
+        manifest = yaml.safe_load((run_dir / "manifest.yaml").read_text())
     except (OSError, yaml.YAMLError):
         return False
-    leakage = ((manifest.get("dataset") or {}).get("leakage")) or {}
+    if not isinstance(manifest, dict):
+        return False
+    dataset = manifest.get("dataset")
+    leakage = dataset.get("leakage") if isinstance(dataset, dict) else None
+    if not isinstance(leakage, dict):
+        return False
     return leakage.get("generalize_metric") == _RAW_FALLBACK_GENERALIZE_METRIC
 
 
@@ -258,7 +308,9 @@ def _grok_fields_from_selection(run_dir: Path) -> dict[str, Any] | None:
       the onset, or ``None`` when that metric never crossed). Its top-level
       ``censored`` is leaked-based, so the canonical unleaked grok is read
       from whether ``categories.unleaked_onset`` landed, and its epoch is the
-      snapshot-aligned onset.
+      snapshot-aligned onset. A present-but-non-boolean top-level
+      ``censored`` (e.g. an explicit JSON ``null``) is malformed and degrades
+      to ``None`` rather than risk a wrong verdict.
 
     Either way the reported epoch is a first-crossing / onset-snapshot proxy
     for the sustained-onset ``endpoints.epochs_to_grok`` would compute from a
@@ -286,6 +338,13 @@ def _grok_fields_from_selection(run_dir: Path) -> dict[str, Any] | None:
         use_leaked = data.get("unleaked_metric_key") is None or _canonical_grok_is_leaked(run_dir)
         if use_leaked:
             # ship_runs' top-level `censored` is exactly `leaked_onset is None`.
+            # An explicitly-null `censored` (key present, value None) is
+            # malformed rather than merely absent: `.get(key, default)` would
+            # return the stored None instead of falling back to `onset is
+            # None`, silently reporting a wrong (uncensored) verdict. Treat
+            # that as unreadable rather than guess at the intended value.
+            if "censored" in data and not isinstance(data["censored"], bool):
+                return None
             onset = categories.get("leaked_onset")
             censored = bool(data.get("censored", onset is None))
         else:
@@ -301,15 +360,17 @@ def _grok_fields_from_run_log(run_dir: Path) -> dict[str, Any] | None:
     """Fallback grok fields for a run with no ``selection.json`` (an un-shipped
     local run): the pre-registered sustained-onset rule
     (:func:`group_algorithm_interp.instruments.endpoints.epochs_to_grok`) run
-    over the run's own ``run.log`` -- the same onset the live sidecar's
+    over the run's own training log -- the same onset the live sidecar's
     ``GrokTracker`` approximates online. Falls back to the raw accuracy series
     when the transpose-unleaked series has no rows at all (an empty unleaked
     held-out subset), mirroring :func:`endpoints.measurement_vector`'s own
-    fallback. ``None`` when there is nothing to read -- no ``run.log``, or an
+    fallback. ``None`` when there is nothing to read -- neither a plain
+    ``run.log`` nor a gzipped ``run.log.gz`` (:func:`checkpoints.resolve_run_log`,
+    the same resolution :func:`endpoints.metric_series` uses), or an
     unreadable/missing ``optim.epochs``."""
-    log_path = run_dir / "run.log"
+    log_path = resolve_run_log(run_dir)
     config_path = run_dir / "resolved_config.yaml"
-    if not log_path.is_file() or not config_path.is_file():
+    if log_path is None or not config_path.is_file():
         return None
     try:
         ceiling = int(yaml.safe_load(config_path.read_text())["optim"]["epochs"])
@@ -362,9 +423,28 @@ def _run_config(record: dict[str, Any], context: dict[str, Any]) -> dict[str, An
     }
 
 
-def _log_per_block_metrics(run: Any, record: dict[str, Any]) -> None:
+def _next_publish_index(run: Any) -> int:
+    """The next per-publish generation number for ``run``: one more than
+    ``summary["occupancy/publish_count"]`` restored by ``resume="allow"`` from
+    an earlier publish of the same run_id, or ``1`` for a fresh run (or if the
+    summary cannot be read -- a summary quirk must not stop a publish)."""
+    try:
+        previous = run.summary.get("occupancy/publish_count")
+    except Exception:  # noqa: BLE001
+        previous = None
+    try:
+        return int(previous) + 1 if previous is not None else 1
+    except (TypeError, ValueError):
+        return 1
+
+
+def _log_per_block_metrics(run: Any, record: dict[str, Any], publish_index: int) -> None:
     """Per-block occupancy as plain metrics against a block-index step metric
-    -- the comparable-curves view, with no Table and no artifact behind it."""
+    -- the comparable-curves view, with no Table and no artifact behind it.
+    Every row also carries ``occupancy/publish_index`` so a republished
+    record's second (appended, not replaced -- W&B history is append-only
+    under ``resume="allow"``) generation of rows is distinguishable from the
+    first rather than silently blending with it."""
     run.define_metric("occupancy/block")
     run.define_metric("occupancy/*", step_metric="occupancy/block")
     null = record["analytic_null"]
@@ -379,6 +459,7 @@ def _log_per_block_metrics(run: Any, record: dict[str, Any]) -> None:
                 "occupancy/null": null[j],
                 "occupancy/left": left[j],
                 "occupancy/right": right[j],
+                "occupancy/publish_index": publish_index,
             }
         )
 
@@ -409,8 +490,9 @@ def _publish_one(
         config=config,
     )
     try:
-        _log_per_block_metrics(run, record)
-        for key, value in summary.items():
+        publish_index = _next_publish_index(run)
+        _log_per_block_metrics(run, record, publish_index)
+        for key, value in {**summary, "occupancy/publish_count": publish_index}.items():
             run.summary[key] = value
     finally:
         run.finish()
@@ -444,12 +526,32 @@ def publish_records(
     Every per-run summary also gets ``grokked``/``censored``/``epochs_to_grok``
     (:func:`_grok_fields`), looked up under ``runs_root`` (default:
     :data:`DEFAULT_RUNS_ROOT`) by the record's own ``run_id`` -- absent when
-    that run's directory or ``run.log`` cannot be found, never a failure.
+    that run's directory or training log cannot be found, never a failure.
+    Republishing a previously-published record does not replace its earlier
+    per-block history rows (W&B history is append-only under
+    ``resume="allow"``); the two generations are distinguishable via
+    ``occupancy/publish_index`` (see the module docstring).
 
     ``wandb_module`` is an injectable seam for tests (mirroring the injectable
     boundaries of ``scripts/sync_runs.py``); production callers leave it
-    ``None`` and get the real SDK via :func:`_import_wandb`."""
-    wandb = wandb_module if wandb_module is not None else _import_wandb()
+    ``None`` and get the real SDK via :func:`_import_wandb` -- gated by
+    :func:`publish_skip_reason` first, so a programmatic caller with no
+    credentials gets a clean no-op (all records counted as skipped) rather
+    than a ``wandb.init`` login/network attempt. A caller that injects its own
+    ``wandb_module`` has already made that call and is not gated here, the
+    same as every existing test in this suite."""
+    if wandb_module is None:
+        skip = publish_skip_reason()
+        if skip is not None:
+            print(f"[publish] not publishing: {skip}")
+            return {
+                "published": 0,
+                "pooled_published": 0,
+                "skipped_records": len(records),
+            }
+        wandb = _import_wandb()
+    else:
+        wandb = wandb_module
     lookup = _load_campaign_lookup(campaign_config or DEFAULT_CAMPAIGN_CONFIG)
     resolved_runs_root = runs_root or DEFAULT_RUNS_ROOT
     published = 0
@@ -458,87 +560,108 @@ def publish_records(
         if record.get("status") != "measured":
             skipped += 1
             continue
-        group_info = record["group"]
-        width = (record.get("model") or {}).get("d_model")
-        context = _campaign_context(group_info.get("order"), group_info.get("index"), width, lookup)
-        name = _display_name(
-            context,
-            group_info.get("order"),
-            group_info.get("index"),
-            width,
-            f"s{_format_seed(record.get('seed'))}",
-        )
-        computed_tags = _computed_tags(context, context["cell_name"] or group_info.get("name"))
-        run_summary = _flat_summary(record)
-        grok = _grok_fields(resolved_runs_root / str(record["run_id"]))
-        if grok is not None:
-            run_summary.update(grok)
-        _publish_one(
-            wandb,
-            run_id=record["run_id"],
-            name=name,
-            job_type=OCCUPANCY_JOB_TYPE,
-            group=record.get("provenance", {}).get("config_group_hash"),
-            project=project,
-            entity=entity,
-            tags=list(dict.fromkeys([*(tags or []), *computed_tags])),
-            config=_run_config(record, context),
-            record=record,
-            summary=run_summary,
-        )
+        try:
+            group_info = record["group"]
+            width = (record.get("model") or {}).get("d_model")
+            context = _campaign_context(
+                group_info.get("order"), group_info.get("index"), width, lookup
+            )
+            name = _display_name(
+                context,
+                group_info.get("order"),
+                group_info.get("index"),
+                width,
+                f"s{_format_seed(record.get('seed'))}",
+            )
+            computed_tags = _computed_tags(context, context["cell_name"] or group_info.get("name"))
+            run_summary = _flat_summary(record)
+            grok = _grok_fields(resolved_runs_root / str(record["run_id"]))
+            if grok is not None:
+                run_summary.update(grok)
+            _publish_one(
+                wandb,
+                run_id=record["run_id"],
+                name=name,
+                job_type=OCCUPANCY_JOB_TYPE,
+                group=record.get("provenance", {}).get("config_group_hash"),
+                project=project,
+                entity=entity,
+                tags=list(dict.fromkeys([*(tags or []), *computed_tags])),
+                config=_run_config(record, context),
+                record=record,
+                summary=run_summary,
+            )
+        except Exception:
+            print(
+                f"[publish] error publishing run {record.get('run_id')!r} -- "
+                f"{published} run(s) published, {skipped} skipped before this failure",
+                file=sys.stderr,
+            )
+            raise
         published += 1
 
     pooled_published = 0
     for entry in pooled or []:
-        key = entry["config_group_hash"]
-        group_info = entry["group"]
-        width = (entry.get("model") or {}).get("d_model")
-        context = _campaign_context(group_info.get("order"), group_info.get("index"), width, lookup)
-        name = _display_name(
-            context,
-            group_info.get("order"),
-            group_info.get("index"),
-            width,
-            f"pooled ({entry['n_runs']} seeds)",
-        )
-        computed_tags = _computed_tags(context, context["cell_name"] or group_info.get("name"))
-        summary: dict[str, Any] = {
-            "status": "pooled",
-            "n_runs": entry["n_runs"],
-            "n_units": entry["n_units"],
-            "seeds": entry["seeds"],
-        }
-        for argument in ARGUMENTS:
-            block = entry["occupancy"][argument]
-            summary[f"occupancy/{argument}/trivial_share"] = block["trivial_block_share"]
-            for form in FORMS:
-                stats = block[form] if form == "full" else block["nontrivial"]
-                summary[f"occupancy/{argument}/{form}/tv_to_null"] = stats["tv_to_null"]
-                summary[f"occupancy/{argument}/{form}/noise_floor"] = stats["noise_floor"]
-                summary[f"occupancy/{argument}/{form}/tv_over_floor"] = stats["tv_over_floor"]
-        _publish_one(
-            wandb,
-            run_id=f"occupancy-pooled-{key}",
-            name=name,
-            job_type=POOLED_JOB_TYPE,
-            group=key,
-            project=project,
-            entity=entity,
-            tags=list(dict.fromkeys([*(tags or []), *computed_tags])),
-            config={
-                "group": entry["group"],
-                "model": entry["model"],
-                "config_group_hash": key,
-                "run_ids": entry["run_ids"],
-                "trivial_block_index": entry["trivial_block_index"],
-                "phase": context["phase"],
-                "cell_name": context["cell_name"],
-                "pair_partner_order": context["pair_partner_order"],
-                "pair_partner_index": context["pair_partner_index"],
-            },
-            record=entry,
-            summary=summary,
-        )
+        try:
+            key = entry["config_group_hash"]
+            group_info = entry["group"]
+            width = (entry.get("model") or {}).get("d_model")
+            context = _campaign_context(
+                group_info.get("order"), group_info.get("index"), width, lookup
+            )
+            name = _display_name(
+                context,
+                group_info.get("order"),
+                group_info.get("index"),
+                width,
+                f"pooled ({entry['n_runs']} seeds)",
+            )
+            computed_tags = _computed_tags(context, context["cell_name"] or group_info.get("name"))
+            summary: dict[str, Any] = {
+                "status": "pooled",
+                "n_runs": entry["n_runs"],
+                "n_units": entry["n_units"],
+                "seeds": entry["seeds"],
+            }
+            for argument in ARGUMENTS:
+                block = entry["occupancy"][argument]
+                summary[f"occupancy/{argument}/trivial_share"] = block["trivial_block_share"]
+                for form in FORMS:
+                    stats = block[form] if form == "full" else block["nontrivial"]
+                    summary[f"occupancy/{argument}/{form}/tv_to_null"] = stats["tv_to_null"]
+                    summary[f"occupancy/{argument}/{form}/noise_floor"] = stats["noise_floor"]
+                    summary[f"occupancy/{argument}/{form}/tv_over_floor"] = stats["tv_over_floor"]
+            _publish_one(
+                wandb,
+                run_id=f"occupancy-pooled-{key}",
+                name=name,
+                job_type=POOLED_JOB_TYPE,
+                group=key,
+                project=project,
+                entity=entity,
+                tags=list(dict.fromkeys([*(tags or []), *computed_tags])),
+                config={
+                    "group": entry["group"],
+                    "model": entry["model"],
+                    "config_group_hash": key,
+                    "run_ids": entry["run_ids"],
+                    "trivial_block_index": entry["trivial_block_index"],
+                    "phase": context["phase"],
+                    "cell_name": context["cell_name"],
+                    "pair_partner_order": context["pair_partner_order"],
+                    "pair_partner_index": context["pair_partner_index"],
+                },
+                record=entry,
+                summary=summary,
+            )
+        except Exception:
+            print(
+                f"[publish] error publishing pooled group {entry.get('config_group_hash')!r} -- "
+                f"{published} run(s) and {pooled_published} pooled run(s) published before "
+                "this failure",
+                file=sys.stderr,
+            )
+            raise
         pooled_published += 1
 
     return {

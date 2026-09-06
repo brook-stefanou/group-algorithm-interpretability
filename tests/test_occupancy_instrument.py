@@ -95,6 +95,24 @@ def test_neuron_activations_require_an_mlp():
         neuron_activations(model, group.order)
 
 
+def test_neuron_activations_reject_a_nonpositive_batch_size():
+    """Finding 12: batch_size < 1 is a caller error caught with a clear message
+    (an empty range would otherwise yield a zero-row activation array)."""
+    model, group = _random_model(8, 3)
+    with pytest.raises(ValueError, match="batch_size must be >= 1"):
+        neuron_activations(model, group.order, batch_size=0)
+
+
+def test_isotypic_energies_reject_nonfinite_activations():
+    """Finding 11: a NaN/Inf activation is caught up front naming the real cause
+    (invalid activations), not misreported as a projector-completeness failure."""
+    model, group = _random_model(8, 3)
+    activations = neuron_activations(model, group.order)
+    activations[0, 0, 0] = np.nan
+    with pytest.raises(ValueError, match="non-finite"):
+        isotypic_energies(activations, group)
+
+
 def test_fc_model_is_accepted_by_the_same_instrument():
     model, group = _random_model(8, 3, arch="fc")
     energies = isotypic_energies(neuron_activations(model, group.order), group)
@@ -311,6 +329,11 @@ def test_template_library_is_undefined_without_nontrivial_corefree_subgroups(nam
     group = resolve_group(name)
     library = template_library(group)
     assert not library.coset_defined
+    # Subgroups WERE examined here, so this is the structural theorem, not the
+    # artifact-incomplete case.
+    assert library.subgroups_included
+    assert not library.artifact_incomplete
+    assert library.n_subgroups_examined > 0
     assert library.min_corefree_index == group.order
     assert library.entries == ()
     record = library.to_record()
@@ -318,10 +341,77 @@ def test_template_library_is_undefined_without_nontrivial_corefree_subgroups(nam
     assert "regular representation" in record["undefined_reason"]
 
 
+def _artifact_without_subgroups(order: int, index: int, dst_dir) -> None:
+    """Write ``dst_dir``'s copy of a fixture artifact with its subgroup/coset
+    arrays and counts stripped -- the artifact-incomplete (default-export) case,
+    where the exporter shipped no subgroup section."""
+    import json
+
+    from group_algorithm_interp.groups.data import artifact_dir
+
+    src = artifact_dir() / f"smallgroup_{order}_{index}.npz"
+    with np.load(src, allow_pickle=False) as raw:
+        keep = {k: raw[k] for k in raw.files if not k.startswith(("subgroup_", "coset_"))}
+    meta = json.loads(str(keep["metadata"].item()))
+    meta["subgroups"] = 0
+    meta["coset_counts"] = []
+    meta["provenance"]["subgroups_included"] = False
+    keep["metadata"] = np.array(json.dumps(meta))
+    np.savez(dst_dir / f"smallgroup_{order}_{index}.npz", **keep)
+
+
+def test_template_library_flags_artifact_incomplete_without_claiming_the_theorem(tmp_path):
+    """An artifact exported without subgroup data cannot claim the structural
+    UNDEFINED theorem: whether a nontrivial core-free subgroup exists is simply
+    unknown. ``template_library`` must report ``artifact_incomplete`` with a
+    reason that names the missing data, never the 'regular representation'
+    theorem verdict reserved for an examined-and-empty group."""
+    from group_algorithm_interp.groups.data import load_group
+
+    _artifact_without_subgroups(8, 3, tmp_path)  # D8 stripped of its subgroups
+    group = load_group(8, 3, directory=tmp_path)
+    library = template_library(group)
+    assert library.n_subgroups_examined == 0
+    assert not library.subgroups_included
+    assert library.artifact_incomplete
+    assert not library.coset_defined
+    record = library.to_record()
+    assert record["entries"] == "UNDEFINED"
+    assert record["subgroups_included"] is False
+    assert "artifact incomplete" in record["undefined_reason"]
+    assert "regular representation" not in record["undefined_reason"]
+
+
 def test_induction_rejects_a_non_dividing_subset():
     d8 = resolve_group("D8")
     with pytest.raises(ValueError, match="does not divide"):
         induction_multiplicities(d8, np.array([0, 1, 2]))
+
+
+def test_induction_rejects_a_non_closed_subset():
+    """A subset whose size divides |G| but which is not closed under the group
+    operation is not a subgroup; its induction multiplicities are meaningless,
+    so it must be rejected rather than pass silently. {e, r} in D8 has size 2
+    (a divisor of 8) but r*r = r^2 lies outside it."""
+    d8 = resolve_group("D8")
+    with pytest.raises(ValueError, match="closed under the group operation"):
+        induction_multiplicities(d8, np.array([0, 1]))
+
+
+def test_induction_template_rejects_empty_subgroup_cleanly():
+    """The empty set must raise a clear ValueError, not a bare ZeroDivisionError
+    from computing [G:H] before the size guard."""
+    d8 = resolve_group("D8")
+    with pytest.raises(ValueError, match="does not divide"):
+        induction_template(d8, np.array([], dtype=np.int64))
+
+
+def test_subgroup_core_requires_the_identity():
+    """A member list missing the identity is not a subgroup; ``subgroup_core``
+    must reject it rather than return a misleading intersection."""
+    d8 = resolve_group("D8")
+    with pytest.raises(ValueError, match="identity"):
+        subgroup_core(d8.cayley_table, np.array([4]))  # {s} alone, no identity
 
 
 def test_energies_reject_wrong_shape_and_corrupt_projectors():

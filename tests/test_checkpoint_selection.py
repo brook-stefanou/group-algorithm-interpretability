@@ -275,13 +275,30 @@ def test_missing_run_log_selects_nothing(tmp_path, old_style_run):
 # ---------------------------------------------------------------------------
 
 
-def _curated_run(run_dir: Path, *, selection: dict, window: int = 5) -> Path:
+def _curated_run(
+    run_dir: Path,
+    *,
+    selection: dict,
+    window: int = 5,
+    epochs: int | None = None,
+    run_log: dict[int, float] | None = None,
+) -> Path:
     """A minimal curated run dir: a resolved config (so the rule can be named),
     a ``selection.json``, and flat stub checkpoints for every filename the
-    selection references. No ``checkpoints/`` dir and no ``run.log``."""
+    selection references. No ``checkpoints/`` dir and no ``run.log`` by
+    default. ``epochs``, when given, additionally records ``optim.epochs`` --
+    needed for the categories-shape substitution recompute's window
+    arithmetic. ``run_log``, when given, writes a real ``run.log`` with one
+    ``val/accuracy`` row per given epoch, also feeding that recompute."""
     run_dir.mkdir(parents=True, exist_ok=True)
-    (run_dir / "resolved_config.yaml").write_text(f"snapshot:\n  final_window_epochs: {window}\n")
+    config = f"snapshot:\n  final_window_epochs: {window}\n"
+    if epochs is not None:
+        config += f"optim:\n  epochs: {epochs}\n"
+    (run_dir / "resolved_config.yaml").write_text(config)
     (run_dir / "selection.json").write_text(json.dumps(selection))
+    if run_log is not None:
+        lines = [f"epoch {e} | {{'val/accuracy': {v}}}" for e, v in sorted(run_log.items())]
+        (run_dir / "run.log").write_text("\n".join(lines) + "\n")
     names: set[str] = set()
 
     def _collect(node: object) -> None:
@@ -352,7 +369,28 @@ def test_curated_selections_schema_censored_selects_nothing(tmp_path):
     assert selection.reason == "a censored or never-stable run"
 
 
+def test_selections_stable_end_null_returns_no_checkpoint_not_recompute(tmp_path):
+    """``selections.stable_end`` as a bare JSON ``null`` (the whole field
+    missing a value, not a dict with ``checkpoint: None``) must be read as its
+    own complete no-checkpoint answer, not treated as an unrecognised shape
+    that falls through to the curated-layout-blind recompute fallback."""
+    run = _curated_run(tmp_path / "sel-null", selection={"selections": {"stable_end": None}})
+    selection = select_checkpoint(run)
+    assert selection.path is None
+    assert selection.epoch is None
+    assert selection.substitution_recorded is True
+    assert selection.reason == (
+        "selection.json recorded no stable checkpoint (censored/never-stable run)"
+    )
+
+
 def test_curated_categories_schema_grokked_fills_missing_fields(tmp_path):
+    """``step_11.pt`` is an implicit substitution (a categories-shape entry
+    predating the ship hook recording substitution info directly): it must be
+    honestly recomputed as ``"trajectory"``, never fabricated as ``None``. A
+    ``step_*``/``generalized_step_*`` filename is never a final-window one, so
+    this classification needs no config at all -- it holds even though this
+    fixture's resolved config carries no ``optim.epochs``."""
     entry = {
         "epoch": 11,
         "metric_key": "val/accuracy",
@@ -367,6 +405,122 @@ def test_curated_categories_schema_grokked_fills_missing_fields(tmp_path):
     assert selection.metric == "val/accuracy"
     assert selection.threshold == 0.99
     assert selection.rule == "final_window"  # inferred from the resolved config
+    assert selection.substitution == "trajectory"
+    assert selection.substitution_recorded is True
+    # No optim.epochs in this fixture's config, so the window's own rejected
+    # trail cannot be recovered -- left empty, never fabricated.
+    assert selection.rejected == []
+
+
+def test_curated_categories_schema_primary_window_pick_has_no_substitution(tmp_path):
+    """The window's own last epoch, picked as-is: recomputation must not
+    invent a substitution for a genuinely unsubstituted pick."""
+    entry = {
+        "epoch": 19,
+        "metric_key": "val/accuracy",
+        "metric_value": 0.995,
+        "filename": "final_epoch_19.pt",
+    }
+    run = _curated_run(
+        tmp_path / "cat-primary", selection=_categories_stable_end(entry), window=3, epochs=20
+    )
+    selection = select_checkpoint(run)
+    assert selection.substitution is None
+    assert selection.substitution_recorded is True
+    assert selection.rejected == []
+
+
+def test_curated_categories_schema_window_substitution_recomputed_honestly(tmp_path):
+    """An earlier final-window epoch was picked because later window epochs
+    dipped: the window arithmetic (ceiling=20, final_window_epochs=3 ->
+    epochs 17/18/19) plus run.log values honestly reconstruct which newer
+    window epochs were rejected and why."""
+    entry = {
+        "epoch": 17,
+        "metric_key": "val/accuracy",
+        "metric_value": 0.995,
+        "filename": "final_epoch_17.pt",
+    }
+    run = _curated_run(
+        tmp_path / "cat-window",
+        selection=_categories_stable_end(entry),
+        window=3,
+        epochs=20,
+        run_log={18: 0.6, 19: 0.7},
+    )
+    selection = select_checkpoint(run)
+    assert selection.substitution == "window"
+    assert selection.substitution_recorded is True
+    assert [r["epoch"] for r in selection.rejected] == [19, 18]
+    assert selection.rejected[0] == {"checkpoint": "final_epoch_19.pt", "epoch": 19, "value": 0.7}
+    assert selection.rejected[1] == {"checkpoint": "final_epoch_18.pt", "epoch": 18, "value": 0.6}
+
+
+def test_curated_categories_schema_trajectory_substitution_recomputed_honestly(tmp_path):
+    """Mirrors the audited real curated run
+    ``2026-07-20_123529_475318_core_5abbf7``: a categories-shape stable_end
+    pick that fell all the way past the final window to a trajectory
+    snapshot. With a full resolved config (ceiling + window) and a surviving
+    run.log, the entire window's rejected trail is honestly recomputed from
+    arithmetic plus logged values -- never fabricated as
+    ``substitution=None, rejected=[]``."""
+    entry = {
+        "epoch": 10,
+        "metric_key": "val/accuracy",
+        "metric_value": 0.995,
+        "filename": "step_10.pt",
+    }
+    run = _curated_run(
+        tmp_path / "cat-traj",
+        selection=_categories_stable_end(entry),
+        window=3,
+        epochs=20,
+        run_log={e: (0.5 if e < 17 else 0.80) for e in range(20)},
+    )
+    selection = select_checkpoint(run)
+    assert selection.path is not None and selection.path.name == "step_10.pt"
+    assert selection.substitution == "trajectory"
+    assert selection.substitution_recorded is True
+    assert [r["epoch"] for r in selection.rejected] == [19, 18, 17]
+    assert all(r["value"] == pytest.approx(0.80) for r in selection.rejected)
+
+
+def test_curated_categories_schema_substitution_not_recorded_when_config_incomplete(tmp_path):
+    """A final-window-epoch pick that is NOT the window's own last epoch
+    (``epoch=8`` while ``final_window_epochs=5``), but with no ``optim.epochs``
+    in the config to place it within the window: the substitution genuinely
+    cannot be determined, so it is marked not-recorded rather than guessed."""
+    entry = {
+        "epoch": 8,
+        "metric_key": "val/accuracy",
+        "metric_value": 0.99,
+        "filename": "final_epoch_8.pt",
+    }
+    run = _curated_run(tmp_path / "cat-unrec", selection=_categories_stable_end(entry))
+    selection = select_checkpoint(run)
+    assert selection.path is not None and selection.path.name == "final_epoch_8.pt"
+    assert selection.substitution is None
+    assert selection.substitution_recorded is False
+    assert selection.rejected == []
+
+
+def test_curated_categories_schema_future_ship_reads_recorded_substitution_verbatim(tmp_path):
+    """A ship from the fixed hook already carries ``substitution``/``rejected``
+    on the curated entry (scripts/ship_runs.py's fix): read straight through,
+    no recomputation needed."""
+    entry = {
+        "epoch": 10,
+        "metric_key": "val/accuracy",
+        "metric_value": 0.995,
+        "filename": "step_10.pt",
+        "substitution": "trajectory",
+        "rejected": [{"checkpoint": "final_epoch_19.pt", "epoch": 19, "value": 0.5}],
+    }
+    run = _curated_run(tmp_path / "cat-recorded", selection=_categories_stable_end(entry))
+    selection = select_checkpoint(run)
+    assert selection.substitution == "trajectory"
+    assert selection.substitution_recorded is True
+    assert selection.rejected == [{"checkpoint": "final_epoch_19.pt", "epoch": 19, "value": 0.5}]
 
 
 def test_curated_categories_schema_censored_uses_anomaly_reason(tmp_path):
@@ -408,6 +562,146 @@ def test_selection_from_json_absent_returns_none(tmp_path):
     run.mkdir()
     (run / "resolved_config.yaml").write_text("snapshot:\n  final_window_epochs: 5\n")
     assert selection_from_json(run) is None
+
+
+# ---------------------------------------------------------------------------
+# Caller metric/threshold divergence on the curated short-circuit (visibility
+# only -- the recorded pick is never overridden, only the divergence is
+# surfaced as data).
+# ---------------------------------------------------------------------------
+
+
+def test_curated_short_circuit_records_requested_metric_and_threshold_when_they_differ(tmp_path):
+    """endpoints.py requests val/unleaked_accuracy on a curated run whose
+    selection.json is gated on the leaked val/accuracy; the short-circuit
+    still returns the ship-time pick untouched (an open human decision), but
+    the caller's differing ask is now visible rather than silently ignored."""
+    run = _curated_run(tmp_path / "sel-req", selection=_selections_stable_end("final_epoch_11.pt"))
+    selection = select_checkpoint(run, metric="val/unleaked_accuracy", threshold=0.95)
+    assert selection.path is not None and selection.path.name == "final_epoch_11.pt"
+    assert selection.metric == "val/accuracy"  # the recorded pick, unchanged
+    assert selection.threshold == 0.99
+    assert selection.requested_metric == "val/unleaked_accuracy"
+    assert selection.requested_threshold == 0.95
+    record = selection.to_record()
+    assert record["requested_metric"] == "val/unleaked_accuracy"
+    assert record["requested_threshold"] == 0.95
+
+
+def test_curated_short_circuit_omits_requested_fields_when_they_match(tmp_path):
+    run = _curated_run(
+        tmp_path / "sel-match", selection=_selections_stable_end("final_epoch_11.pt")
+    )
+    selection = select_checkpoint(run, metric="val/accuracy", threshold=0.99)
+    assert selection.requested_metric is None
+    assert selection.requested_threshold is None
+    assert "requested_metric" not in selection.to_record()
+    assert "requested_threshold" not in selection.to_record()
+
+
+# ---------------------------------------------------------------------------
+# Recompute fallback must see the curated flat layout (a missing/corrupt
+# selection.json must not misclassify a grokked curated run as censored).
+# ---------------------------------------------------------------------------
+
+
+def test_curated_run_missing_selection_json_recomputes_from_flat_layout(tmp_path):
+    """A real grokked curated run with selection.json deleted must not be
+    misclassified as censored: the recompute fallback discovers the flat
+    final_epoch_*.pt / step_*.pt files at the run-dir root (no checkpoints/
+    subdirectory) and the gzipped run.log, exactly as selection_from_json
+    would have reported had the file survived."""
+    run_dir = tmp_path / "no-sel"
+    run_dir.mkdir()
+    (run_dir / "resolved_config.yaml").write_text(
+        "optim:\n  epochs: 12\nsnapshot:\n  final_window_epochs: 3\n"
+    )
+    for name in (
+        "step_0.pt",
+        "step_4.pt",
+        "step_8.pt",
+        "final_epoch_9.pt",
+        "final_epoch_10.pt",
+        "final_epoch_11.pt",
+    ):
+        (run_dir / name).write_bytes(b"stub")
+    lines = [f"epoch {e} | {{'val/accuracy': {0.995 if e >= 9 else 0.3}}}" for e in range(12)]
+    (run_dir / "run.log.gz").write_bytes(gzip.compress(("\n".join(lines) + "\n").encode()))
+    # Deliberately no selection.json.
+    selection = select_checkpoint(run_dir)
+    assert selection.path is not None and selection.path.name == "final_epoch_11.pt"
+    assert selection.rule == "final_window"
+    assert selection.reason is None
+
+
+def test_curated_run_missing_selection_json_final_gate_recomputes_from_flat_layout(tmp_path):
+    """Same defect, final_gate rule: final.pt is flat at the run-dir root, not
+    under checkpoints/, and must still be found."""
+    run_dir = tmp_path / "no-sel-gate"
+    run_dir.mkdir()
+    (run_dir / "resolved_config.yaml").write_text("snapshot: {}\n")
+    (run_dir / "final.pt").write_bytes(b"stub")
+    (run_dir / "run.log").write_text(
+        "epoch 0 | {'val/accuracy': 0.5}\nepoch 1 | {'val/accuracy': 0.995}\n"
+    )
+    selection = select_checkpoint(run_dir)
+    assert selection.path is not None and selection.path.name == "final.pt"
+    assert selection.rule == "final_gate"
+    assert selection.reason is None
+
+
+# ---------------------------------------------------------------------------
+# Config-error degradation: malformed snapshot config and a missing
+# resolved_config.yaml must degrade the same way everywhere, never raise.
+# ---------------------------------------------------------------------------
+
+
+def test_malformed_snapshot_config_degrades_gracefully_on_recompute_path(tmp_path):
+    """A scalar ``snapshot: true`` and a non-numeric ``final_window_epochs``
+    must degrade like any other config error (no window inferred), never raise
+    AttributeError/ValueError."""
+    run_dir = tmp_path / "malformed"
+    run_dir.mkdir()
+    (run_dir / "resolved_config.yaml").write_text(
+        "snapshot: true\noptim:\n  epochs: not_a_number\n"
+    )
+    (run_dir / "run.log").write_text("epoch 0 | {'val/accuracy': 0.5}\n")
+    selection = select_checkpoint(run_dir)  # must not raise
+    assert selection.rule == "final_gate"
+    assert selection.path is None
+
+
+def test_malformed_snapshot_config_degrades_in_curated_reconstruction(tmp_path):
+    """The same malformed ``snapshot`` value, reached through the categories-
+    shape substitution recompute, must degrade rather than raise."""
+    run_dir = tmp_path / "malformed-curated"
+    run_dir.mkdir()
+    (run_dir / "resolved_config.yaml").write_text("snapshot: true\n")
+    entry = {
+        "epoch": 5,
+        "metric_key": "val/accuracy",
+        "metric_value": 0.99,
+        "filename": "step_5.pt",
+    }
+    (run_dir / "selection.json").write_text(json.dumps(_categories_stable_end(entry)))
+    (run_dir / "step_5.pt").write_bytes(b"stub")
+    selection = select_checkpoint(run_dir)  # must not raise
+    assert selection.path is not None and selection.path.name == "step_5.pt"
+    assert selection.rule == "final_gate"  # malformed snapshot -> no window inferred
+    assert selection.substitution == "trajectory"  # a step file needs no config to know this
+    assert selection.substitution_recorded is True
+
+
+def test_missing_resolved_config_degrades_on_recompute_path(tmp_path):
+    """A missing resolved_config.yaml must degrade to a recorded reason, not
+    an uncaught FileNotFoundError -- the same failure mode selection_from_json
+    already handles gracefully for the rule-inference path."""
+    run_dir = tmp_path / "no-config"
+    run_dir.mkdir()
+    (run_dir / "run.log").write_text("epoch 0 | {'val/accuracy': 0.99}\n")
+    selection = select_checkpoint(run_dir)  # must not raise
+    assert selection.path is None
+    assert selection.reason is not None and "resolved_config" in selection.reason
 
 
 # ---------------------------------------------------------------------------

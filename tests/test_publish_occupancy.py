@@ -83,6 +83,48 @@ def test_load_campaign_lookup_missing_file(tmp_path):
     assert publish_module._load_campaign_lookup(tmp_path / "nope.yaml") == {}
 
 
+def test_load_campaign_lookup_malformed_yaml_degrades(tmp_path, capsys):
+    """Bad YAML (not just a missing file) must degrade to metadata-free
+    naming rather than crash the whole publish."""
+    path = tmp_path / "core.yaml"
+    path.write_text("cells: [\n  - order: 4\n")  # unbalanced flow sequence
+    assert publish_module._load_campaign_lookup(path) == {}
+    assert "campaign config" not in capsys.readouterr().err  # this path is silent (parse failure)
+
+
+def test_load_campaign_lookup_non_mapping_top_level_degrades(tmp_path, capsys):
+    """A top-level YAML list (instead of the expected mapping) must degrade
+    with a warning, not raise AttributeError from ``.get``."""
+    path = tmp_path / "core.yaml"
+    path.write_text("- order: 4\n  index: 1\n  width: 16\n")
+    assert publish_module._load_campaign_lookup(path) == {}
+    err = capsys.readouterr().err
+    assert "not a mapping" in err
+
+
+def test_load_campaign_lookup_skips_malformed_cell_entry(tmp_path, capsys):
+    """A cell missing a required key (``KeyError``) is skipped with a
+    warning rather than crashing the lookup for every other cell."""
+    path = tmp_path / "core.yaml"
+    path.write_text(
+        """
+cells:
+  - order: 4
+    index: 1
+    name: "C4-bad-no-width"
+  - order: 8
+    index: 3
+    width: 32
+    name: "D4-good"
+"""
+    )
+    lookup = publish_module._load_campaign_lookup(path)
+    assert (8, 3, 32) in lookup
+    assert lookup[(8, 3, 32)]["name"] == "D4-good"
+    assert (4, 1, 16) not in lookup
+    assert "malformed campaign cell entry" in capsys.readouterr().err
+
+
 # ---------------------------------------------------------------------------
 # _grok_fields -- deriving grokked/censored/epochs_to_grok post hoc for an
 # already-finished run. Primary source is the durable selection.json (the
@@ -286,11 +328,89 @@ def test_grok_fields_categories_uses_leaked_when_unleaked_subset_empty(tmp_path)
     }
 
 
+def test_grok_fields_categories_null_censored_degrades_to_none(tmp_path):
+    """An explicitly-null top-level `censored` (JSON `null`, not merely an
+    absent key) with no onsets at all previously fell through `.get(key,
+    default)` -- which returns the stored None instead of the default -- and
+    produced a positively wrong `{"grokked": True, "censored": False}`
+    verdict. It must now degrade to omitting the grok fields entirely.
+
+    `unleaked_metric_key` is null here (the empty-unleaked-subset case) so
+    the leaked branch -- the one that reads the malformed `censored` -- is
+    canonical; that is exactly the fork the bug lived in."""
+    run_dir = tmp_path / "null-censored-run"
+    run_dir.mkdir()
+    selection = {
+        "run_id": "null-censored-run",
+        "leaked_metric_key": "val/accuracy",
+        "unleaked_metric_key": None,
+        "threshold": 0.99,
+        "censored": None,
+        "interrupted": False,
+        "categories": {
+            "first": {"epoch": 0, "filename": "step_0.pt"},
+            "intermediate": [],
+            "last": {"epoch": 59999, "filename": "final.pt"},
+            "leaked_onset": None,
+            "unleaked_onset": None,
+            "stable_end": None,
+        },
+        "anomalies": [],
+    }
+    (run_dir / "selection.json").write_text(json.dumps(selection))
+    assert publish_module._grok_fields_from_selection(run_dir) is None
+    # And with no run.log fallback either, the whole record publishes without
+    # these fields rather than with a wrong verdict.
+    assert publish_module._grok_fields(run_dir) is None
+
+
+def test_canonical_grok_is_leaked_defaults_false_for_non_mapping_manifest(tmp_path):
+    """A manifest whose YAML top level is a list (not a mapping) must not
+    raise AttributeError from `.get` -- it degrades to the unleaked-canonical
+    default, the never-fail intent the module docstring states."""
+    run_dir = tmp_path / "list-manifest-run"
+    run_dir.mkdir()
+    (run_dir / "manifest.yaml").write_text("- just\n- a\n- list\n")
+    assert publish_module._canonical_grok_is_leaked(run_dir) is False
+
+
+def test_canonical_grok_is_leaked_defaults_false_for_non_mapping_dataset_or_leakage(tmp_path):
+    """A manifest whose `dataset` or `dataset.leakage` value is not itself a
+    mapping (e.g. a stray string) must also degrade rather than raise."""
+    run_dir = tmp_path / "odd-dataset-run"
+    run_dir.mkdir()
+    (run_dir / "manifest.yaml").write_text("dataset: just-a-string\n")
+    assert publish_module._canonical_grok_is_leaked(run_dir) is False
+
+
 def test_grok_fields_falls_back_to_run_log_without_selection_json(tmp_path):
     """No selection.json (an un-shipped local run) -> the run.log sustained
     onset rule, the live sidecar's approximation."""
     series = [(e, 0.5) for e in range(5)] + [(e, 0.995) for e in range(5, 12)]
     run_dir = _write_run_log_dir(tmp_path, "unshipped-run", series=series, ceiling=100)
+    assert publish_module._grok_fields(run_dir) == {
+        "grokked": True,
+        "censored": False,
+        "epochs_to_grok": 5,
+    }
+
+
+def test_grok_fields_falls_back_to_gzipped_run_log(tmp_path):
+    """The run.log fallback must also work with the ship hook's gzipped
+    run.log.gz, not just a plain run.log -- _grok_fields_from_run_log used to
+    hardcode a plain-file check even though metric_series/run_log_rows already
+    resolve the gz variant."""
+    import gzip
+
+    series = [(e, 0.5) for e in range(5)] + [(e, 0.995) for e in range(5, 12)]
+    run_dir = tmp_path / "gz-run"
+    run_dir.mkdir()
+    run_dir.joinpath("resolved_config.yaml").write_text("optim:\n  epochs: 100\n")
+    lines = "".join(
+        f"epoch {epoch} | {{'val/unleaked_accuracy': {value}}}\n" for epoch, value in series
+    )
+    with gzip.open(run_dir / "run.log.gz", "wt") as handle:
+        handle.write(lines)
     assert publish_module._grok_fields(run_dir) == {
         "grokked": True,
         "censored": False,
@@ -323,11 +443,19 @@ def _load_script() -> ModuleType:
 
 class _FakeRun:
     """Records everything the publisher does to a run. ``summary`` is a plain
-    dict because the publisher only item-assigns into it."""
+    dict because the publisher only item-assigns into it.
 
-    def __init__(self, kwargs: dict[str, Any]):
+    ``seed_summary`` simulates what ``resume="allow"`` actually does on the
+    real SDK: a fresh local handle whose ``summary`` starts pre-populated from
+    the server's last-synced state for that run id, while ``logged`` -- the
+    local history buffer for *this* call only -- starts empty. That is
+    exactly the seam finding 1 depends on: history is append-only server-side
+    (every generation's rows persist), but each local ``publish_records`` call
+    only sees its own generation's ``logged`` list."""
+
+    def __init__(self, kwargs: dict[str, Any], seed_summary: dict[str, Any] | None = None):
         self.init_kwargs = kwargs
-        self.summary: dict[str, Any] = {}
+        self.summary: dict[str, Any] = dict(seed_summary or {})
         self.logged: list[dict[str, Any]] = []
         self.defined_metrics: list[tuple[str, dict[str, Any]]] = []
         self.finished = False
@@ -345,14 +473,24 @@ class _FakeRun:
 class _FakeWandb:
     """Deliberately exposes ONLY ``init``: no ``Artifact``, no ``Table``, no
     ``log_artifact`` anywhere -- a publisher reaching for artifact storage
-    raises AttributeError instead of silently uploading."""
+    raises AttributeError instead of silently uploading.
+
+    Tracks the most recent run object by (sanitised) run id so a second
+    ``init(id=..., resume="allow")`` call for the same id can restore that
+    run's summary, the way a resumed real W&B run restores its server-synced
+    summary into a fresh local handle."""
 
     def __init__(self) -> None:
         self.runs: list[_FakeRun] = []
+        self._by_id: dict[str, _FakeRun] = {}
 
     def init(self, **kwargs: Any) -> _FakeRun:
-        run = _FakeRun(kwargs)
+        run_id = kwargs.get("id")
+        previous = self._by_id.get(run_id) if kwargs.get("resume") == "allow" else None
+        run = _FakeRun(kwargs, seed_summary=previous.summary if previous else None)
         self.runs.append(run)
+        if run_id is not None:
+            self._by_id[run_id] = run
         return run
 
 
@@ -409,6 +547,25 @@ def test_skip_reason_with_disabled_mode(monkeypatch):
 def test_no_skip_with_key_and_online_mode(monkeypatch):
     monkeypatch.delenv("WANDB_MODE", raising=False)
     monkeypatch.setenv("WANDB_API_KEY", "test-key")
+    assert publish_skip_reason() is None
+
+
+def test_skip_reason_honours_legacy_wandb_disabled(monkeypatch):
+    """Under the legacy WANDB_DISABLED=true, wandb.init returns a disabled
+    stub that accepts every call and pushes nothing -- without this check
+    publish_skip_reason() would say "go ahead" and the publisher would claim
+    success while nothing reached the server."""
+    monkeypatch.delenv("WANDB_MODE", raising=False)
+    monkeypatch.setenv("WANDB_API_KEY", "test-key")
+    monkeypatch.setenv("WANDB_DISABLED", "true")
+    reason = publish_skip_reason()
+    assert reason is not None and "WANDB_DISABLED" in reason
+
+
+def test_skip_reason_ignores_wandb_disabled_false(monkeypatch):
+    monkeypatch.delenv("WANDB_MODE", raising=False)
+    monkeypatch.setenv("WANDB_API_KEY", "test-key")
+    monkeypatch.setenv("WANDB_DISABLED", "false")
     assert publish_skip_reason() is None
 
 
@@ -579,6 +736,135 @@ def test_publish_records_skips_unmeasured_records(measured):
     counts = publish_records(skipped_only, None, project="p", wandb_module=fake)
     assert counts == {"published": 0, "pooled_published": 0, "skipped_records": 1}
     assert fake.runs == []
+
+
+# ---------------------------------------------------------------------------
+# Republishing a record: W&B history is append-only under resume="allow", so
+# the per-block rows duplicate across generations. This is documented, not
+# fixed (the wire behaviour cannot change from this side); the visibility
+# fix is a per-publish `occupancy/publish_index` on every row and an
+# `occupancy/publish_count` summary field, so the two generations are at
+# least distinguishable rather than silently blended.
+# ---------------------------------------------------------------------------
+
+
+def test_republishing_a_record_duplicates_history_but_tags_each_generation(measured):
+    records, _ = measured
+    record = records[0]
+    fake = _FakeWandb()
+
+    publish_records([record], project="p", wandb_module=fake)
+    publish_records([record], project="p", wandb_module=fake)
+
+    assert len(fake.runs) == 2
+    first_run, second_run = fake.runs
+    n_blocks = len(record["analytic_null"])
+
+    # Both generations hit the *same* run id (the point of resume="allow"),
+    # and each local call's own `logged` list is exactly one generation's
+    # rows -- neither replaces nor sees the other's, mirroring how a real
+    # resumed W&B run's history accumulates server-side across two separate
+    # publishes.
+    assert first_run.init_kwargs["id"] == second_run.init_kwargs["id"]
+    assert len(first_run.logged) == n_blocks
+    assert len(second_run.logged) == n_blocks
+
+    # The generations are distinguishable: the first publish's rows and
+    # summary all carry generation 1, the second's carry generation 2.
+    assert {row["occupancy/publish_index"] for row in first_run.logged} == {1}
+    assert {row["occupancy/publish_index"] for row in second_run.logged} == {2}
+    assert first_run.summary["occupancy/publish_count"] == 1
+    assert second_run.summary["occupancy/publish_count"] == 2
+
+
+# ---------------------------------------------------------------------------
+# The programmatic gate: publish_records must not reach for the real SDK (or
+# claim success) when there is no wandb_module override and no credentials --
+# previously only the CLI checked this.
+# ---------------------------------------------------------------------------
+
+
+def test_publish_records_gates_itself_without_credentials(monkeypatch, measured):
+    records, _ = measured
+    monkeypatch.delenv("WANDB_MODE", raising=False)
+    monkeypatch.delenv("WANDB_API_KEY", raising=False)
+
+    def _boom():
+        raise AssertionError("_import_wandb must not be called when the gate is closed")
+
+    monkeypatch.setattr(publish_module, "_import_wandb", _boom)
+    counts = publish_records(records, project="p")  # no wandb_module override
+    assert counts == {
+        "published": 0,
+        "pooled_published": 0,
+        "skipped_records": len(records),
+    }
+
+
+def test_publish_records_gate_does_not_apply_when_wandb_module_is_injected(monkeypatch, measured):
+    """A caller that already hands in its own wandb_module (every test in
+    this suite, and any programmatic caller that has made its own credential
+    decision) is not blocked by the environmental gate."""
+    records, _ = measured
+    monkeypatch.delenv("WANDB_MODE", raising=False)
+    monkeypatch.delenv("WANDB_API_KEY", raising=False)
+    fake = _FakeWandb()
+    counts = publish_records(records, project="p", wandb_module=fake)
+    assert counts["published"] == 2
+    assert len(fake.runs) >= 2
+
+
+# ---------------------------------------------------------------------------
+# Per-record error containment: a mid-loop failure must report how many
+# records were already published rather than silently discarding that count.
+# ---------------------------------------------------------------------------
+
+
+class _FlakyWandb(_FakeWandb):
+    """Like _FakeWandb, but raises on the Nth call to init (1-indexed)."""
+
+    def __init__(self, fail_on_call: int) -> None:
+        super().__init__()
+        self._fail_on_call = fail_on_call
+        self._calls = 0
+
+    def init(self, **kwargs: Any) -> _FakeRun:
+        self._calls += 1
+        if self._calls == self._fail_on_call:
+            raise RuntimeError("simulated W&B outage")
+        return super().init(**kwargs)
+
+
+def test_publish_records_reports_partial_progress_before_reraising(measured, capsys):
+    """A failure on the second record must still report that the first one
+    published successfully, then propagate the original error."""
+    records, _ = measured
+    two_measured = [r for r in records if r["status"] == "measured"]
+    assert len(two_measured) == 2
+    fake = _FlakyWandb(fail_on_call=2)
+
+    with pytest.raises(RuntimeError, match="simulated W&B outage"):
+        publish_records(two_measured, None, project="p", wandb_module=fake)
+
+    err = capsys.readouterr().err
+    assert "1 run(s) published" in err
+    assert len(fake.runs) == 1  # the first record's run was created before the failure
+
+
+def test_publish_records_reports_partial_progress_on_pooled_failure(measured, capsys):
+    """A failure while publishing pooled records reports both the per-run and
+    pooled counts already published before re-raising."""
+    records, _ = measured
+    two_measured = [r for r in records if r["status"] == "measured"]
+    pooled = pool_records(two_measured)
+    assert len(pooled) == 1
+    fake = _FlakyWandb(fail_on_call=3)  # 2 per-run inits succeed, the pooled init fails
+
+    with pytest.raises(RuntimeError, match="simulated W&B outage"):
+        publish_records(two_measured, pooled, project="p", wandb_module=fake)
+
+    err = capsys.readouterr().err
+    assert "2 run(s) and 0 pooled run(s) published" in err
 
 
 # ---------------------------------------------------------------------------

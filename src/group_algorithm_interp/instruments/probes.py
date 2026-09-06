@@ -162,7 +162,15 @@ class SignedCyclicCoords:
 
     @property
     def is_signed_cyclic(self) -> bool:
-        """The dihedral (inversion-action) case -- the structure I-27 fits."""
+        """The dihedral (inversion-action) case -- the structure I-27 fits.
+
+        Undefined-as-a-question, not just undefined-in-code, for ``radix <= 2``:
+        an order-``<= 2`` cyclic generator is its own inverse, so the inversion
+        action ``c -> c^{-1}`` and the trivial action ``c -> c`` are the *same
+        function* on ``N``, and :func:`signed_cyclic_coordinates` always
+        resolves this case to ``action_sign = +1`` (trivial) rather than
+        picking the dihedral label arbitrarily (Klein-four, ``radix == 2``, is
+        the case that bit -- see the regression test)."""
         return self.action_sign == -1
 
 
@@ -180,6 +188,13 @@ def signed_cyclic_coordinates(group: FiniteGroup) -> SignedCyclicCoords | None:
     * an involution ``t`` outside ``N`` acting on ``c`` by inversion
       (``t c t^{-1} = c^{-1}``, the signed-cyclic case) -- or trivially, recorded
       as ``action_sign = +1``.
+
+    For ``m <= 2`` inversion and the trivial action coincide (an order-``<= 2``
+    element is its own inverse, so ``c^{-1} == c``): the classification always
+    resolves to ``action_sign = +1`` in that case, never ``-1`` by an accident
+    of which branch a search checks first. Without this, the Klein four-group
+    (``m = 2``) -- an abelian group -- would be labelled dihedral, because its
+    unique non-identity element of ``N`` equals its own "inverse".
 
     On failure at either step the group has no signed-cyclic coordinate system
     and ``None`` is returned. On success the constructed rule is asserted to
@@ -207,13 +222,19 @@ def signed_cyclic_coordinates(group: FiniteGroup) -> SignedCyclicCoords | None:
     c_inverse = inv[generator]
 
     # An involution outside N; classify its action on c as inversion or trivial.
+    # For m <= 2, c is its own inverse (c_inverse == generator), so the two
+    # branches below are the same test; checking the inversion branch first
+    # would then always "win" and mislabel a trivial action as dihedral (the
+    # Klein four-group case). Only trust the inversion match when it is
+    # actually distinguishable from the trivial one.
     involution = None
     action_sign = 0
+    inversion_is_distinguishable = c_inverse != generator
     for t in range(n):
         if in_rotation[t] or orders[t] != 2:
             continue
         conjugate = int(table[table[t, generator], inv[t]])
-        if conjugate == c_inverse:
+        if inversion_is_distinguishable and conjugate == c_inverse:
             involution, action_sign = t, -1
             break
         if conjugate == generator:
@@ -266,7 +287,8 @@ class PolycyclicDigits:
     """A mixed-radix coordinate system over a pinned polycyclic series.
 
     ``digits[g]`` is the length-``length`` tuple of coordinates of element ``g``
-    in the normal form ``g = prod_i gen_i^{digit_i}`` along a greedily built
+    in the normal form ``g = gen_0^{d_0} * gen_1^{d_1} * ... * gen_{length-1}^{d_{length-1}}``
+    (index 0 first) along a greedily built
     chain ``1 = G_0 < G_1 < ... < G_length = G`` with prime relative orders
     ``radices``. ``length`` is the composition length ``l(G)`` (7 for both C128
     and C2^7). The digit map is asserted to be a set bijection. ``carry`` is the
@@ -335,6 +357,23 @@ def polycyclic_digits(group: FiniteGroup) -> PolycyclicDigits | None:
     claim needs; for a non-abelian group it verifies normality of each step and
     returns ``None`` if it fails rather than shipping a coordinate system that is
     not polycyclic.
+
+    On abelian groups (the C3 scope: C128, C2^7, the C127 anchor) every subgroup
+    is normal, so the outcome (a coordinate system is always built) does not
+    depend on which "outside" element the greedy step happens to pick, and is
+    robust to the Cayley table's element enumeration.
+
+    On a non-abelian group the outcome can depend on the artifact's element
+    enumeration: the guard at each step requires the *chosen* extension to stay
+    normal in the whole of ``G`` (``x g x^{-1}`` inside the extended subgroup
+    for every ``x``, not merely the weaker "normal in the next step's subgroup"
+    that polycyclicity actually requires), and which candidate the greedy search
+    picks first is enumeration order-dependent. D8 has been observed to return a
+    coordinate system under one element enumeration and ``None`` under another
+    -- both are real, correct outcomes of this specific (enumeration-sensitive)
+    construction, not a bug in either. Do not read a non-abelian ``None``/measured
+    outcome as a property of the group; it is a property of this greedy search
+    over this artifact's enumeration.
     """
     table = group.cayley_table
     n = int(table.shape[0])
@@ -369,9 +408,13 @@ def polycyclic_digits(group: FiniteGroup) -> PolycyclicDigits | None:
             coset_rep = int(table[coset_rep, gen])
         if len(set(new_members)) != radix * len(members):
             return None  # not a clean cyclic extension (step was not polycyclic)
-        # Subnormality guard: the added generator's conjugates must stay inside
-        # the extended subgroup, or the chain is not polycyclic (trivial for an
-        # abelian group, where every subgroup is normal -- the C3 scope).
+        # Guard: the added generator's conjugates (in the whole of G, which is
+        # stronger than polycyclicity actually requires -- normal-in-the-next-
+        # subgroup would suffice) must stay inside the extended subgroup, or the
+        # chain is rejected. Trivially satisfied on an abelian group (every
+        # subgroup is normal -- the C3 scope, enumeration-robust); on a
+        # non-abelian group whether a given greedy pick passes is enumeration-
+        # order-dependent (see the docstring above).
         extended = set(new_members)
         if any(int(table[table[x, gen], inv[x]]) not in extended for x in range(n)):
             return None
@@ -383,12 +426,21 @@ def polycyclic_digits(group: FiniteGroup) -> PolycyclicDigits | None:
     length = len(generators)
     radix_tuple = tuple(radices)
 
-    # Digit assignment by the normal form g = gen_{L-1}^{d_{L-1}} ... gen_0^{d_0}.
-    # Build element -> digits by enumerating the mixed-radix grid in the same
-    # order the chain was grown (generator i multiplies on the outside of G_i).
+    # Digit assignment by the normal form g = gen_0^{d_0} * gen_1^{d_1} * ...
+    # * gen_{L-1}^{d_{L-1}} (index 0 first -- confirmed against _element_for's
+    # actual left-multiply accumulation below, not merely asserted). Build
+    # element -> digits by enumerating the mixed-radix grid in the same order
+    # the chain was grown (generator i multiplies on the outside of G_i).
     digits = np.empty((n, length), dtype=np.int64)
 
     def _element_for(digit_tuple: tuple[int, ...]) -> int:
+        # Accumulates right-to-left (i from length-1 down to 0), left-
+        # multiplying each new factor onto the running product -- by
+        # associativity this equals gen_0^{d_0} * gen_1^{d_1} * ...
+        # * gen_{length-1}^{d_{length-1}} (index 0 first), the normal form
+        # documented above. The digit-tuple bijection check below is what
+        # actually keeps this correct regardless of convention; the order
+        # only matters for reading the digits off correctly by hand.
         acc = e
         for i in range(length - 1, -1, -1):
             g = e
@@ -448,12 +500,32 @@ def polycyclic_digits(group: FiniteGroup) -> PolycyclicDigits | None:
 # ---------------------------------------------------------------------------
 
 
+def _assert_finite(array: np.ndarray, what: str) -> None:
+    """Raise a clear ``ValueError`` if ``array`` carries a NaN or Inf.
+
+    Checkpoint-derived features and logits feed a nearest-centroid classifier
+    (``argmin`` over NaN distances silently lands on class 0) and an
+    unregularised least-squares fit (NaN propagates through and serialises as
+    a bare, invalid ``NaN`` JSON token) -- neither fails loudly on its own, so
+    every producer of checkpoint-derived numbers must guard here instead of
+    downstream."""
+    if not np.all(np.isfinite(array)):
+        n_bad = int(np.size(array) - np.count_nonzero(np.isfinite(array)))
+        raise ValueError(
+            f"{what} contains {n_bad} non-finite value(s) (NaN/Inf); the "
+            "checkpoint may be corrupted or the model diverged. Refusing to "
+            "feed non-finite values into a probe or fit -- they would pass "
+            "silently through nearest-centroid argmin or lstsq."
+        )
+
+
 def embedding_features(model: GroupModel, order: int) -> np.ndarray:
     """The model's learned embedding of each group element, ``W_E[g]``, mean-
     centred across elements (both architectures expose ``W_E``; the ``=`` read
     token, index ``order``, is dropped). Mean-centring removes the DC offset the
     read position injects, per the occupancy DC-dominance finding."""
     w_e = model.W_E.detach().to(torch.float64).cpu().numpy()[:order]
+    _assert_finite(w_e, "embedding_features (model.W_E)")
     return w_e - w_e.mean(axis=0, keepdims=True)
 
 
@@ -463,6 +535,7 @@ def neuron_features(model: GroupModel, group: FiniteGroup, *, argument: str) -> 
     over ``a`` to a function of ``b``. Mean-centred across elements (the trivial
     DC block would otherwise dominate)."""
     activations = neuron_activations(model, group.order)  # [d_mlp, order, order]
+    _assert_finite(activations, "neuron_features (neuron_activations)")
     if argument == "left":
         features = activations.mean(axis=2).T  # [order, d_mlp], indexed by a
     elif argument == "right":
@@ -619,8 +692,23 @@ def involution_direction_ablation(
     behavioural accuracy (in flips: the change in the number of correctly
     answered pairs), against norm-matched random-direction controls.
 
+    Only ``source="embed"`` is valid here, unlike the probe (I-28, which
+    decodes structure in whatever feature space the caller asks for):
+    :func:`interventions.ablate_direction` always projects the direction out of
+    ``W_E`` rows, in ``d_model`` space, because zero-ablating an embedding axis
+    is the one representational edit every architecture this harness serves
+    shares. A direction built from ``source="left"``/``"right"``
+    (:func:`neuron_features`, ``d_mlp`` space) has the wrong dimensionality to
+    ablate against ``W_E`` -- it either crashes on a shape mismatch, or, on a
+    config where ``d_mlp`` happens to equal ``d_model``, silently zero-ablates
+    a meaningless axis and reports a spurious ``status: "measured"`` record.
+    Both have been observed; this function refuses any ``source`` but
+    ``"embed"`` rather than risk either. (:func:`power_map_probe` and the other
+    element-level probes are unaffected -- they only ever classify, never
+    ablate, so any feature space is safe for them.)
+
     The involution direction is the difference of class means (involutions minus
-    non-involutions) in the chosen feature space -- the axis a nearest-mean probe
+    non-involutions) in the embedding space -- the axis a nearest-mean probe
     would use. Zero-ablation projects it out of ``W_E``. ``UNDEFINED`` when the
     involution label is degenerate (no involutions, or all elements are
     involutions), matching the probe. ``subset`` restricts the accuracy count to
@@ -630,6 +718,16 @@ def involution_direction_ablation(
     Rung 3 (causal, Necessary) *only* alongside the probe; reported in flips, the
     behavioural unit, never a bare percentage.
     """
+    if source != "embed":
+        raise ValueError(
+            "involution_direction_ablation only supports source='embed': "
+            "ablate_direction always projects the direction out of W_E rows "
+            f"in d_model space, but source={source!r} builds the direction in "
+            "d_mlp space (neuron_features) -- a dimensional mismatch that "
+            "either crashes (d_mlp != d_model) or silently ablates a "
+            "meaningless axis and reports a spurious measured record "
+            "(d_mlp == d_model). Valid sources for ablation: 'embed'."
+        )
     table = group.cayley_table
     orders = element_orders(table)
     involution = orders == 2
@@ -680,9 +778,22 @@ class FunctionalForm:
     ``design`` has shape ``[order, order, n_classes, n_features]``: the features
     the rule assigns to answer ``c`` for input pair ``(a, b)``. Regressing the
     model's read-position logits onto these features (per pair, over the class
-    axis) tests how much of the logit structure the rule explains. For a nested
-    comparison the reduced form's feature columns must be a subset of the full
-    form's.
+    axis) tests how much of the logit structure the rule explains. Held-out FVE
+    is well defined for any pair of forms; it is the *interpretation* of the
+    comparison that depends on how the pair relates:
+
+    * a genuinely **nested** pair -- the reduced form's feature columns a
+      subset of the full form's -- isolates what the full form's extra columns
+      buy over the reduced one, with neither rewarded for fitting noise
+      (held-out scoring);
+    * a **non-nested** pair of alternatives (e.g. two different one-hot
+      answer-indicator rules, as in the signed-cyclic twisted-rule fit,
+      :func:`_signed_cyclic_forms`) instead compares which of two candidate
+      *rules* the model's logits agree with -- read the gap as a difference in
+      whole-answer agreement between the two rules, not as isolated evidence
+      for the extra structure the nested case would license. Callers that pass
+      a non-nested pair to :func:`functional_form_fit` document the
+      interpretation that actually applies at the call site.
     """
 
     name: str
@@ -696,6 +807,7 @@ def read_position_logits(model: GroupModel, order: int) -> np.ndarray:
     model.eval()
     with torch.no_grad():
         logits = model(tokens)[:, -1, :].to(torch.float64).cpu().numpy()
+    _assert_finite(logits, "read_position_logits")
     return logits.reshape(order, order, -1)
 
 
@@ -769,6 +881,10 @@ def functional_form_fit(
     rule fit. Rung 5 only when connected to circuit or causal evidence.
     """
     logits = read_position_logits(model, order)
+    # Computed once, not per form: the null model's logits do not depend on
+    # the form being scored, so recomputing them inside the loop was a
+    # wasted forward pass per form for no different result.
+    null_logits = read_position_logits(null_model, order) if null_model is not None else None
     fit_pairs, test_pairs = pair_split(order, train_frac=train_frac, seed=seed)
     per_form: list[dict[str, Any]] = []
     for form in forms:
@@ -778,8 +894,7 @@ def functional_form_fit(
             "n_features": int(form.design.shape[3]),
             "held_out_fve": fve,
         }
-        if null_model is not None:
-            null_logits = read_position_logits(null_model, order)
+        if null_logits is not None:
             entry["null_held_out_fve"] = _held_out_fve(
                 null_logits, form.design, fit_pairs, test_pairs
             )
@@ -787,6 +902,8 @@ def functional_form_fit(
     record: dict[str, Any] = {
         "instrument": "functional-form-fit",
         "rung": 5,
+        "train_frac": float(train_frac),
+        "split_seed": int(seed),
         "n_fit_pairs": int(fit_pairs.size),
         "n_held_out_pairs": int(test_pairs.size),
         "forms": per_form,
@@ -807,12 +924,26 @@ def functional_form_fit(
 
 
 def _signed_cyclic_forms(coords: SignedCyclicCoords, order: int) -> list[FunctionalForm]:
-    """The nested pair of closed-form rules for the twisted-rule fit: the full
+    """The pair of closed-form rules for the twisted-rule fit: the full
     signed-cyclic rule (uses the ``(-1)^{s}`` inversion) and the reduced
     untwisted rule (adds the rotations directly). Each is a one-hot indicator of
-    the predicted answer per ``(a, b)``; the full rule predicts ``a*b`` exactly
-    (by construction), the reduced rule predicts the wrong element wherever the
-    inversion matters, so the held-out FVE gap is the twist's contribution."""
+    the predicted answer per ``(a, b)``.
+
+    NOT a nested pair in :class:`FunctionalForm`'s sense (contrast the general
+    nested case that class documents): the full rule predicts ``a*b`` exactly,
+    by construction -- it *is* the ground-truth one-hot -- while the reduced
+    rule predicts a different (wrong, wherever the inversion matters) element.
+    Consequently the full form's held-out FVE is really a measurement of the
+    model's accuracy on the held-out pairs, and the full-minus-reduced gap is
+    accuracy-sensitive: it mostly reflects whether the model gets the
+    inversion-sensitive pairs right at all, not whether it computes them via a
+    signed-cyclic mechanism specifically. Any accurate (grokked) model would
+    show the same positive gap here, on any group -- this fit is not
+    independent mechanism evidence. I-27's mechanism content is the ``(r, s)``
+    coordinate system existing at all (structurally ``UNDEFINED`` on the
+    quaternionic member) and the ``rotation_r``/``reflection_s`` probes scored
+    alongside it; see :func:`signed_cyclic_instrument`, whose record carries
+    this caveat on the fit."""
     m = coords.radix
     r = coords.coords[:, 0]
     s = coords.coords[:, 1]
@@ -855,6 +986,14 @@ def signed_cyclic_instrument(
     corrected), and the twisted-rule fit (via I-20) reports held-out FVE for the
     signed-cyclic rule against the untwisted reduced rule (rung 5 with I-15/I-28b
     as the causal check).
+
+    CAVEAT (carried in the record's ``twisted_rule_fit["caveat"]``): the two
+    forms are not a nested pair (see :func:`_signed_cyclic_forms`) -- the full
+    form is exactly the ground-truth one-hot, so the fit's held-out FVE gap is
+    accuracy-sensitive, not independent evidence that the model's mechanism is
+    specifically signed-cyclic. That mechanism content is carried by the
+    ``(r, s)`` probes above and by this instrument's structural ``UNDEFINED``
+    on the quaternionic member, not by the fit's FVE gap.
     """
     coords = signed_cyclic_coordinates(group)
     if coords is None or not coords.is_signed_cyclic:
@@ -883,6 +1022,18 @@ def signed_cyclic_instrument(
         seed=seed,
         null_model=null_model,
     )
+    fit["caveat"] = (
+        "The two forms are not a nested pair: the full form is exactly the "
+        "ground-truth one-hot (it predicts a*b by construction), so this "
+        "held-out FVE (and the full-minus-reduced gap) is accuracy-sensitive "
+        "-- it mostly measures whether the model gets the inversion-sensitive "
+        "pairs right, not whether it computes them via a signed-cyclic "
+        "mechanism specifically. Any accurate (grokked) model would show the "
+        "same positive gap here, signed-cyclic or not. This fit is not "
+        "independent mechanism evidence; I-27's mechanism content is the "
+        "rotation_r/reflection_s probe above and the structural UNDEFINED on "
+        "the quaternionic member."
+    )
     return {
         "instrument": "signed-cyclic",
         "target_theory": "T12",
@@ -896,7 +1047,9 @@ def signed_cyclic_instrument(
         "note": (
             "Probe (rung 1, chance-corrected) decodes (r, s); the twisted-rule fit "
             "(rung 5, held-out FVE) compares the signed-cyclic rule against the "
-            "untwisted reduced rule. Defined only on the split member."
+            "untwisted reduced rule -- an accuracy-sensitive comparison, not "
+            "independent mechanism evidence, see twisted_rule_fit['caveat']. "
+            "Defined only on the split member."
         ),
     }
 

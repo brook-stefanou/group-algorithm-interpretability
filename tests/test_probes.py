@@ -21,6 +21,8 @@ labels.
 
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import numpy as np
 import pytest
 import torch
@@ -118,6 +120,22 @@ def test_signed_cyclic_coordinates_exist_and_reproduce_the_table(name, radix):
             assert int(coords.element_of[r, s]) == int(table[a, b])
 
 
+def test_klein_four_is_classified_trivial_not_dihedral():
+    """DECISIVE regression: for m <= 2 the cyclic generator is its own inverse,
+    so the inversion action and the trivial action are the same function on N.
+    Klein four (C2 x C2, m = 2) must be classified action_sign = +1 (trivial),
+    never -1 (dihedral) -- a hand-built table catches the bug the artifact
+    corpus (which has no order-4 abelian target) cannot."""
+    # Klein four as bitwise XOR on {0, 1, 2, 3}: table[i, j] = i ^ j.
+    table = np.array([[i ^ j for j in range(4)] for i in range(4)], dtype=np.int64)
+    group = SimpleNamespace(cayley_table=table)
+    coords = P.signed_cyclic_coordinates(group)
+    assert coords is not None
+    assert coords.radix == 2
+    assert coords.action_sign == 1
+    assert not coords.is_signed_cyclic
+
+
 def test_signed_cyclic_is_undefined_on_the_quaternionic_member():
     """DECISIVE (I-27): Q8 is the fixture-scale Q32 -- non-split, so no (r, s)
     coordinate system exists and the construction must return None. A cyclic
@@ -142,6 +160,10 @@ def test_signed_cyclic_instrument_status_is_undefined_on_q8_but_measured_on_d8()
     assert set(d_record["probe"]) == {"rotation_r", "reflection_s"}
     fit_forms = {f["name"] for f in d_record["twisted_rule_fit"]["forms"]}
     assert fit_forms == {"signed_cyclic_twisted", "untwisted"}
+    # Finding 2: the twisted-rule fit is accuracy-sensitive, not independent
+    # mechanism evidence -- the record must carry that caveat explicitly.
+    assert "caveat" in d_record["twisted_rule_fit"]
+    assert "accuracy" in d_record["twisted_rule_fit"]["caveat"]
 
 
 def test_twisted_rule_fit_prefers_the_twist_on_a_dihedral_structured_model():
@@ -167,17 +189,36 @@ def test_twisted_rule_fit_prefers_the_twist_on_a_dihedral_structured_model():
 
 
 def test_polycyclic_digits_are_a_bijection_that_reconstructs_products():
-    for name in ("C8", "C7", (21, 2), "Q8", "D8"):
+    """Abelian groups (the C3 scope) are enumeration-robust: a coordinate
+    system always exists, so ``pc is not None`` is asserted directly for
+    them. Non-abelian groups (D8, Q8) are enumeration-dependent (see
+    ``polycyclic_digits``'s docstring): whether the greedy chain returns a
+    system at all depends on the artifact's element enumeration, so the
+    fixed measured/None outcome is not asserted here -- only that *if* a
+    system is returned, it has the bijection and reconstruction properties
+    any valid system must have, regardless of which enumeration produced it."""
+    abelian = ("C8", "C7", (21, 2))
+    non_abelian = ("Q8", "D8")
+    for name in abelian:
         group = resolve_group(name)
         pc = P.polycyclic_digits(group)
-        assert pc is not None
-        # A set bijection: distinct digit tuples, one per element.
-        tuples = {tuple(int(v) for v in pc.digits[g]) for g in range(group.order)}
-        assert len(tuples) == group.order
-        # element_of inverts the digit map.
-        for g in range(group.order):
-            assert pc.element_of(tuple(int(v) for v in pc.digits[g])) == g
-        assert int(np.prod(pc.radices)) == group.order
+        assert pc is not None, f"{name} is abelian: a coordinate system must always exist"
+        _assert_bijection_and_reconstruction(pc, group)
+    for name in non_abelian:
+        group = resolve_group(name)
+        pc = P.polycyclic_digits(group)
+        if pc is not None:
+            _assert_bijection_and_reconstruction(pc, group)
+
+
+def _assert_bijection_and_reconstruction(pc: P.PolycyclicDigits, group) -> None:
+    # A set bijection: distinct digit tuples, one per element.
+    tuples = {tuple(int(v) for v in pc.digits[g]) for g in range(group.order)}
+    assert len(tuples) == group.order
+    # element_of inverts the digit map.
+    for g in range(group.order):
+        assert pc.element_of(tuple(int(v) for v in pc.digits[g])) == g
+    assert int(np.prod(pc.radices)) == group.order
 
 
 def test_carry_matrix_is_triangular_for_a_radix_two_cyclic_group():
@@ -315,6 +356,19 @@ def test_involution_ablation_respects_a_held_out_subset():
     assert record["baseline_correct"] <= subset.size
 
 
+@pytest.mark.parametrize("source", ["left", "right"])
+def test_involution_ablation_rejects_non_embedding_sources(source):
+    """DECISIVE (finding 1): source="left"/"right" builds the involution
+    direction in d_mlp space (neuron_features), but ablate_direction only
+    projects a direction out of W_E in d_model space -- a dimensional mismatch
+    that either crashes (D_MODEL != D_MLP here) or, on a config where they
+    happen to coincide, would silently ablate a meaningless axis and report a
+    spurious "measured" record. The honest fix is to reject it outright."""
+    model, group = _random_model("D8")
+    with pytest.raises(ValueError, match="only supports source='embed'"):
+        P.involution_direction_ablation(model, group, source=source)
+
+
 # ---------------------------------------------------------------------------
 # I-20: the generic, nested-safe functional-form fit harness
 # ---------------------------------------------------------------------------
@@ -346,10 +400,13 @@ def test_functional_form_fit_scores_the_true_form_high_and_a_wrong_form_low():
         P.FunctionalForm(name="true", design=true_design),
         P.FunctionalForm(name="wrong", design=wrong_design),
     ]
-    record = P.functional_form_fit(model, order, forms, seed=0)
+    record = P.functional_form_fit(model, order, forms, seed=0, train_frac=0.6)
     fve = {f["name"]: f["held_out_fve"] for f in record["forms"]}
     assert fve["true"] > 0.9
     assert fve["true"] > fve["wrong"]
+    # Finding 7: the fit-defining split parameters must travel in the record.
+    assert record["train_frac"] == pytest.approx(0.6)
+    assert record["split_seed"] == 0
 
 
 def test_functional_form_fit_null_model_scores_near_zero():
@@ -363,6 +420,29 @@ def test_functional_form_fit_null_model_scores_near_zero():
     record = P.functional_form_fit(model, group.order, forms, null_model=null_model, seed=0)
     for form in record["forms"]:
         assert form["null_held_out_fve"] < 0.2
+
+
+def test_functional_form_fit_computes_null_logits_once_not_per_form(monkeypatch):
+    """Finding 7: the null model's read-position logits do not depend on which
+    form is being scored, so they must be computed once, not once per form."""
+    group = resolve_group("D8")
+    coords = P.signed_cyclic_coordinates(group)
+    forms = P._signed_cyclic_forms(coords, group.order)
+    assert len(forms) == 2  # a real multi-form call, so "once per form" would show
+    model, _ = _random_model("D8", seed=0)
+    null_model, _ = _random_model("D8", seed=1)
+
+    calls = []
+    real_read_position_logits = P.read_position_logits
+
+    def _counting_read_position_logits(m, order):
+        calls.append(m)
+        return real_read_position_logits(m, order)
+
+    monkeypatch.setattr(P, "read_position_logits", _counting_read_position_logits)
+    P.functional_form_fit(model, group.order, forms, null_model=null_model, seed=0)
+    assert calls.count(null_model) == 1
+    assert calls.count(model) == 1
 
 
 # ---------------------------------------------------------------------------
@@ -387,6 +467,40 @@ def test_model_correct_mask_matches_manual_argmax():
     mask = P.model_correct_mask(model, group)
     assert mask.shape == (group.order * group.order,)
     assert mask.dtype == bool
+
+
+# ---------------------------------------------------------------------------
+# Finiteness guard: a NaN/Inf feature or logit must fail loudly, not pass
+# silently through nearest-centroid argmin or lstsq.
+# ---------------------------------------------------------------------------
+
+
+def test_embedding_features_rejects_nan_in_w_e():
+    model, group = _random_model("D8")
+    with torch.no_grad():
+        model.W_E[0, 0] = float("nan")
+    with pytest.raises(ValueError, match="non-finite"):
+        P.embedding_features(model, group.order)
+
+
+def test_neuron_features_rejects_nan_activations(monkeypatch):
+    model, group = _random_model("D8")
+
+    def _nan_activations(_model, order):
+        return np.full((4, order, order), np.nan)
+
+    monkeypatch.setattr(P, "neuron_activations", _nan_activations)
+    with pytest.raises(ValueError, match="non-finite"):
+        P.neuron_features(model, group, argument="left")
+
+
+def test_read_position_logits_rejects_nan_logits():
+    order = 3
+    grid = np.zeros((order, order, 2))
+    grid[0, 0, 0] = np.nan
+    model = _FakeModel(grid)
+    with pytest.raises(ValueError, match="non-finite"):
+        P.read_position_logits(model, order)
 
 
 def test_fc_model_is_accepted_by_the_probes():

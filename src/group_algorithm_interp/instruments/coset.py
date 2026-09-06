@@ -353,9 +353,13 @@ def isotypic_block_ablation(
 @dataclass(frozen=True)
 class CosetTarget:
     """The minimal-index core-free subgroup the coset arm runs on, plus the
-    left-coset partition and the ``Ind_H^G 1`` support the arm needs. ``count_at
-    _min_index`` records how many core-free subgroups tie at the minimal index
-    (all give a conjugate coset action); the first is used."""
+    left-coset partition and the ``Ind_H^G 1`` support the arm needs.
+    ``count_at_min_index`` records how many core-free subgroups tie at the
+    minimal index. Those ties need NOT be conjugate to one another -- e.g. D8's
+    four index-4 reflection subgroups fall into two conjugacy classes, not one --
+    so they can give genuinely different coset actions; the arm fixes one
+    deterministically (the lowest ``subgroup_index``) rather than assuming they
+    agree."""
 
     subgroup_index: int
     subgroup: np.ndarray
@@ -369,11 +373,16 @@ class CosetTarget:
 
 
 def coset_target(group: FiniteGroup) -> CosetTarget | None:
-    """Select the coset arm's subgroup, or ``None`` when the coset account is
-    ``UNDEFINED`` (no nontrivial core-free subgroup -- Q32 and its family). The
-    selection is deterministic: the lowest-``subgroup_index`` core-free subgroup
-    at the minimal core-free index (I-12), which fixes a concrete left-coset
-    partition and the ``Ind_H^G 1`` isotypic support (I-13)."""
+    """Select the coset arm's subgroup, or ``None`` when there is none to run on.
+    ``None`` covers two distinct causes -- a structural UNDEFINED (no nontrivial
+    core-free subgroup exists, Q32 and its family) and an artifact-incomplete
+    group (no subgroups were exported at all) -- which this function does not
+    itself separate: consult :func:`templates.template_library`'s
+    ``coset_defined`` / ``artifact_incomplete`` (as :func:`coset_arm` does) to
+    tell them apart. When a subgroup is returned the selection is deterministic:
+    the lowest-``subgroup_index`` core-free subgroup at the minimal core-free
+    index (I-12), which fixes a concrete left-coset partition and the
+    ``Ind_H^G 1`` isotypic support (I-13)."""
     library = template_library(group)
     if not library.coset_defined:
         return None
@@ -446,13 +455,19 @@ def _partition_distance_ratio(reps: np.ndarray, labels: np.ndarray, n_labels: in
 def _random_partition_labels(sizes: Sequence[int], n: int, rng: np.random.Generator) -> np.ndarray:
     """A random labelling of ``n`` items into groups of the given sizes (the
     coset partition's block sizes) -- the I-17/I-19 null matched on block
-    sizes."""
-    labels = np.empty(n, dtype=np.int64)
+    sizes. The sizes must sum to ``n`` or the labelling would leave items
+    unassigned (a silent bug with ``np.empty``); this is guarded."""
+    total = int(sum(int(s) for s in sizes))
+    if total != n:
+        raise ValueError(f"partition sizes sum to {total}, expected {n}")
+    labels = np.full(n, -1, dtype=np.int64)
     perm = rng.permutation(n)
     start = 0
     for label, size in enumerate(sizes):
         labels[perm[start : start + size]] = label
         start += size
+    if int(labels.min()) < 0:
+        raise ValueError("partition left some items unlabelled")
     return labels
 
 
@@ -535,7 +550,9 @@ def coset_subspace_ablation(
 ) -> dict[str, Any]:
     """I-18 (rung 3, Necessary): ablate the whole ``Ind_H^G 1`` isotypic subspace
     (the union of the occupied blocks, ``rank`` = sum of their ``block_rank``s --
-    e.g. 48 on D32, not a single degree-2 block's 4) from the shared embedding,
+    30 on D32 for the minimal core-free ``H`` of index 16, not a single degree-2
+    block's 4; the ranks sum to |G|=32, so a value like 48 is impossible. See
+    ``tests/test_coset.py`` for the computed 30) from the shared embedding,
     against a random subspace matched on norm and that total rank. Reports the
     behavioural drop in flip units per mode with the matched-random control,
     exactly as I-15 but for the coset support rather than one block."""
@@ -566,12 +583,6 @@ def coset_subspace_ablation(
 # ---------------------------------------------------------------------------
 # I-19: within-coset / across-coset patching (rung 4, Causal/pathway)
 # ---------------------------------------------------------------------------
-
-
-def _read_logits(model: GroupModel, tokens: torch.Tensor) -> torch.Tensor:
-    model.eval()
-    with torch.no_grad():
-        return model(tokens)[:, -1, :]
 
 
 def _path_patch_recovery(
@@ -715,30 +726,53 @@ def coset_arm(
     n_null: int = 500,
     seed: int = 0,
 ) -> dict[str, Any]:
-    """The full I-17/I-18/I-19 coset arm for one model, or the structural
-    ``UNDEFINED`` record when no nontrivial core-free subgroup exists (Q32 and its
-    family -- the D32/QD32-only scoping, plan §2). The ``UNDEFINED`` case still
-    carries the reason and the minimal core-free index so a reviewer sees the
-    coset account was undefined by theorem, not merely unmeasured."""
+    """The full I-17/I-18/I-19 coset arm for one model, or one of two non-measured
+    records when there is no nontrivial core-free subgroup to run on:
+
+    * *structural UNDEFINED* -- subgroups were examined and none beyond the
+      trivial one is core-free (Q32 and its family -- the D32/QD32-only scoping,
+      plan §2). ``Ind_1^G 1`` is the regular representation, so the coset account
+      has no distinct prediction: a theorem. The record carries
+      ``undefined_reason`` and the minimal core-free index.
+    * *artifact-incomplete* -- the group's artifact was exported without any
+      subgroup data, so whether a core-free subgroup exists is simply unknown. The
+      record is marked ``status: "skipped"`` with a ``skip_reason``; it makes NO
+      theorem claim, so a subgroup-less artifact can never masquerade as a
+      structural UNDEFINED verdict.
+
+    ``n_subgroups_examined`` is carried in every case so a reviewer can tell an
+    examined-and-empty verdict from an unexamined one."""
+    library = template_library(group)
     target = coset_target(group)
     if target is None:
-        library = template_library(group)
-        return {
+        record: dict[str, Any] = {
             "instrument": "coset-arm",
             "coset_defined": False,
+            "n_subgroups_examined": library.n_subgroups_examined,
             "min_corefree_index": library.min_corefree_index,
             "i17_coset_collapse": UNDEFINED,
             "i18_coset_subspace_ablation": UNDEFINED,
             "i19_coset_patching": UNDEFINED,
-            "undefined_reason": (
+        }
+        if library.artifact_incomplete:
+            record["status"] = "skipped"
+            record["skip_reason"] = (
+                "artifact incomplete: this group's artifact was exported without "
+                "subgroup data, so the coset account cannot be evaluated. This is "
+                "NOT the structural UNDEFINED theorem; re-export the artifact with "
+                "--include-subgroups to measure the coset arm"
+            )
+        else:
+            record["undefined_reason"] = (
                 "no nontrivial core-free subgroup: Ind_1^G 1 is the regular "
                 "representation, so the coset account has no distinct prediction "
                 "(the D32/QD32-only scoping; Q32 is UNDEFINED by design)"
-            ),
-        }
+            )
+        return record
     return {
         "instrument": "coset-arm",
         "coset_defined": True,
+        "n_subgroups_examined": library.n_subgroups_examined,
         "subgroup_index": target.subgroup_index,
         "subgroup_order": int(target.subgroup.size),
         "coset_index": target.coset_index,
@@ -773,12 +807,16 @@ def measure_coset_run(
     dip-aware selection finds no stable checkpoint (a censored/never-grokked
     seed) returns ``status: "skipped"`` with the selection record, never a
     silently-analysed unstable model. Provenance pins the manifest hashes, the
-    checkpoint sha256, and this module's sha256.
+    checkpoint sha256, this module's sha256, and the group-artifact file the run
+    is analysed against (its relative path and sha256) -- the one input that
+    flips the coset-arm verdict between measured, structural UNDEFINED and
+    artifact-incomplete.
     """
     import yaml
 
     from ..config import validate_config
     from ..groups.catalog import resolve_group
+    from ..groups.data import artifact_path
     from ..manifest import get_git_commit, read_manifest
     from ..training.trainer import build_model
     from .checkpoints import select_checkpoint
@@ -787,6 +825,15 @@ def measure_coset_run(
     manifest = read_manifest(run_dir)
     config = validate_config(yaml.safe_load((run_dir / "resolved_config.yaml").read_text()))
     selection = select_checkpoint(run_dir, metric=metric, threshold=threshold)
+    # The group artifact is resolved from the same (order, index) and
+    # GROUP_ARTIFACTS_DIR that ``resolve_group`` below reads, so hashing it here
+    # pins exactly the file the verdict depends on.
+    art_path = artifact_path(config.data.group.order, config.data.group.index)
+    repo_root = Path(__file__).resolve().parents[3]
+    try:
+        art_rel = str(art_path.relative_to(repo_root))
+    except ValueError:
+        art_rel = art_path.name
     record: dict[str, Any] = {
         "instrument": "coset",
         "run_id": manifest.get("run_id", run_dir.name),
@@ -811,6 +858,8 @@ def measure_coset_run(
             "dataset_spec_hash": manifest.get("dataset", {}).get("spec_hash"),
             "analysis_git_commit": get_git_commit(),
             "instrument_code_sha256": instrument_code_hashes(),
+            "group_artifact": art_rel,
+            "group_artifact_sha256": (file_sha256(art_path) if art_path.is_file() else None),
         },
     }
     if selection.path is None:

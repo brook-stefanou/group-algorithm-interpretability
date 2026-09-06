@@ -18,9 +18,10 @@ The harness provides:
   pass (typically the corrupted member of a pair) substituted into the first,
   the rest held fixed, and the readout recomputed.
 
-Everything runs offline and is deterministic for a fixed ``rng_seed``: the mean
-and resample edits use a private seeded RNG and never perturb the global torch
-stream. The harness measures; the corrupted-pair design, the choice of neuron
+Everything runs offline and is deterministic for a fixed ``rng_seed``: the
+resample edit uses a private seeded RNG (mean needs none -- it has no
+randomness) and neither perturbs the global torch stream. The harness measures;
+the corrupted-pair design, the choice of neuron
 set, and any claim about what the effect means belong to the experiment that
 consumes it. Two-track rule: a within-model intervention supports a mechanism
 claim about that one model, never a between-model difference claim.
@@ -81,9 +82,12 @@ def _edit_neurons(
 
     ``zero`` sets them to 0; ``mean`` replaces each selected neuron with its mean
     over the batch (per position), i.e. its activation carries no example-specific
-    information; ``resample`` permutes each selected neuron's activations across
-    the batch, breaking the neuron's alignment with the input while preserving its
-    marginal distribution.
+    information; ``resample`` draws a single random permutation of the batch and
+    applies it jointly to every selected neuron (and every position), so the
+    same donor example supplies all of them together. This breaks each selected
+    neuron's alignment with its own input while preserving both each neuron's
+    marginal distribution and the within-set correlations across the selected
+    neurons -- not an independent per-neuron permutation.
     """
     edited = post.clone()
     if mode == "zero":
@@ -166,15 +170,31 @@ def ablate_neurons(
     random-neuron control, reported in behavioural units.
 
     ``tokens`` are ``(a, b, '=')`` triples; ``targets`` are the products; the
-    optional ``unleaked_mask`` restricts the behavioural readout to the
+    optional ``unleaked_mask`` restricts the *behavioural readout* to the
     transpose-unleaked subset so the effect is on the endpoint accuracy, not the
-    leaked one. The record carries the baseline accuracy, each mode's effect on
-    the target set, and the same three modes on a random set of the same size —
-    the control an effect must beat to be more than a generic capacity loss. No
+    leaked one -- the mean and resample statistics themselves are still computed
+    over the full batch (the mean is the full-batch mean; resample's donor
+    permutation is drawn over the full batch), regardless of ``unleaked_mask``.
+    The record carries the baseline accuracy, each mode's effect on the target
+    set, and the same three modes on a random set of the same size — the
+    control an effect must beat to be more than a generic capacity loss. No
     verdict is emitted.
+
+    ``neuron_indices`` must be in-bounds for the model's ``d_mlp`` and free of
+    duplicates -- rejected outright rather than silently deduped, so the
+    matched-size random control's size always agrees with what the caller asked
+    to ablate.
     """
     _require_mlp(model)
     idx = torch.as_tensor(list(neuron_indices), dtype=torch.long)
+    if idx.numel() > 0:
+        d_mlp_model = int(model.d_mlp)
+        if int(idx.min()) < 0 or int(idx.max()) >= d_mlp_model:
+            raise ValueError(
+                f"neuron_indices out of bounds for d_mlp={d_mlp_model}: {idx.tolist()}"
+            )
+        if int(idx.unique().numel()) != int(idx.numel()):
+            raise ValueError(f"neuron_indices contains duplicates: {idx.tolist()}")
     model.eval()
     with torch.no_grad():
         cache = model(tokens, return_cache=True)
@@ -216,17 +236,42 @@ def ablate_component(
     component: str,
     *,
     unleaked_mask: torch.Tensor | None = None,
+    full_removal: bool = False,
 ) -> dict[str, Any]:
-    """Zero-ablate a whole component of the transformer's short paths: the MLP
-    block (``component="mlp"``) or the attention block (``component="attn"``).
-    The 1-layer paths are embed -> readout, embed -> attn -> readout, and
-    embed -> mlp -> readout, so zeroing one block isolates its contribution to
-    the readout. Reported in behavioural units; transformer only (the FC model
-    has a single path)."""
-    if not hasattr(model, "W_out"):
-        raise ValueError("component ablation is defined for the transformer path only")
+    """Ablate one block of the transformer's residual stream and measure the
+    behavioural cost of removing it.
+
+    The 1-layer transformer's readout is reached from ``embed`` by four paths:
+    ``embed -> readout`` (the residual skip, always present), ``embed -> attn ->
+    readout`` (attention's own additive term), ``embed -> mlp -> readout`` (the
+    MLP's additive term), and ``embed -> attn -> mlp -> readout`` (the composed
+    path -- attention's output feeds the MLP's input, before the MLP's
+    nonlinearity, so attention's effect also reaches the readout through the
+    MLP, not only through its own additive term).
+
+    Because attention runs before the MLP, ``component="mlp"`` removes the
+    MLP's contribution completely: there is no further block downstream for it
+    to reach the readout through, so this already is a true full-block removal
+    (``scope: "full"`` in the returned record). ``component="attn"`` by default
+    zeroes only attention's own additive term (``scope: "direct_path"``): the
+    cached ``mlp_post`` comes from the original forward pass, so it still
+    carries attention's effect, and the composed embed->attn->mlp->readout path
+    is NOT removed -- do not read this as "attention's contribution to the
+    readout". Pass ``full_removal=True`` to also recompute the MLP from
+    ``embed`` alone, equivalent to zeroing ``W_O`` and rerunning the forward
+    pass, for a true full removal of attention along both paths (``scope:
+    "full"``); the default is unchanged. Reported in behavioural units;
+    transformer only (the FC model has a single block, with no direct/composed
+    path to isolate)."""
+    if not hasattr(model, "W_Q"):
+        raise ValueError(
+            "component ablation requires the transformer architecture, which has "
+            "separate attn/mlp blocks to isolate; the FC model has a single block"
+        )
     if component not in ("mlp", "attn"):
         raise ValueError(f"component must be 'mlp' or 'attn', got {component!r}")
+    if component == "mlp":
+        _require_mlp(model)
     model.eval()
     with torch.no_grad():
         cache = model(tokens, return_cache=True)
@@ -234,18 +279,31 @@ def ablate_component(
         embed = cache["embed"]
         attn_out = cache["attn_out"]
         post = cache["mlp_post"]
-        mlp_out = (
-            torch.einsum("b p l, l m -> b p m", post, model.W_out) if post is not None else 0.0
-        )
         if component == "mlp":
             resid = embed + attn_out
+            scope = "full"
+        elif post is None:
+            # No MLP exists at all, so there is no embed->attn->mlp->readout
+            # composed path to miss: removing attention's direct additive term
+            # already removes its entire contribution to the readout.
+            resid = embed
+            scope = "full"
+        elif full_removal:
+            mlp_pre_full = torch.einsum("b p m, m l -> b p l", embed, model.W_in)
+            mlp_post_full = model.activation(mlp_pre_full)
+            mlp_out_full = torch.einsum("b p l, l m -> b p m", mlp_post_full, model.W_out)
+            resid = embed + mlp_out_full
+            scope = "full"
         else:
+            mlp_out = torch.einsum("b p l, l m -> b p m", post, model.W_out)
             resid = embed + mlp_out
+            scope = "direct_path"
         logits = torch.einsum("b p m, m v -> b p v", resid, model.W_U)
         after = _behaviour(logits, targets, unleaked_mask)
     return {
         "instrument": "intervention-component-ablation",
         "component": component,
+        "scope": scope,
         "baseline_accuracy": baseline.accuracy,
         "accuracy_after": after.accuracy,
         "accuracy_drop": baseline.accuracy - after.accuracy,
@@ -334,10 +392,27 @@ def _accuracy_in_flips(mask: np.ndarray, subset: np.ndarray | None) -> int:
     return int(mask[subset].sum())
 
 
+def _subset_size(full_size: int, subset: np.ndarray | None) -> int:
+    """The number of pairs ``subset`` actually selects out of ``full_size``:
+    every pair when ``subset`` is ``None``, the count of ``True`` entries for a
+    boolean mask (``mask[subset]`` only keeps those), or the number of indices
+    for an integer index array."""
+    if subset is None:
+        return full_size
+    if subset.dtype == np.bool_:
+        return int(subset.sum())
+    return int(subset.size)
+
+
 def _ablated_model(model: GroupModel, direction: np.ndarray) -> GroupModel:
     """A copy of ``model`` with the unit ``direction`` (in ``d_model`` space)
     projected out of every ``W_E`` row -- zero-ablation of one representational
-    axis."""
+    axis in the *embedding input*, not the residual stream: only the token
+    embedding is edited (``W_pos`` is untouched), and any downstream write --
+    attention or MLP -- can reintroduce a component along the same axis before
+    the readout. This is not a guarantee that the axis is absent from the
+    residual stream at every position; it is a lower bound on the model's
+    reliance on it as an embedding-input feature."""
     clone = copy.deepcopy(model)
     unit = direction / (np.linalg.norm(direction) + 1e-12)
     unit_t = torch.tensor(unit, dtype=clone.W_E.dtype)
@@ -361,15 +436,20 @@ def ablate_direction(
     -- the change in the number of correctly answered pairs -- against
     norm-matched random-direction controls.
 
-    ``subset`` restricts the accuracy count to an unleaked held-out mask when the
-    caller supplies one; by default every pair is counted. The random controls
+    This is embedding-input ablation, not residual-stream ablation: only
+    ``W_E`` is edited (``W_pos`` is untouched), and a downstream write --
+    through attention or the MLP -- can reintroduce a component along the same
+    axis before the readout (see :func:`_ablated_model`). ``subset`` restricts
+    the accuracy count to an unleaked held-out mask when the caller supplies
+    one -- a boolean mask counts its ``True`` entries, an integer index array
+    counts its length; by default every pair is counted. The random controls
     draw from a private ``numpy`` generator (never the global stream) and share
     the ablated axis's dimensionality, so the effect is read against a matched
     baseline rather than an absolute threshold. Effect sizes only, no verdict
     (within-model, two-track rule)."""
     baseline_mask = model_correct_mask(model, group)
     baseline = _accuracy_in_flips(baseline_mask, subset)
-    n_scored = group.order * group.order if subset is None else int(subset.size)
+    n_scored = _subset_size(group.order * group.order, subset)
 
     ablated_mask = model_correct_mask(_ablated_model(model, direction), group)
     ablated = _accuracy_in_flips(ablated_mask, subset)

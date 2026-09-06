@@ -20,9 +20,17 @@ normaliser whose achievable range depends on the irrep degrees (the audited
 condition-dependent-normalisation failure). Total-variation distances are
 always quoted with the group's own noise floor,
 ``floor = 1/2 * sum_j sqrt(2/pi) * sqrt(pi0_j * (1 - pi0_j) / N)`` with
-``N = neurons x seeds`` -- the Dirichlet/multinomial-derived planning floor,
-which self-averaging of the energy-weighted statistic can beat but never
-fabricate against.
+``N = nonzero-energy neurons x seeds``. That floor is a *lower bound* on null
+variability, derived under an independence assumption real networks violate:
+its units are treated as independent draws from ``pi0``, but a model's neurons
+are correlated through the shared residual stream, so the actual null spread
+runs wider than the floor. Empirically (over 30 random-init D8 models the null
+TV averaged ~1.5x the floor, up to ~3x), a *single-model* ``tv_over_floor`` of
+2-3x is well within null noise, not evidence of structure. The floor is a
+planning scale, not a decision threshold; the calibrated reference for "does
+this statistic separate the conditions" is the measured I-11 null gate
+(:func:`report.null_gate`), which reads the separation off the paired
+random-init distribution rather than off the floor.
 
 Population occupancy (I-10, energy-weighted) is the primary readout; per-neuron
 concentration (I-09) is a reportable secondary whose structured failure is a
@@ -76,7 +84,15 @@ def neuron_activations(
     """I-08: the per-neuron function on ``G x G``, ``A[m, a, b]`` with shape
     ``[d_mlp, |G|, |G|]``, read from ``mlp_pre`` at the read position (-1) over
     the full Cayley grid. Requires an MLP (``use_mlp=false`` models have no
-    neurons to measure)."""
+    neurons to measure).
+
+    Contract: this calls ``model.eval()``, which mutates the caller's model --
+    training mode is not restored on return, so a caller that needs the model
+    back in ``train()`` must set it themselves. Tokens are built and the forward
+    pass runs on CPU only (the grid is enumerated as CPU ``long`` tensors); the
+    model is expected to be on CPU."""
+    if batch_size < 1:
+        raise ValueError(f"batch_size must be >= 1, got {batch_size}")
     tokens = cayley_grid_tokens(order)
     chunks: list[torch.Tensor] = []
     model.eval()
@@ -115,14 +131,23 @@ def isotypic_energies(
     """Per-neuron isotypic energies ``E[m, j]``, shape ``[d_mlp, n_blocks]``.
 
     ``argument="left"`` projects the first (``a``) index: ``||P_j A_m||_F^2``;
-    ``argument="right"`` projects the second: ``||A_m P_j||_F^2``. Asserts the
-    completeness identity ``sum_j E[m, j] == ||A_m||_F^2`` (the block
-    projectors resolve the identity) and non-negativity."""
+    ``argument="right"`` projects the second: ``||A_m P_j||_F^2``. Energies are
+    sums of squares, so non-negativity holds by construction and needs no
+    clamp; the one asserted identity is completeness,
+    ``sum_j E[m, j] == ||A_m||_F^2`` (the block projectors resolve the
+    identity). Activations must be finite up front: a NaN/Inf activation would
+    otherwise poison the completeness check and be reported as a spurious
+    projector failure, so it is caught here naming the real cause."""
     if argument not in ("left", "right"):
         raise ValueError(f"argument must be 'left' or 'right', got {argument!r}")
     a = np.asarray(activations, dtype=np.float64)
     if a.ndim != 3 or a.shape[1] != group.order or a.shape[2] != group.order:
         raise ValueError(f"activations must have shape [d_mlp, {group.order}, {group.order}]")
+    if not np.isfinite(a).all():
+        raise ValueError(
+            "activations contain non-finite values (NaN or Inf); the model "
+            "produced invalid activations, so isotypic energies are undefined"
+        )
     energies = np.empty((a.shape[0], len(group.isotypic_blocks)), dtype=np.float64)
     for j, block in enumerate(group.isotypic_blocks):
         projector = block.projector
@@ -137,9 +162,7 @@ def isotypic_energies(
             "isotypic energies do not sum to the total activation energy; the "
             "block projectors of this artifact do not resolve the identity"
         )
-    if float(energies.min(initial=0.0)) < -_REL_TOL:
-        raise ValueError("negative isotypic energy; projector data is corrupt")
-    return np.maximum(energies, 0.0)
+    return energies
 
 
 def population_occupancy(energies: np.ndarray) -> np.ndarray:
@@ -207,11 +230,16 @@ def dirichlet_noise_floor(pi0: np.ndarray, n_units: int) -> float:
     ``n_units`` units from ``pi0``:
     ``1/2 * sum_j sqrt(2/pi) * sqrt(pi0_j * (1 - pi0_j) / n_units)``.
 
-    ``n_units`` is neurons x seeds, so pooling ``S`` seeds scales the floor by
-    ``1/sqrt(S)``. A raw TV quoted without this floor is meaningless; the
-    floor is a conservative planning number (count-form variance applied to
-    the energy-weighted statistic, which self-averages further), so it can
-    understate power but cannot fabricate decidability."""
+    ``n_units`` is nonzero-energy neurons x seeds, so pooling ``S`` seeds scales
+    the floor by ``1/sqrt(S)``. This is a *lower bound* on null variability, not
+    a conservative ceiling: it treats the units as independent draws from
+    ``pi0``, but a model's neurons are correlated through the shared residual
+    stream, so the real null TV runs wider than the floor (measured ~1.5x on
+    average and up to ~3x over 30 random-init D8 models). A single-model
+    ``tv_over_floor`` of 2-3x is therefore consistent with null noise, not
+    evidence of structure -- the floor sets the scale, and the measured I-11
+    null gate (:func:`report.null_gate`), not the floor, is the calibrated
+    reference for whether a statistic separates the conditions."""
     if n_units <= 0:
         raise ValueError(f"n_units must be positive, got {n_units}")
     p = np.asarray(pi0, dtype=np.float64)

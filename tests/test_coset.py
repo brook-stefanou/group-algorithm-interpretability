@@ -131,15 +131,66 @@ def test_coset_target_is_none_without_a_nontrivial_corefree_subgroup(name):
 @pytest.mark.parametrize("name", ["Q8", "C8"])
 def test_coset_arm_returns_undefined_on_the_q32_class(name):
     """The D32/QD32-only scoping: the whole arm (I-17/I-18/I-19) is the string
-    UNDEFINED, deliberately not a number, wherever no core-free H exists."""
+    UNDEFINED, deliberately not a number, wherever no core-free H exists. The
+    fixtures export their subgroups, so this is the structural theorem verdict:
+    subgroups were examined and the record says so."""
     model, group = _random_model(*({"Q8": (8, 4), "C8": (8, 1)}[name]))
     tokens, targets = unleaked_heldout(group, train_frac=0.8, split_seed=0)
     arm = coset_arm(model, group, tokens, targets, n_random=2, n_null=20)
     assert arm["coset_defined"] is False
+    assert arm["n_subgroups_examined"] > 0
     assert arm["i17_coset_collapse"] == UNDEFINED
     assert arm["i18_coset_subspace_ablation"] == UNDEFINED
     assert arm["i19_coset_patching"] == UNDEFINED
     assert "regular representation" in arm["undefined_reason"]
+    # The theorem verdict is not a skip: the account was evaluated and found
+    # structurally undefined.
+    assert "status" not in arm and "skip_reason" not in arm
+
+
+def _strip_subgroups(order: int, index: int, dst_dir: Path) -> None:
+    """Copy a fixture artifact into ``dst_dir`` with its subgroup/coset arrays
+    and metadata counts removed -- reproducing the exporter's default (no
+    ``--include-subgroups``) output."""
+    import json
+
+    from group_algorithm_interp.groups.data import artifact_dir
+
+    src = artifact_dir() / f"smallgroup_{order}_{index}.npz"
+    with np.load(src, allow_pickle=False) as raw:
+        keep = {k: raw[k] for k in raw.files if not k.startswith(("subgroup_", "coset_"))}
+    meta = json.loads(str(keep["metadata"].item()))
+    meta["subgroups"] = 0
+    meta["coset_counts"] = []
+    meta["provenance"]["subgroups_included"] = False
+    keep["metadata"] = np.array(json.dumps(meta))
+    np.savez(dst_dir / f"smallgroup_{order}_{index}.npz", **keep)
+
+
+def test_coset_arm_on_a_subgroupless_artifact_skips_without_claiming_the_theorem(tmp_path):
+    """The honest gate: an artifact exported without subgroup data (the
+    exporter's default) says nothing about whether a core-free subgroup exists.
+    D8 provably HAS core-free subgroups, so if its subgroup-stripped artifact
+    produced the theorem-claiming UNDEFINED record, the record would be false.
+    The arm must instead emit a distinct ``status: "skipped"`` record whose
+    reason names the missing subgroup data."""
+    from group_algorithm_interp.groups.data import load_group
+
+    _strip_subgroups(8, 3, tmp_path)
+    group = load_group(8, 3, directory=tmp_path)
+    assert coset_target(group) is None  # nothing to run on...
+    model, _ = _random_model(8, 3)
+    tokens, targets = unleaked_heldout(group, train_frac=0.8, split_seed=0)
+    arm = coset_arm(model, group, tokens, targets, n_random=2, n_null=20)
+    # ...but the record is a skip, never the structural theorem.
+    assert arm["coset_defined"] is False
+    assert arm["n_subgroups_examined"] == 0
+    assert arm["status"] == "skipped"
+    assert "artifact" in arm["skip_reason"] and "subgroup" in arm["skip_reason"]
+    assert "undefined_reason" not in arm
+    assert arm["i17_coset_collapse"] == UNDEFINED
+    assert arm["i18_coset_subspace_ablation"] == UNDEFINED
+    assert arm["i19_coset_patching"] == UNDEFINED
 
 
 # ---------------------------------------------------------------------------
@@ -324,6 +375,7 @@ def test_coset_arm_measured_record_is_complete_on_d8():
     tokens, targets = unleaked_heldout(group, train_frac=0.8, split_seed=0)
     arm = coset_arm(model, group, tokens, targets, n_random=2, n_null=30)
     assert arm["coset_defined"] is True
+    assert arm["n_subgroups_examined"] > 0
     assert arm["corefree_subgroups_at_min_index"] == 4
     assert arm["i17_coset_collapse"]["instrument"] == "coset-collapse-probe"
     assert arm["i18_coset_subspace_ablation"]["instrument"] == "coset-subspace-ablation"
@@ -337,6 +389,62 @@ def test_coset_arm_measured_record_is_complete_on_d8():
 _REPO = Path(__file__).resolve().parent.parent
 _ARCHIVE = _REPO / "results-archive"
 _REAL_ARTIFACTS = _REPO / "data" / "group_artifacts"
+
+
+def _real_artifact_has_subgroups(order: int, index: int) -> bool:
+    """Whether the local ground-truth artifact exists and carries subgroup data
+    (i.e. was exported with ``--include-subgroups``)."""
+    import json
+
+    path = _REAL_ARTIFACTS / f"smallgroup_{order}_{index}.npz"
+    if not path.is_file():
+        return False
+    with np.load(path, allow_pickle=False) as raw:
+        meta = json.loads(str(raw["metadata"].item()))
+    return int(meta.get("subgroups", 0)) > 0
+
+
+def test_real_d32_artifact_coset_target_has_minimal_corefree_index_16():
+    """On the real D32 (32,18) artifact re-exported with subgroups, the coset
+    account is defined: the minimal core-free index is 16 (an order-2 core-free
+    subgroup of the order-32 group) and ``coset_target`` selects it. Skipped
+    when the local artifact is absent or was exported without subgroups."""
+    from group_algorithm_interp.groups.data import load_group
+    from group_algorithm_interp.instruments.templates import template_library
+
+    if not _real_artifact_has_subgroups(32, 18):
+        pytest.skip("no local D32 artifact with subgroup data (re-export with --include-subgroups)")
+    group = load_group(32, 18, directory=_REAL_ARTIFACTS)
+    library = template_library(group)
+    assert library.subgroups_included and not library.artifact_incomplete
+    assert library.n_subgroups_examined > 0
+    assert library.coset_defined is True
+    assert library.min_corefree_index == 16
+    target = coset_target(group)
+    assert target is not None
+    assert target.coset_index == 16
+    assert target.subgroup.size == 2
+    assert sorted(np.concatenate(target.cosets).tolist()) == list(range(32))
+    # The Ind_H^G 1 support: occupied-block ranks sum to 30 (< |G| = 32), the
+    # value quoted in the I-18 docstring -- computed here, never restated.
+    assert target.subspace_rank == 30
+
+
+def test_real_q32_artifact_is_structurally_undefined():
+    """On the real Q32 (32,20) artifact re-exported with subgroups, the theorem
+    verdict is genuine: subgroups were examined and none beyond the trivial one
+    is core-free."""
+    from group_algorithm_interp.groups.data import load_group
+    from group_algorithm_interp.instruments.templates import template_library
+
+    if not _real_artifact_has_subgroups(32, 20):
+        pytest.skip("no local Q32 artifact with subgroup data (re-export with --include-subgroups)")
+    group = load_group(32, 20, directory=_REAL_ARTIFACTS)
+    library = template_library(group)
+    assert library.subgroups_included and library.n_subgroups_examined > 0
+    assert library.coset_defined is False
+    assert library.min_corefree_index == 32
+    assert coset_target(group) is None
 
 
 def _find_archive_run(order: int, index: int) -> Path | None:
@@ -367,17 +475,17 @@ def _find_archive_run(order: int, index: int) -> Path | None:
 
 def test_measure_coset_run_on_salvaged_d32_checkpoint(monkeypatch):
     """End-to-end on a real salvaged, grokked D32 run when one exists: the record
-    is well-formed and I-15 runs on the real held-out set. Reads the committed
+    is well-formed and I-15 runs on the real held-out set. Reads the local
     ground-truth artifacts and read-only archive checkpoints only -- never the
     live campaign.
 
-    Note: the committed ground-truth artifacts are exported without subgroup
-    lists (the large-group escape hatch documented in ``templates.py``), so the
-    coset arm reads ``UNDEFINED`` here for want of exported subgroups; the
-    coset-defined path (I-17/I-18/I-19) is covered on the D8 fixture, which does
-    export its subgroups. This test therefore checks the run-loading, checkpoint
-    selection, held-out scoring and I-15 path on a real trained model, and that
-    the coset arm degrades cleanly when subgroups are unavailable."""
+    D32 provably has core-free subgroups, so the coset arm on it must never emit
+    the theorem-claiming structural UNDEFINED record. What it may emit depends on
+    the local artifact: exported with subgroups, the arm is measured with
+    ``coset_defined`` True; exported without them (the exporter's default), the
+    arm is a distinct ``status: "skipped"`` artifact-incomplete record. Both
+    branches are asserted; the false theorem claim is asserted against in both.
+    Provenance must pin the group-artifact file the verdict was read from."""
     from group_algorithm_interp.instruments.coset import measure_coset_run
 
     run_dir = _find_archive_run(32, 18)
@@ -386,13 +494,25 @@ def test_measure_coset_run_on_salvaged_d32_checkpoint(monkeypatch):
     monkeypatch.setenv("GROUP_ARTIFACTS_DIR", str(_REAL_ARTIFACTS))
     record = measure_coset_run(run_dir, n_random=2, n_null=20)
     assert record["group"]["name"] == "SmallGroup(32,18)"
+    assert record["provenance"]["group_artifact"].endswith("smallgroup_32_18.npz")
+    assert record["provenance"]["group_artifact_sha256"]
     if record["status"] == "measured":
         ablation = record["isotypic_block_ablation"]
         assert ablation["rung"] == 3 and ablation["blocks"]
         # A real grokked D32 solves the held-out set.
         assert ablation["clean_accuracy"] > 0.9
         arm = record["coset_arm"]
-        assert isinstance(arm["coset_defined"], bool)
+        # Never the false theorem on D32, whichever artifact is present.
+        assert arm.get("undefined_reason") is None
+        if _real_artifact_has_subgroups(32, 18):
+            assert arm["coset_defined"] is True
+            assert arm["n_subgroups_examined"] > 0
+            assert arm["coset_index"] == 16
+        else:
+            assert arm["coset_defined"] is False
+            assert arm["n_subgroups_examined"] == 0
+            assert arm["status"] == "skipped"
+            assert "subgroup" in arm["skip_reason"]
     else:
         assert record["status"] == "skipped"
         assert record["checkpoint_selection"]["reason"]
@@ -409,6 +529,17 @@ def test_measure_coset_run_on_salvaged_q32_checkpoint_is_undefined(monkeypatch):
     monkeypatch.setenv("GROUP_ARTIFACTS_DIR", str(_REAL_ARTIFACTS))
     record = measure_coset_run(run_dir, n_random=2, n_null=20)
     assert record["group"]["name"] == "SmallGroup(32,20)"
+    assert record["provenance"]["group_artifact"].endswith("smallgroup_32_20.npz")
+    assert record["provenance"]["group_artifact_sha256"]
     if record["status"] == "measured":
-        assert record["coset_arm"]["i17_coset_collapse"] == UNDEFINED
-        assert record["coset_arm"]["i19_coset_patching"] == UNDEFINED
+        arm = record["coset_arm"]
+        assert arm["i17_coset_collapse"] == UNDEFINED
+        assert arm["i19_coset_patching"] == UNDEFINED
+        if _real_artifact_has_subgroups(32, 20):
+            # The genuine theorem verdict: subgroups examined, none core-free.
+            assert arm["n_subgroups_examined"] > 0
+            assert "regular representation" in arm["undefined_reason"]
+        else:
+            # Artifact-incomplete: no theorem is claimed.
+            assert arm["status"] == "skipped"
+            assert "undefined_reason" not in arm
