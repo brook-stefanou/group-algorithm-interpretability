@@ -206,6 +206,50 @@ the report-everything rule: a null probe or ablation outcome ships as a
 measurement.  No prior work looks for explicitly learned extension data — a
 2-cocycle probed as a represented object — in network weights.
 
+A deviation from the registered design, found before any C5 model was
+analysed.  The registered I-22 measurements assumed the cocycle f would
+spread across several quotient-pair cells.  At the pair we run it does not.
+For Q = C2 the normalised cocycle is nontrivial on a single (q1, q2) cell,
+cell (1,1), and that collapses the decode-based measurements.
+Leave-one-cell-out holds out the only cell carrying the nontrivial class, so
+the probe trains on none of it and sits at chance whatever the model has
+learned; the instrument now marks that fold structurally degenerate instead
+of shipping the chance number.  The deeper trouble is that f, used as a
+per-pair label, carries the same information as the cell-(1,1) indicator, so
+decoding f or ablating an "f-direction" cannot be separated from ordinary
+sensitivity to which coset a pair lands in — which every accurate model has.
+On this pair the decode design measures the confound, not the mechanism.
+
+The replacement, I-22d, sets decoding aside for an intervention that reads
+the model's own errors.  On the nontrivial cell the true product and the
+untwisted product are a fixed right-translation apart, true = untwisted · w,
+so each input pair has its own untwisted answer and those answers vary across
+the cell.  The test knocks out the model's winning prediction on the cell's
+pairs and asks where the answer falls back to.  A model that forms the
+untwisted product and then applies the cocycle correction falls back onto
+that pair's untwisted answer; a model that has memorised the cell answer by
+answer falls back somewhere unrelated.  Because the untwisted target changes
+from pair to pair while cell membership does not, the score cannot come from
+coset sensitivity alone.  Two matched baselines calibrate it: a shuffled
+reassignment of untwisted targets to pairs, and, where the normal subgroup is
+large enough, the untwisted answers for a wrong cocycle value.  The split
+member, coordinatised with the transversal on which f vanishes, has no
+nontrivial cell and returns an inactive reading.  The effect ships as a size
+with a bootstrap interval, and a null reading ships as a measurement, as the
+pre-registered fallback requires.
+
+One limitation is built into I-22d.  The untwisted answer each pair is scored
+against comes from the pinned canonical transversal — the coset
+representatives fixed when the group is exported.  A model that internally
+works in a different transversal forms untwisted products against its own
+representatives, which differ from the canonical ones by a coset-dependent
+shift, so a correct twisted-then-corrected computation registers as only a
+partial hit.  A weak I-22d reading is therefore underdetermined: it fits a
+model that carries the cocycle against an unaligned transversal as well as one
+that carries no cocycle at all.  The split-member control is unaffected, since
+it is coordinatised on the transversal where f vanishes and no cell carries a
+nontrivial class.
+
 ## The groups
 
 Seeds are paired: the same seed list on both members of every pair, with the
@@ -246,6 +290,25 @@ grok returns only both-censored ties, at the largest orders in the design.
 The four width-256 cells therefore double as staging probes: the staged pairs
 re-enter the cell list only if those probes grok.  The censoring rule and the
 ceiling do not change either way.
+
+Two tier-1 pairs came in below the grokking floor at their pinned width — the
+roughly 25 grokked seeds a paired endpoint needs to resolve — and were re-run
+at greater width.  At width 256 the order-27 pair `(27,3)/(27,4)` groks 14 and
+9 of 50 seeds (`results/grok_verdict.json`); at width 512 it groks 34 and 30,
+clearing the floor, and the paired epochs-to-grok difference over its 20
+both-grokked seeds spans zero (mean +4 epochs, 95% CI [−9,081, +9,062];
+`results/endpoints/pair_27_3__vs__27_4_w512.json`).  The order-64 pair
+`(64,241)/(64,242)` groks 7 of 50 on each member at its pinned width 128;
+re-run at width 256 to a 400,000-epoch ceiling it groks all 50, the
+epochs-to-grok difference again spanning zero (mean +2,924, CI [−8,211,
++16,445]) and the final unleaked-accuracy difference sitting at −0.0008 (CI
+[−0.00156, −0.00022], dz −0.31) with both members at ≈1.0 accuracy
+(`results/endpoints/pair_64_241__vs__64_242_w256_e400k.json`).  For these
+heavies width is the binding constraint, ahead of epoch budget or seed count;
+the wider cell is the operative C1 measurement for each pair.  The falsifier
+screen and the pair family it defines are untouched: width sets training
+capacity, and the pair criterion never refers to it.  Each rescue is a shift
+of operating point inside the pre-registered family, reported as such.
 
 ## Endpoints and reporting
 

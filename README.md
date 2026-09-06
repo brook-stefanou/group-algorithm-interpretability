@@ -13,10 +13,13 @@ before any run, over 26 groups in 31 paired-seed cells (1,550 runs),
 reported estimation-first — effect sizes with confidence intervals, and every
 measurement taken ships.
 
-The design was fixed on 2026-07-15, with the epoch ceiling settled on
-2026-07-20.  The training and campaign machinery below runs end to end.  No
-training run has started: no empirical result or mechanistic finding is
-released here yet, and the analysis instruments are still being built.
+The design was fixed on 2026-07-15 and the epoch ceiling on 2026-07-20; the
+campaign has since run to completion.  Every measurement is in
+[`results/`](results/), computed post-hoc from committed snapshots by the
+instruments in `src/group_algorithm_interp/instruments/`, and the
+[reviewer notebook](notebooks/reviewer_walkthrough.ipynb) reproduces the main
+results end to end from those files.  The headline results are in the
+[Findings](#findings) section below.
 
 ## The study
 
@@ -58,6 +61,30 @@ fixed before any run.  The screen's output is committed at
 [`results/falsifier_screen_results_full.json`](results/falsifier_screen_results_full.json),
 and [`results/README.md`](results/README.md) records the input and output
 hashes that make it reproducible byte-for-byte.
+
+## Findings
+
+The campaign is complete — 2,100 canonical one-run-per-seed cells across the
+core and its width rescues (`results/canonical_runs.json`, 1,544 grokked /
+556 censored).  Every measurement is in [`results/`](results/), computed
+post-hoc from committed snapshots by the instruments in
+`src/group_algorithm_interp/instruments/`; the
+[reviewer notebook](notebooks/reviewer_walkthrough.ipynb) reproduces the
+headline results from those files.
+
+| test | finding | records |
+|---|---|---|
+| C1 (headline) | the within-pair difference includes zero on both endpoints — epochs-to-grok and the irrep-occupancy contrast — for every pair with an informative sample, with occupancy well above its analytic floor, so the null reads as genuine equality | [`results/endpoints/`](results/endpoints/), [`results/occupancy/`](results/occupancy/) |
+| C2 | the coset-block circuit passes a faithfulness/completeness/minimality audit at width 256 and fails it at width 128; a coset-subspace ablation flips as many held-out predictions as a rank-matched random subspace | [`results/coset/`](results/coset/), [`results/audit/`](results/audit/) |
+| C3 | the ablation-cost matrix is diagonal on C2⁷ and triangular on C128, unanimous across all 50 seeds of each group | [`results/probes/`](results/probes/) |
+| C4 | the signed-cyclic probe is undefined on the quaternionic member C13:Q8 (all 50 seeds) and measured on D104, the direction the strict character-decode account predicts | [`results/probes/`](results/probes/) |
+| C5 | with a two-element quotient the pre-registered cocycle probe is structurally degenerate; a replacement intervention finds the untwisted-product fallback in a minority of seeds | [`results/cocycle/`](results/cocycle/) |
+
+Two tier-1 pairs sat below the grok floor at their pinned width and were
+measured wider — order-27 at width 512, and one order-64 pair at width 256 with
+a 400,000-epoch ceiling — with the pair family unchanged.  Five heavier tier-1
+pairs are staged behind a pre-registered width probe that did not clear, so
+they stand as a documented deferral described in the core study.
 
 ## Quickstart: run the training loop without SageMath
 
