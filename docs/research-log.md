@@ -82,3 +82,14 @@ they were written.
   - Rescue the two below-floor tier-1 pairs at width 256 with a longer ceiling, plus a width-128 firm-up of the C2 pair; cells still short at the stop-line are reported as boundaries.
   - Drop the five staged large-order p-group pairs — too expensive to run to convergence, and the same hard class as order-27, so likely boundaries regardless.
   - C1 rests on the clean run pairs plus the rescues.
+
+## Jul 24
+
+<!-- decision: c5-mechanism-via-interventions -->
+- The pre-registered cocycle decode (I-22) cannot work at |Q| = 2: the
+  normalised cocycle is nontrivial in a single (q1,q2) cell, so its label
+  equals the cell indicator — leave-one-cell-out caps at chance whatever the
+  model encodes, and any decode is confounded with ordinary coset sensitivity.
+  Both C5 members have Q ≅ C2. Will replace the C5 mechanism evidence with an
+  intervention design scored on which wrong answers perturbations produce,
+  since the twisted and untwisted rules predict different specific errors.
