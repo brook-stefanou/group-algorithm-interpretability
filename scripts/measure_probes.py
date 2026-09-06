@@ -20,12 +20,20 @@ data). For the selected model the applicable probes are run:
 * **I-26** the polycyclic digit probe, direction count and carry structure --
   ``UNDEFINED`` where no mixed-radix coordinate system exists.
 
+``--source`` picks the feature space (``embed``, ``left`` or ``right``) for the
+classification/fit probes above. The involution-direction ablation always
+ablates in ``embed`` space regardless of ``--source``: zero-ablation removes a
+direction from ``W_E`` (``d_model`` space), so a ``d_mlp``-space direction
+(``left``/``right``) has no valid ablation there.
+
 Each structural probe is compared against a random-init model of the same shape
 (seeded exactly as training would seed it), so the untrained null the rule-1
 regression requires travels in the record. Every run's record is written to
 ``<run_dir>/analysis/probes.json``; ``--out`` additionally collects them into one
 file. Exit code is ``0`` iff every requested run was measured, ``1`` when a run
 was skipped for want of a stable checkpoint (so a campaign wrapper notices).
+Provenance carries the checkpoint's sha256, the analysed group artifact's
+repo-relative path and sha256, and every instrument module's sha256.
 """
 
 from __future__ import annotations
@@ -45,6 +53,7 @@ import yaml  # noqa: E402
 
 from group_algorithm_interp.config import validate_config  # noqa: E402
 from group_algorithm_interp.groups.catalog import resolve_group  # noqa: E402
+from group_algorithm_interp.groups.data import artifact_path  # noqa: E402
 from group_algorithm_interp.instruments.checkpoints import select_checkpoint  # noqa: E402
 from group_algorithm_interp.instruments.probes import (  # noqa: E402
     carry_digit_instrument,
@@ -60,9 +69,22 @@ from group_algorithm_interp.manifest import get_git_commit, read_manifest  # noq
 from group_algorithm_interp.seed import set_seed  # noqa: E402
 from group_algorithm_interp.training.trainer import build_model  # noqa: E402
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+
 
 def _utcnow() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _relative_to_repo(path: Path) -> str:
+    """``path`` relative to the repo root when possible, else its absolute
+    form (e.g. an ``--artifacts-dir`` override or a test's tmp directory
+    outside the repo) -- so the provenance block is always a valid path,
+    never an assumption about where artifacts live."""
+    try:
+        return str(path.resolve().relative_to(_REPO_ROOT))
+    except ValueError:
+        return str(path.resolve())
 
 
 def probe_run(
@@ -122,12 +144,21 @@ def probe_run(
     set_seed(config.seed, deterministic=False)
     null_model = build_model(config, group)
 
+    group_artifact = artifact_path(config.data.group.order, config.data.group.index)
     record["status"] = "measured"
     record["provenance"]["checkpoint_sha256"] = file_sha256(selection.path)
+    record["provenance"]["group_artifact_path"] = _relative_to_repo(group_artifact)
+    record["provenance"]["group_artifact_sha256"] = file_sha256(group_artifact)
     record["probes"] = {
         "power_map": power_map_probe(model, group, source=source, seed=config.seed),
+        # The involution-direction ablation always ablates out of W_E (d_model
+        # space, interventions.ablate_direction's only supported space) --
+        # unlike the other probes here, it does not follow the CLI's general
+        # --source choice, which can also name a d_mlp feature space
+        # (neuron_features) that has no valid ablation analogue. See
+        # probes.involution_direction_ablation's docstring.
         "involution_ablation": involution_direction_ablation(
-            model, group, source=source, seed=config.seed
+            model, group, source="embed", seed=config.seed
         ),
         "signed_cyclic": signed_cyclic_instrument(
             model, group, source=source, seed=config.seed, null_model=null_model
@@ -190,7 +221,12 @@ def main(argv: list[str] | None = None) -> int:
         "--source",
         default="embed",
         choices=["embed", "left", "right"],
-        help="per-element feature source for the probes (default: embed)",
+        help=(
+            "per-element feature source for the classification/fit probes "
+            "(power_map, signed_cyclic, carry_digit; default: embed). The "
+            "involution-direction ablation always uses 'embed' regardless of "
+            "this flag -- ablation is only defined in W_E's d_model space."
+        ),
     )
     measure.add_argument(
         "--artifacts-dir", default=None, help="override the group-artifact directory"

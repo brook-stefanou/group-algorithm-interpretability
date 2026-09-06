@@ -68,6 +68,7 @@ from group_algorithm_interp.instruments.report import (  # noqa: E402
     measure_run,
     null_gate,
     pool_records,
+    sanitise_nonfinite,
 )
 
 
@@ -104,8 +105,14 @@ def _parse_group(spec: str) -> tuple[int, int]:
 
 
 def _write_json(path: Path, payload: object) -> None:
+    """Write ``payload`` as strict RFC-8259 JSON. Non-finite floats (NaN, +/-Inf
+    -- reachable via a rejected checkpoint candidate's metric value) are
+    sanitised to ``null`` first, and ``allow_nan=False`` makes any missed case a
+    hard error rather than a bare ``NaN`` token that ``jq`` and strict parsers
+    reject. ``null`` therefore reads as "non-finite" in the written record."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n")
+    text = json.dumps(sanitise_nonfinite(payload), indent=2, sort_keys=False, allow_nan=False)
+    path.write_text(text + "\n")
 
 
 def _cmd_measure(args: argparse.Namespace) -> int:

@@ -196,15 +196,25 @@ class LogTail:
 
 
 def load_campaign_lookup(path: Path) -> dict[tuple[int, int, int], dict[str, Any]]:
-    """``(order, index, width) -> cell`` from a campaign cell list. A missing
-    or unreadable file degrades to cosmetic-metadata-free naming."""
+    """``(order, index, width) -> cell`` from a campaign cell list. A missing,
+    unreadable, malformed (bad YAML, a non-mapping top level), or partially
+    malformed (a cell missing a required key) file degrades to
+    cosmetic-metadata-free naming rather than crashing the sidecar."""
     try:
         data = yaml.safe_load(path.read_text())
-    except OSError:
+    except (OSError, yaml.YAMLError):
+        return {}
+    if not isinstance(data, dict):
+        _warn(f"{path}: campaign config is not a mapping; degrading to metadata-free naming")
         return {}
     lookup: dict[tuple[int, int, int], dict[str, Any]] = {}
-    for cell in (data or {}).get("cells", []):
-        lookup.setdefault((cell["order"], cell["index"], cell["width"]), cell)
+    for cell in data.get("cells") or []:
+        try:
+            key = (cell["order"], cell["index"], cell["width"])
+        except (TypeError, KeyError) as exc:
+            _warn(f"{path}: skipping a malformed campaign cell entry ({exc})")
+            continue
+        lookup.setdefault(key, cell)
     return lookup
 
 

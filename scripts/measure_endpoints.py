@@ -21,9 +21,13 @@ re-training. Two subcommands::
         --member-a runs/a0 runs/a1 --member-b runs/b0 runs/b1 \
         [--out results/pair.json]
 
-Exit code: 0 iff every requested run was measured (``measure``) or the pair
-record was written (``pair``); 1 when a run was skipped by ``measure`` (no
-``run.log`` rows), so a campaign wrapper notices missing measurements loudly.
+Exit code: 0 iff every requested run was measured; 1 when a run was skipped (no
+``run.log`` rows, or none carrying the endpoint metric), so a campaign wrapper
+notices missing measurements loudly. This applies to both subcommands: ``pair``
+measures every member run first, and exits 1 if any of them was skipped, same
+as ``measure`` -- the pair record is still written (with the skip recorded in
+``within_pair_endpoints``'s dropped-seed accounting), but the exit code flags
+that it rests on fewer seeds than requested.
 """
 
 from __future__ import annotations
@@ -80,13 +84,20 @@ def _cmd_pair(args: argparse.Namespace) -> int:
         measurement_vector(Path(d), threshold=args.threshold, sustain=args.sustain)
         for d in args.member_b
     ]
+    n_skipped = sum(1 for r in records_a + records_b if r["status"] != "measured")
     record = within_pair_endpoints(records_a, records_b)
     if args.out is not None:
         _write_json(Path(args.out), record)
         print(f"[endpoints] wrote pair record to {args.out}")
     else:
         print(json.dumps(record, indent=2))
-    return 0
+    if n_skipped:
+        print(
+            f"[endpoints] {n_skipped} member run(s) were skipped -- the pair "
+            "record was still written but rests on fewer seeds than requested",
+            file=sys.stderr,
+        )
+    return 0 if n_skipped == 0 else 1
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -226,11 +226,52 @@ def test_curated_selection_full_run_picks_every_category(tmp_path):
     assert by_category["last"][0].path.name == "final.pt"
     assert by_category["stable_end"][0].epoch == EPOCHS
     assert by_category["stable_end"][0].path.name == "final.pt"
+    # A genuinely unsubstituted pick still carries the fields, just empty/None
+    # -- never omitted (finding 1b: future ships write the full record).
+    assert by_category["stable_end"][0].substitution is None
+    assert by_category["stable_end"][0].rejected == []
 
     # final.pt is chosen by both "last" and "stable_end": dedup collapses it
     # to one physical upload even though two categories reference it.
     assert len(selection.entries) == 7
     assert len(selection.unique_files()) == 6
+
+
+def test_curated_selection_stable_end_carries_substitution_and_rejected_trail(tmp_path):
+    """Finding 1(b): a shipped ``categories.stable_end`` must carry
+    ``substitution``/``rejected``, not just epoch/metric_value/filename --
+    the trail a post-hoc reconstruction from ``selection.json`` alone would
+    otherwise have to fabricate. Here the final epoch's leaked accuracy dips
+    below the bar, so stable_end substitutes the nearest stable trajectory
+    snapshot instead of final.pt."""
+    run_dir = _build_run(tmp_path, "run-dip", leaked_onset=10, unleaked_onset=20)
+    dipped_final = _epoch_metrics(EPOCHS, 10, 20)
+    dipped_final["val/accuracy"] = 0.5
+    lines = [f"epoch {epoch} | {_epoch_metrics(epoch, 10, 20)}" for epoch in range(EPOCHS)]
+    lines.append(f"epoch {EPOCHS} | {dipped_final}")
+    (run_dir / "run.log").write_text("\n".join(lines) + "\n")
+
+    selection = ship_runs.build_curated_selection(run_dir, manifest_status="completed")
+    stable_end = next(e for e in selection.entries if e.category == "stable_end")
+    assert stable_end.path.name != "final.pt"
+    assert stable_end.substitution == "trajectory"
+    assert stable_end.rejected
+    assert stable_end.rejected[0]["checkpoint"] == "final.pt"
+    assert stable_end.rejected[0]["value"] == pytest.approx(0.5)
+
+    entry_record = stable_end.to_record()
+    assert entry_record["substitution"] == "trajectory"
+    assert entry_record["rejected"] == stable_end.rejected
+
+    full_record = selection.to_record()
+    stable_end_record = full_record["categories"]["stable_end"]
+    assert stable_end_record["substitution"] == "trajectory"
+    assert stable_end_record["rejected"]
+    # Round-trips through JSON exactly like it will when shipped.
+    reparsed = json.loads(json.dumps(full_record))
+    assert reparsed["categories"]["stable_end"]["substitution"] == "trajectory"
+    # A non-stable_end category never carries substitution semantics.
+    assert "substitution" not in full_record["categories"]["last"]
 
 
 def test_curated_selection_censored_run_skips_onset_and_intermediate(tmp_path):

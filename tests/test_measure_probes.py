@@ -83,7 +83,31 @@ def test_probe_run_produces_a_full_record_on_the_dihedral_member(dihedral_and_qu
     assert provenance["config_hash"]
     assert provenance["checkpoint_sha256"]
     assert provenance["instrument_code_sha256"]
+    # Finding 7: the analysed group artifact's path and hash must travel too.
+    assert provenance["group_artifact_path"].endswith("smallgroup_8_3.npz")
+    assert len(provenance["group_artifact_sha256"]) == 64  # a hex sha256 digest
     json.dumps(record)  # the whole record must be JSON-serialisable
+
+
+def test_probe_run_with_neuron_source_does_not_crash_and_ablates_in_embedding_space(
+    dihedral_and_quaternion_runs,
+):
+    """DECISIVE end-to-end (finding 1): source="left" builds power_map's/
+    signed_cyclic's/carry_digit's features in d_mlp space, which is fine for
+    those (classification, any feature space is safe) -- but the involution-
+    direction ablation must still run in embedding (d_model) space regardless
+    of the CLI's --source choice, because ablate_direction only supports a
+    d_model-space direction. Before the fix this crashed on a shape mismatch
+    (this fixture's d_model=16 != d_mlp=32) or, on a config where they
+    coincide, would have silently produced a meaningless "measured" record."""
+    d8_run, _ = dihedral_and_quaternion_runs
+    script = _load_script()
+    record = script.probe_run(d8_run, threshold=0.0, source="left")
+    assert record["status"] == "measured"
+    assert record["probes"]["power_map"]["source"] == "left"
+    assert record["probes"]["involution_ablation"]["source"] == "embed"
+    assert record["probes"]["involution_ablation"]["status"] == "measured"
+    json.dumps(record)
 
 
 def test_probe_run_is_undefined_for_signed_cyclic_on_the_quaternionic_member(

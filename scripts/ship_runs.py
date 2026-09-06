@@ -28,8 +28,11 @@ The curated set per run, deduplicated by file (categories in
 5. **last** -- ``final.pt``, or the latest saved snapshot if ``final.pt`` is
    missing (a forced-interrupted run).
 6. **stable_end** -- :func:`~group_algorithm_interp.instruments.checkpoints.
-   select_checkpoint`'s dip-aware pick; ``None`` for a run with no stable
-   checkpoint anywhere (recorded, not an error).
+   select_checkpoint`'s dip-aware pick, including its ``substitution``
+   (``None``/``"window"``/``"trajectory"``) and ``rejected`` trail so a
+   post-hoc reconstruction from ``selection.json`` alone never has to
+   fabricate "no substitution"; ``None`` for a run with no stable checkpoint
+   anywhere (recorded, not an error).
 
 A run with ``val/accuracy`` never clearing the threshold is **censored**:
 categories 2 and 4 are skipped (never populated), 1/5/6 still ship. Every
@@ -218,14 +221,29 @@ class CuratedEntry:
     metric_key: str | None
     metric_value: float | None
     path: Path
+    # Only meaningful for "stable_end" (the dip-aware pick): whether the rule
+    # substituted an earlier window epoch or a trajectory snapshot for a
+    # dipped primary choice, and every candidate it passed over first. Absent
+    # (None) for every other category, whose picks carry no substitution
+    # semantics. Recording these mirrors what the flat selection.json shape
+    # already preserves (CheckpointSelection.to_record), so a curated-shape
+    # reconstruction is never left fabricating "no substitution" for a run
+    # that genuinely dipped (see instruments/checkpoints.py's
+    # _recompute_curated_substitution for the reconstruction this feeds).
+    substitution: str | None = None
+    rejected: list[dict[str, Any]] | None = None
 
     def to_record(self) -> dict[str, Any]:
-        return {
+        record: dict[str, Any] = {
             "epoch": self.epoch,
             "metric_key": self.metric_key,
             "metric_value": self.metric_value,
             "filename": self.path.name,
         }
+        if self.category == "stable_end":
+            record["substitution"] = self.substitution
+            record["rejected"] = list(self.rejected) if self.rejected is not None else []
+        return record
 
 
 @dataclass
@@ -404,7 +422,13 @@ def build_curated_selection(
         if stable.path is not None:
             entries.append(
                 CuratedEntry(
-                    "stable_end", stable.epoch, stable.metric, stable.metric_value, stable.path
+                    "stable_end",
+                    stable.epoch,
+                    stable.metric,
+                    stable.metric_value,
+                    stable.path,
+                    substitution=stable.substitution,
+                    rejected=list(stable.rejected),
                 )
             )
         else:

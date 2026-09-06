@@ -215,6 +215,39 @@ def test_load_campaign_lookup_missing_file(tmp_path):
     assert stream_runs.load_campaign_lookup(tmp_path / "nope.yaml") == {}
 
 
+def test_load_campaign_lookup_malformed_yaml_degrades(tmp_path):
+    path = tmp_path / "core.yaml"
+    path.write_text("cells: [\n  - order: 4\n")  # unbalanced flow sequence
+    assert stream_runs.load_campaign_lookup(path) == {}
+
+
+def test_load_campaign_lookup_non_mapping_top_level_degrades(tmp_path, capsys):
+    path = tmp_path / "core.yaml"
+    path.write_text("- order: 4\n  index: 1\n  width: 16\n")
+    assert stream_runs.load_campaign_lookup(path) == {}
+    assert "not a mapping" in capsys.readouterr().err
+
+
+def test_load_campaign_lookup_skips_malformed_cell_entry(tmp_path, capsys):
+    path = tmp_path / "core.yaml"
+    path.write_text(
+        """
+cells:
+  - order: 4
+    index: 1
+    name: "C4-bad-no-width"
+  - order: 8
+    index: 3
+    width: 32
+    name: "D4-good"
+"""
+    )
+    lookup = stream_runs.load_campaign_lookup(path)
+    assert (8, 3, 32) in lookup
+    assert (4, 1, 16) not in lookup
+    assert "malformed campaign cell entry" in capsys.readouterr().err
+
+
 def test_sanitise_run_id():
     assert stream_runs.sanitise_run_id("run/with:odd chars") == "run-with-odd-chars"
 

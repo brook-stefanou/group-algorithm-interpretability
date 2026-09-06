@@ -103,6 +103,104 @@ def _flat_censored() -> dict[str, Any]:
     }
 
 
+def _flat_grokked_with_stable_end(epoch: int, checkpoint: str) -> dict[str, Any]:
+    """Like :func:`_flat_grokked`, plus a ``selections.stable_end`` block
+    naming ``checkpoint`` -- the shape ``checkpoints.selection_from_json``
+    resolves flat-first (``run_dir/checkpoint``), used to exercise the
+    missing-on-disk integrity tiebreak."""
+    record = _flat_grokked(epoch)
+    record["selections"] = {
+        "stable_end": {
+            "rule": "final_window",
+            "metric": "val/accuracy",
+            "threshold": 0.99,
+            "checkpoint": checkpoint,
+            "epoch": epoch,
+            "metric_value": 1.0,
+            "substitution": None,
+            "rejected": [],
+            "reason": None,
+        }
+    }
+    return record
+
+
+def _flat_no_stable_end() -> dict[str, Any]:
+    """A flat-shape selection that explicitly recorded no stable checkpoint
+    (a censored run) -- ``stable_end`` is JSON ``null``, not a missing key."""
+    record = _flat_censored()
+    record["selections"] = {"stable_end": None}
+    return record
+
+
+# ---------------------------------------------------------------------------
+# run_missing_selected_checkpoint: the integrity check itself
+# ---------------------------------------------------------------------------
+
+
+def test_run_missing_selected_checkpoint_true_when_named_file_absent(tmp_path):
+    run_dir = _write_run(
+        tmp_path,
+        "2026-01-01_000000_000000_core_trunc",
+        order=32,
+        index=20,
+        width=256,
+        epochs=60000,
+        seed=29,
+        completed_at="2026-01-01T00:10:00+00:00",
+        selection=_flat_grokked_with_stable_end(59999, "final_epoch_59999.pt"),
+    )
+    # selection.json names final_epoch_59999.pt, but the file was never written.
+    assert dedup_runs.run_missing_selected_checkpoint(run_dir) is True
+
+
+def test_run_missing_selected_checkpoint_false_when_named_file_present(tmp_path):
+    run_dir = _write_run(
+        tmp_path,
+        "2026-01-01_000000_000000_core_full",
+        order=32,
+        index=20,
+        width=256,
+        epochs=60000,
+        seed=29,
+        completed_at="2026-01-01T01:10:00+00:00",
+        selection=_flat_grokked_with_stable_end(59999, "final_epoch_59999.pt"),
+    )
+    (run_dir / "final_epoch_59999.pt").write_bytes(b"")
+    assert dedup_runs.run_missing_selected_checkpoint(run_dir) is False
+
+
+def test_run_missing_selected_checkpoint_false_when_no_selection_json(tmp_path):
+    run_dir = _write_run(
+        tmp_path,
+        "2026-01-01_000000_000000_core_nosel",
+        order=32,
+        index=20,
+        width=256,
+        epochs=60000,
+        seed=29,
+        completed_at="2026-01-01T00:10:00+00:00",
+        selection=None,
+    )
+    assert dedup_runs.run_missing_selected_checkpoint(run_dir) is False
+
+
+def test_run_missing_selected_checkpoint_false_for_legitimate_no_stable_checkpoint(tmp_path):
+    run_dir = _write_run(
+        tmp_path,
+        "2026-01-01_000000_000000_core_censored",
+        order=32,
+        index=20,
+        width=256,
+        epochs=60000,
+        seed=29,
+        completed_at="2026-01-01T00:10:00+00:00",
+        selection=_flat_no_stable_end(),
+    )
+    # No checkpoint was ever named, so there is nothing missing to flag.
+    assert dedup_runs.run_missing_selected_checkpoint(run_dir) is False
+
+
 # ---------------------------------------------------------------------------
 # choose_canonical: the tiebreak rule itself
 # ---------------------------------------------------------------------------
@@ -116,6 +214,48 @@ def test_choose_canonical_prefers_completed_status():
     canonical, dropped = dedup_runs.choose_canonical(infos)
     assert canonical == "a-earlier"
     assert dropped == ["b-later"]
+
+
+def test_choose_canonical_prefers_present_checkpoint_over_earlier_completed_at():
+    infos = [
+        {
+            "run_id": "earlier-truncated",
+            "status": "completed",
+            "completed_at": "2026-01-01T00:00:00+00:00",
+            "missing_selected_checkpoint": True,
+        },
+        {
+            "run_id": "later-full",
+            "status": "completed",
+            "completed_at": "2026-01-01T01:00:00+00:00",
+            "missing_selected_checkpoint": False,
+        },
+    ]
+    canonical, dropped = dedup_runs.choose_canonical(infos)
+    assert canonical == "later-full"
+    assert dropped == ["earlier-truncated"]
+
+
+def test_choose_canonical_still_deterministic_when_every_duplicate_missing():
+    infos = [
+        {
+            "run_id": "b",
+            "status": "completed",
+            "completed_at": "2026-01-01T01:00:00+00:00",
+            "missing_selected_checkpoint": True,
+        },
+        {
+            "run_id": "a",
+            "status": "completed",
+            "completed_at": "2026-01-01T00:00:00+00:00",
+            "missing_selected_checkpoint": True,
+        },
+    ]
+    canonical, dropped = dedup_runs.choose_canonical(infos)
+    # Falls back to the pre-existing tiebreak (earliest completed_at) rather
+    # than refusing to pick.
+    assert canonical == "a"
+    assert dropped == ["b"]
 
 
 def test_choose_canonical_earliest_completed_at_among_completed():
@@ -280,6 +420,9 @@ def test_build_index_three_cases(tmp_path):
     assert index[seed0_key]["canonical_run_id"] == "2026-01-01_000000_000000_core_aaa"
     assert index[seed0_key]["dropped_run_ids"] == ["2026-01-01_010000_000000_core_bbb"]
     assert index[seed0_key]["n_total"] == 2
+    # None of these fixtures name a stable_end checkpoint, so the integrity
+    # flag never fires.
+    assert index[seed0_key]["canonical_missing_selected_checkpoint"] is False
 
     # Seed 1: same tiebreak rule applies regardless of the grok/censor outcome.
     assert index[seed1_key]["canonical_run_id"] == "2026-01-01_000000_000000_core_ccc"
@@ -307,6 +450,83 @@ def test_build_index_three_cases(tmp_path):
         "2026-01-01_000000_000000_core_ccc": False,
         "2026-01-01_010000_000000_core_ddd": True,
     }
+
+
+def test_build_index_prefers_full_copy_over_earlier_truncated_duplicate(tmp_path):
+    """Mirrors the real (32,20) w256 bug: the earliest-completed_at duplicate
+    is a truncated local copy whose selection.json names a checkpoint that
+    was never written to disk, while the later duplicate has the full
+    checkpoint set. The integrity tiebreak must pick the full copy despite
+    its later completed_at."""
+    truncated = _write_run(
+        tmp_path,
+        "2026-07-20_103654_000000_core_trunc",
+        order=32,
+        index=20,
+        width=256,
+        epochs=60000,
+        seed=29,
+        completed_at="2026-07-20T10:36:54+00:00",
+        selection=_flat_grokked_with_stable_end(59999, "final_epoch_59999.pt"),
+    )
+    (truncated / "step_6200.pt").write_bytes(b"")  # a few files survived; not the selected one
+
+    full = _write_run(
+        tmp_path,
+        "2026-07-20_123535_000000_core_full",
+        order=32,
+        index=20,
+        width=256,
+        epochs=60000,
+        seed=29,
+        completed_at="2026-07-20T12:35:35+00:00",
+        selection=_flat_grokked_with_stable_end(59999, "final_epoch_59999.pt"),
+    )
+    (full / "final_epoch_59999.pt").write_bytes(b"")
+
+    run_dirs = dedup_runs.discover_run_dirs(tmp_path)
+    index, _, _ = dedup_runs.build_index(run_dirs, epoch_tolerance=1000)
+
+    key = (32, 20, 256, 60000, 29)
+    assert index[key]["canonical_run_id"] == full.name
+    assert index[key]["dropped_run_ids"] == [truncated.name]
+    assert index[key]["canonical_missing_selected_checkpoint"] is False
+
+
+def test_build_index_flags_canonical_missing_selected_checkpoint_when_all_truncated(tmp_path):
+    """When every duplicate for a key is truncated, build_index still picks a
+    canonical run deterministically (the pre-existing tiebreak) rather than
+    dropping the seed, and marks the fallback so it is visible as data."""
+    first = _write_run(
+        tmp_path,
+        "2026-07-20_100000_000000_core_aaa",
+        order=32,
+        index=20,
+        width=256,
+        epochs=60000,
+        seed=30,
+        completed_at="2026-07-20T10:00:00+00:00",
+        selection=_flat_grokked_with_stable_end(59999, "final_epoch_59999.pt"),
+    )
+    _write_run(
+        tmp_path,
+        "2026-07-20_110000_000000_core_bbb",
+        order=32,
+        index=20,
+        width=256,
+        epochs=60000,
+        seed=30,
+        completed_at="2026-07-20T11:00:00+00:00",
+        selection=_flat_grokked_with_stable_end(59999, "final_epoch_59999.pt"),
+    )
+    # Neither copy ever wrote final_epoch_59999.pt to disk.
+
+    run_dirs = dedup_runs.discover_run_dirs(tmp_path)
+    index, _, _ = dedup_runs.build_index(run_dirs, epoch_tolerance=1000)
+
+    key = (32, 20, 256, 60000, 30)
+    assert index[key]["canonical_run_id"] == first.name  # falls back to earliest completed_at
+    assert index[key]["canonical_missing_selected_checkpoint"] is True
 
 
 def test_main_writes_index_and_does_not_touch_runs_root(tmp_path):
@@ -347,11 +567,13 @@ def test_main_writes_index_and_does_not_touch_runs_root(tmp_path):
     assert payload["n_distinct_keys"] == 1
     assert payload["n_duplicate_keys"] == 1
     assert payload["n_dropped_duplicate_dirs"] == 1
+    assert payload["n_canonical_missing_selected_checkpoint"] == 0
     assert payload["grok_totals_raw"] == {"grokked": 2, "censored": 0, "missing": 0}
     assert payload["grok_totals_canonical"] == {"grokked": 1, "censored": 0, "missing": 0}
     key = next(iter(payload["canonical_runs"].values()))
     assert key["canonical_run_id"] == "2026-01-01_000000_000000_core_aaa"
     assert key["dropped_run_ids"] == ["2026-01-01_010000_000000_core_bbb"]
+    assert key["canonical_missing_selected_checkpoint"] is False
 
 
 def test_main_missing_runs_root_returns_error(tmp_path):

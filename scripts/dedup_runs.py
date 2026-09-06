@@ -13,17 +13,38 @@ without deleting or moving any duplicate.
 
 Canonical rule (deterministic, documented rather than "correct" -- see
 below): prefer ``manifest.status == "completed"`` over any other status;
-among the preferred group, the earliest ``manifest.completed_at`` wins; if
-that is missing or tied, the lexicographically earliest ``run_id`` wins (this
-campaign's run ids are ``YYYY-MM-DD_HHMMSS_ffffff_...``, so string order is
-timestamp order). Every run directory in this campaign is ``completed``, so
-in practice the rule reduces to "first completed attempt is canonical" --
-the rerun exists only because the crash-recovery restart did not know the
-first attempt had already succeeded, not because the rerun corrected
-anything. Every run's ``resolved_config.yaml`` also declares
-``deterministic: false``, which means there is no principled way to call one
-rerun's *outcome* more correct than another's: the choice is procedural (pick
-one, consistently), not epistemic.
+among the preferred group, a run whose ``selection.json``-selected checkpoint
+is present on disk beats one whose selected checkpoint is missing (a
+truncated local copy that still carries a ``selection.json`` naming a
+checkpoint it does not have the file for); among what remains, the earliest
+``manifest.completed_at`` wins; if that is missing or tied, the
+lexicographically earliest ``run_id`` wins (this campaign's run ids are
+``YYYY-MM-DD_HHMMSS_ffffff_...``, so string order is timestamp order). Every
+run directory in this campaign is ``completed``, so absent the integrity
+tiebreak the rule reduces to "first completed attempt is canonical" -- the
+rerun exists only because the crash-recovery restart did not know the first
+attempt had already succeeded, not because the rerun corrected anything.
+Every run's ``resolved_config.yaml`` also declares ``deterministic: false``,
+which means there is no principled way to call one rerun's *outcome* more
+correct than another's: the choice is procedural (pick one, consistently),
+not epistemic.
+
+The integrity tiebreak exists because "first completed attempt" and "has the
+files an instrument would actually need" are not the same thing: a handful of
+local copies were synced/truncated mid-transfer and carry only a few
+checkpoint files even though their ``selection.json`` (written before the
+truncation) still names a ``stable_end`` checkpoint from the full set. Without
+this check the earliest-``completed_at`` rule can canonicalise exactly such a
+copy, and downstream instruments then skip that seed rather than measure it.
+The check reuses ``checkpoints.selection_from_json``/``resolve_checkpoint`` --
+the same resolution an instrument would perform -- rather than re-deriving
+"which file does this selection name" here; it never treats a run that
+legitimately recorded no stable checkpoint (a censored seed) as an integrity
+problem. If every duplicate for a key is truncated this way, the rule still
+picks one canonical run deterministically; ``canonical_runs.json`` marks that
+key's entry with ``canonical_missing_selected_checkpoint: true`` and the
+payload's ``n_canonical_missing_selected_checkpoint`` counts them, so the
+fallback stays visible rather than silently dropping the seed.
 
 Grok derivation is not reimplemented: it imports
 ``group_algorithm_interp.instruments.publish``'s
@@ -53,6 +74,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from group_algorithm_interp.instruments import checkpoints as checkpoints_module  # noqa: E402
 from group_algorithm_interp.instruments import publish as publish_module  # noqa: E402
 
 DEFAULT_RUNS_ROOT = Path(__file__).resolve().parent.parent / "runs"
@@ -152,24 +174,60 @@ def run_grok_fields(run_dir: Path) -> dict[str, Any] | None:
     return publish_module._grok_fields_from_selection(run_dir)
 
 
+# The exact reason-string fragment ``checkpoints.selection_from_json`` writes
+# (both the flat and curated ``categories`` schema shapes use this same
+# template -- see ``_selection_from_full_record``/``_selection_from_curated_entry``)
+# when a selection names a checkpoint file that ``resolve_checkpoint`` cannot
+# find on disk. This is the signal that distinguishes a genuinely-truncated
+# copy from a run that legitimately recorded no stable checkpoint at all (a
+# censored seed), which gets a different reason.
+_MISSING_ON_DISK_MARKER = "but the checkpoint is not on disk"
+
+
+def run_missing_selected_checkpoint(run_dir: Path) -> bool:
+    """Whether ``run_dir``'s ``selection.json`` names a ``stable_end``
+    checkpoint that is not present on disk (a truncated local copy).
+
+    Delegates entirely to ``checkpoints.selection_from_json`` --
+    ``resolve_checkpoint`` under the hood -- the same resolution an instrument
+    would use to load this run's checkpoint, rather than re-parsing either
+    ``selection.json`` schema shape here. ``False`` when ``selection.json`` is
+    absent or unreadable (nothing to check against) or when it legitimately
+    recorded no stable checkpoint at all (``path`` is ``None`` for a reason
+    other than the file being missing) -- only a named-but-absent file counts
+    as an integrity problem."""
+    selection = checkpoints_module.selection_from_json(run_dir)
+    if selection is None or selection.path is not None:
+        return False
+    return selection.reason is not None and _MISSING_ON_DISK_MARKER in selection.reason
+
+
 # --- canonical selection -----------------------------------------------------------
 
 
-def _tiebreak_sort_key(info: dict[str, Any]) -> tuple[int, str, str]:
+def _tiebreak_sort_key(info: dict[str, Any]) -> tuple[int, int, str, str]:
     """Sort key for choosing the canonical run among duplicates: completed
-    status first, then earliest ``completed_at`` (missing sorts last within
-    its status group via an empty string only when compared to a present
-    timestamp -- ISO 8601 strings never sort before ``""``), then earliest
+    status first; then a run whose selected checkpoint is present on disk
+    over one whose selection names a checkpoint that is missing (a truncated
+    copy -- ``info["missing_selected_checkpoint"]``, absent/``False`` for any
+    info dict that never set it, so callers that don't populate the field see
+    no change in behaviour); then earliest ``completed_at`` (missing sorts
+    last within its group via an empty string only when compared to a present
+    timestamp -- ISO 8601 strings never sort before ``""``); then earliest
     ``run_id`` as a final, always-available tiebreak."""
     status_rank = _STATUS_RANK_COMPLETED if info["status"] == "completed" else _STATUS_RANK_OTHER
+    missing_rank = 1 if info.get("missing_selected_checkpoint") else 0
     completed_at = info["completed_at"] or ""
-    return status_rank, completed_at, info["run_id"]
+    return status_rank, missing_rank, completed_at, info["run_id"]
 
 
 def choose_canonical(infos: list[dict[str, Any]]) -> tuple[str, list[str]]:
     """``(canonical_run_id, dropped_run_ids)`` for one cell+seed key's run
     directories, ``dropped_run_ids`` sorted for determinism. A singleton
-    list returns itself with no drops."""
+    list returns itself with no drops. When every candidate's selected
+    checkpoint is missing on disk (see ``_tiebreak_sort_key``), this still
+    returns a deterministic pick rather than refusing -- the caller is
+    responsible for surfacing that fallback as data."""
     ordered = sorted(infos, key=_tiebreak_sort_key)
     canonical = ordered[0]["run_id"]
     dropped = sorted(info["run_id"] for info in ordered[1:])
@@ -233,8 +291,11 @@ def build_index(
     one run directory.
 
     Returns ``(index, rerun_agreement, n_unresolvable)`` where ``index`` maps
-    each ``SeedKey`` to ``{"canonical_run_id", "dropped_run_ids", "n_total"}``
-    and ``rerun_agreement`` collects the disagreement detail."""
+    each ``SeedKey`` to ``{"canonical_run_id", "dropped_run_ids", "n_total",
+    "canonical_missing_selected_checkpoint"}`` (the last is ``True`` only when
+    every duplicate for that key was truncated, so even the chosen canonical
+    lacks its selected checkpoint on disk) and ``rerun_agreement`` collects
+    the disagreement detail."""
     grouped: dict[SeedKey, list[dict[str, Any]]] = {}
     n_unresolvable = 0
     for run_dir in run_dirs:
@@ -244,6 +305,7 @@ def build_index(
             _warn(f"{run_dir.name}: cannot determine cell+seed key; skipped")
             continue
         info = run_status_info(run_dir)
+        info["missing_selected_checkpoint"] = run_missing_selected_checkpoint(run_dir)
         info["_run_dir"] = run_dir
         grouped.setdefault(key, []).append(info)
 
@@ -259,10 +321,14 @@ def build_index(
 
     for key, infos in grouped.items():
         canonical, dropped = choose_canonical(infos)
+        canonical_info = next(info for info in infos if info["run_id"] == canonical)
         index[key] = {
             "canonical_run_id": canonical,
             "dropped_run_ids": dropped,
             "n_total": len(infos),
+            "canonical_missing_selected_checkpoint": bool(
+                canonical_info.get("missing_selected_checkpoint")
+            ),
         }
         if len(infos) <= 1:
             continue
@@ -379,11 +445,16 @@ def main(argv: list[str] | None = None) -> int:
 
     n_duplicate_keys = sum(1 for entry in index.values() if entry["n_total"] > 1)
     n_dropped_dirs = sum(len(entry["dropped_run_ids"]) for entry in index.values())
+    n_canonical_missing_selected_checkpoint = sum(
+        1 for entry in index.values() if entry["canonical_missing_selected_checkpoint"]
+    )
 
     payload = {
         "runs_root": str(runs_root),
         "dedup_rule": (
-            "prefer manifest.status == 'completed'; tie-break by earliest "
+            "prefer manifest.status == 'completed'; among those, prefer a run whose "
+            "selection.json-selected checkpoint exists on disk over one whose selected "
+            "checkpoint is missing (a truncated copy); tie-break by earliest "
             "manifest.completed_at; final tie-break by lexicographically "
             "earliest run_id"
         ),
@@ -392,6 +463,7 @@ def main(argv: list[str] | None = None) -> int:
         "n_distinct_keys": len(index),
         "n_duplicate_keys": n_duplicate_keys,
         "n_dropped_duplicate_dirs": n_dropped_dirs,
+        "n_canonical_missing_selected_checkpoint": n_canonical_missing_selected_checkpoint,
         "grok_totals_raw": raw_totals,
         "grok_totals_canonical": canonical_totals,
         "rerun_agreement": rerun_agreement,
@@ -405,6 +477,9 @@ def main(argv: list[str] | None = None) -> int:
                 "canonical_run_id": entry["canonical_run_id"],
                 "dropped_run_ids": entry["dropped_run_ids"],
                 "n_total": entry["n_total"],
+                "canonical_missing_selected_checkpoint": entry[
+                    "canonical_missing_selected_checkpoint"
+                ],
             }
             for key, entry in sorted(index.items())
         },
@@ -417,6 +492,10 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"\nrun dirs: {len(run_dirs)}  distinct keys: {len(index)}  "
         f"duplicate keys: {n_duplicate_keys}  dropped dirs: {n_dropped_dirs}"
+    )
+    print(
+        "canonical entries where every duplicate is missing its selected "
+        f"checkpoint on disk: {n_canonical_missing_selected_checkpoint}"
     )
     print(
         f"grok totals, raw (every dir):       "
