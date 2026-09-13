@@ -265,6 +265,155 @@ def coset_circuit_neurons(
 
 
 # ---------------------------------------------------------------------------
+# Carry-digit -> neuron bridge: the second circuit derivation feeding I-34,
+# built for the abelian C3 members (C128 vs C2^7, the C127 anchor) whose
+# claim is the polycyclic ripple-carry structure, not a coset subspace. This
+# is a CAUSAL digit-attribution criterion, not an activation correlation: it
+# reads each neuron's exact zero-ablation effect on the output logits and asks
+# which output digit that effect additively produces.
+# ---------------------------------------------------------------------------
+
+
+def _output_digit_main_effects(
+    directions: np.ndarray, digits: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """The per-neuron output-digit main-effect energies of the causal output
+    directions, and each neuron's total centred causal energy.
+
+    ``directions[m]`` is neuron ``m``'s causal (zero-ablation) logit direction
+    over the ``|G|`` answer classes; ``digits[c]`` is answer element ``c``'s
+    polycyclic digit tuple. Softmax is shift-invariant, so each direction is
+    first centred across the class axis (a constant logit shift cannot move the
+    answer). For output digit ``j`` the *main effect* projector replaces each
+    class's value by the mean over all classes sharing its digit-``j`` value;
+    because the digit map is a bijection onto the full mixed-radix grid, for a
+    fixed digit-``j`` value the remaining digits range over every combination
+    exactly once, so this group-average is exactly the ANOVA main effect of
+    digit ``j`` (the additive part attributable to that one coordinate), and the
+    ``L`` main effects are mutually orthogonal. ``energy[m, j] = ||P_j d_m||^2``;
+    ``total[m] = ||d_m||^2`` (centred). ``sum_j energy[m, j] <= total[m]``, the
+    slack being inter-digit coupling (carry interactions) not attributable to
+    any single coordinate.
+    """
+    centred = directions - directions.mean(axis=1, keepdims=True)
+    total = np.square(centred).sum(axis=1)
+    length = digits.shape[1]
+    energy = np.zeros((centred.shape[0], length), dtype=np.float64)
+    for j in range(length):
+        values = digits[:, j]
+        projected = np.zeros_like(centred)
+        for value in np.unique(values):
+            mask = values == value
+            projected[:, mask] = centred[:, mask].mean(axis=1, keepdims=True)
+        energy[:, j] = np.square(projected).sum(axis=1)
+    return energy, total
+
+
+def carry_circuit_neurons(
+    model: GroupModel,
+    group: FiniteGroup,
+    *,
+    min_top_share: float = 0.5,
+) -> list[int] | None:
+    """The C3 carry arm's polycyclic digit structure (I-21/I-26,
+    ``probes.polycyclic_digits``) turned into a neuron subset
+    :func:`circuit_audit` can ablate, by a **causal digit-attribution**
+    criterion: the mlp_post neurons whose exact zero-ablation effect on the
+    output logits is dominated -- at least ``min_top_share`` of it -- by the
+    additive production of a single output digit.
+
+    This is the carry-structure analogue of :func:`coset_circuit_neurons`, and
+    the *only* other circuit-derivation bridge this module implements for I-34.
+    Where the coset bridge concentrates a neuron's *activation* energy on the
+    induced-representation's occupied isotypic blocks, this bridge concentrates
+    a neuron's *causal output* on the polycyclic digit coordinates -- a causal
+    attribution, not an activation correlation, so a neuron that merely
+    co-varies with a digit but does not write it to the logits is not counted.
+
+    Definition, step by step:
+
+    * **Causal output direction.** Zero-ablating neuron ``m`` changes the logits
+      by exactly ``a_m[row] * u_m[c]`` (rank one): the neuron's activation
+      ``a_m`` over the input grid times its output direction
+      ``u_m = W_out[m] @ W_U`` (transformer) or ``u_m = W_U[m]`` (FC) over the
+      ``|G|`` answer classes. The digit *distribution* of a neuron's causal
+      effect is the digit distribution of ``u_m`` (the activation scales
+      magnitude, not the split across digits), so the attribution is read off
+      ``u_m``. Each ``u_m`` is class-axis mean-centred (softmax shift
+      invariance).
+    * **Digit main effects.** ``u_m`` is decomposed into per-output-digit
+      main effects (:func:`_output_digit_main_effects`): ``energy[m, j]`` is how
+      much of ``u_m`` is the additive production of output digit ``j``. Every
+      digit coordinate of the polycyclic normal form is carry-relevant (the
+      answer's digits); there is no trivial/DC digit to exclude, unlike the
+      coset bridge's occupied-block restriction, so the target set is all ``L``
+      coordinates. This specialises correctly: the C127 anchor has one digit,
+      C2^7 seven independent bit-digits, C128 seven ripple-coupled digits.
+    * **Concentration.** ``top_share[m] = max_j energy[m, j] / sum_j
+      energy[m, j]`` -- the share of the neuron's *digit-resolved additive*
+      causal output carried by its single most-driven digit, the direct
+      analogue of I-09's :func:`per_neuron_concentration` over the digit blocks.
+      Inter-digit coupling (interaction energy, ``total - sum_j energy``) is
+      deliberately excluded from this denominator: the question is which single
+      digit a neuron additively produces, which is a property of its additive
+      part. (Normalising by ``total`` instead -- counting coupling against
+      concentration -- is the stricter alternative; on the ripple-carry members
+      it selects almost nothing because the answer's high digits are computed
+      through carries, i.e. through coupling. The choice of denominator is the
+      load-bearing modelling decision here.)
+    * **Selection.** Neuron ``m`` is inside the circuit iff it is causally live
+      (nonzero activation energy over the grid and nonzero centred output
+      direction), has some additive digit structure (``sum_j energy[m, j] >
+      0``), and ``top_share[m] >= min_top_share``. An empty result is a valid
+      measurement (no neuron additively localises to one digit), not an error.
+
+    Scope: returns ``None`` for any **non-abelian** group. ``polycyclic_digits``
+    is exact and enumeration-robust only for abelian groups (the C3 scope: C128,
+    C2^7, C127); on a non-abelian group its greedy chain is an
+    enumeration-dependent artefact its own docstring warns must not be read as a
+    property of the group (Q8 yields a chain under one artifact enumeration and
+    ``None`` under another), so a "carry-digit circuit" there would be auditing
+    an artefact. Also returns ``None`` when no polycyclic system can be built at
+    all. Both mean the same thing to the caller as :func:`coset_circuit_neurons`
+    returning ``None``: this bridge does not apply, fall through to skip.
+    """
+    from .probes import polycyclic_digits
+
+    table = group.cayley_table
+    if not np.array_equal(table, table.T):
+        return None  # non-abelian: polycyclic chain is an enumeration artefact
+    precompute = polycyclic_digits(group)
+    if precompute is None:
+        return None
+
+    order = group.order
+    unembed = model.W_U.detach().to(torch.float64)
+    if isinstance(model, OneLayerTransformer):
+        direction_tensor = model.W_out.detach().to(torch.float64) @ unembed
+    elif isinstance(model, FCModel):
+        direction_tensor = unembed
+    else:  # pragma: no cover - defensive
+        raise TypeError(f"unsupported model type {type(model)!r}")
+    directions = direction_tensor.cpu().numpy()[:, :order]
+
+    energy, total = _output_digit_main_effects(directions, precompute.digits)
+    main_total = energy.sum(axis=1)
+    activation_energy = np.square(neuron_activations(model, order)).sum(axis=(1, 2))
+    with np.errstate(invalid="ignore", divide="ignore"):
+        top_share = np.where(main_total > 0.0, energy.max(axis=1) / main_total, np.nan)
+    selected = [
+        m
+        for m in range(directions.shape[0])
+        if activation_energy[m] > 0.0
+        and total[m] > 0.0
+        and main_total[m] > 0.0
+        and np.isfinite(top_share[m])
+        and float(top_share[m]) >= min_top_share
+    ]
+    return selected
+
+
+# ---------------------------------------------------------------------------
 # I-34: circuit audit
 # ---------------------------------------------------------------------------
 
@@ -645,8 +794,10 @@ def measure_audit_run(
 ) -> dict[str, Any]:
     """The audit record for one run: I-35 direct logit attribution (always,
     every architecture supports it) plus I-34 circuit audit wherever this
-    module can derive a neuron circuit for the group -- currently only via
-    :func:`coset_circuit_neurons` (the D32/QD32-style coset case study).
+    module can derive a neuron circuit for the group, via one of two bridges,
+    tried in order: :func:`coset_circuit_neurons` (the D32/QD32-style coset
+    case study) and, when that declines, :func:`carry_circuit_neurons` (the
+    abelian C3 members' polycyclic carry-digit structure).
 
     Behind the same dip-aware checkpoint rule the other instruments use
     (``checkpoints.select_checkpoint``): a run with no stable checkpoint (a
@@ -654,15 +805,17 @@ def measure_audit_run(
     selection record, never a silently-analysed unstable model.
 
     A measured run always carries ``direct_logit_attribution``. Its
-    ``circuit_audit`` sub-record is ``status: "skipped"`` with a reason when
-    the group has no coset target (every abelian group -- including every C3
-    member -- and the Q32 family; see :func:`coset_circuit_neurons`), and
-    ``status: "measured"`` with the full I-34 :class:`AuditRecord` otherwise,
-    alongside the derived circuit's provenance (the coset subgroup/occupied
-    blocks and the ``min_top_share`` threshold used to select neurons). This
-    sub-skip is expected and does not by itself mean the run was skipped for
-    checkpoint reasons -- callers should read the top-level ``status`` for
-    that.
+    ``circuit_audit`` sub-record is ``status: "measured"`` with the full I-34
+    :class:`AuditRecord` and the derived circuit's provenance whenever a bridge
+    applies: ``circuit_source == "coset_occupied_blocks"`` (with the coset
+    subgroup/occupied blocks) or ``circuit_source == "carry_digit_attribution"``
+    (with the polycyclic composition length, radices, carry diagonality and
+    coordinate-direction count), each alongside the ``min_top_share`` threshold
+    used to select neurons. It is ``status: "skipped"`` with a reason only when
+    neither bridge applies -- the group has no coset target and no trusted
+    (abelian) polycyclic carry-digit structure (the Q32 family). This sub-skip
+    is expected and does not by itself mean the run was skipped for checkpoint
+    reasons -- callers should read the top-level ``status`` for that.
 
     Provenance mirrors ``coset.measure_coset_run``: manifest hashes, the
     analysis-time git commit, this module's sha256, the checkpoint's sha256,
@@ -735,21 +888,7 @@ def measure_audit_run(
     )
 
     inside = coset_circuit_neurons(model, group, min_top_share=min_top_share)
-    if inside is None:
-        record["circuit_audit"] = {
-            "status": "skipped",
-            "reason": (
-                "no coset target for this group (coset.coset_target returns "
-                "None: no nontrivial core-free subgroup exists -- true of every "
-                "abelian group, including every C3 member, and of the Q32 "
-                "family). This driver's only implemented circuit-derivation "
-                "bridge is the coset-block one (coset_circuit_neurons); a "
-                "carry-digit or other non-coset circuit definition is not "
-                "implemented, so I-34 cannot be produced for this run without "
-                "one -- see coset_circuit_neurons' docstring."
-            ),
-        }
-    else:
+    if inside is not None:
         from .coset import coset_target
 
         target = coset_target(group)  # not None: coset_circuit_neurons already checked
@@ -772,12 +911,59 @@ def measure_audit_run(
             "min_top_share": min_top_share,
             **audit_record.to_record(),
         }
+        return record
+
+    carry_inside = carry_circuit_neurons(model, group, min_top_share=min_top_share)
+    if carry_inside is not None:
+        from .probes import polycyclic_digits
+
+        precompute = polycyclic_digits(group)  # not None: carry_circuit_neurons checked
+        assert precompute is not None
+        audit_record = circuit_audit(
+            model,
+            group,
+            carry_inside,
+            train_frac=config.data.train_frac,
+            split_seed=config.effective_split_seed,
+            ablation_mode=ablation_mode,
+            seed=seed,
+            checkpoint_path=selection.path,
+        )
+        record["circuit_audit"] = {
+            "status": "measured",
+            "circuit_source": "carry_digit_attribution",
+            "carry_composition_length": precompute.length,
+            "carry_radices": list(precompute.radices),
+            "carry_is_diagonal": bool(
+                np.array_equal(precompute.carry, np.eye(precompute.length, dtype=bool))
+            ),
+            "carry_coordinate_directions": precompute.coordinate_directions,
+            "min_top_share": min_top_share,
+            **audit_record.to_record(),
+        }
+        return record
+
+    record["circuit_audit"] = {
+        "status": "skipped",
+        "reason": (
+            "no circuit-derivation bridge applies to this group. It has no "
+            "coset target (coset.coset_target is None: no nontrivial core-free "
+            "subgroup, true of the Q32 family) and no trusted polycyclic "
+            "carry-digit structure (carry_circuit_neurons is None: the group is "
+            "non-abelian, where the greedy polycyclic chain is an "
+            "enumeration-dependent artefact, or no chain exists). Both "
+            "implemented bridges -- coset_circuit_neurons and "
+            "carry_circuit_neurons -- decline, so I-34 cannot be produced for "
+            "this run."
+        ),
+    }
     return record
 
 
 __all__ = [
     "AuditRecord",
     "ReplicationRecord",
+    "carry_circuit_neurons",
     "circuit_audit",
     "coset_circuit_neurons",
     "direct_logit_attribution",

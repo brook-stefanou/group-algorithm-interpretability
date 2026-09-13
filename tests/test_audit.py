@@ -77,6 +77,15 @@ def q8_transformer():
     return _trained_model("Q8", 8, 4, "transformer")
 
 
+@pytest.fixture(scope="module")
+def c8_transformer():
+    """C8 is abelian with a genuine polycyclic carry structure (radices
+    (2, 2, 2), triangular ripple carry) -- the small stand-in for the C128
+    member :func:`A.carry_circuit_neurons` is defined on. ``coset_target`` is
+    ``None`` (abelian), so only the carry bridge applies."""
+    return _trained_model("C8", 8, 1, "transformer")
+
+
 # ---------------------------------------------------------------------------
 # Held-out subset and KL primitives
 # ---------------------------------------------------------------------------
@@ -283,6 +292,77 @@ def test_coset_circuit_neurons_selection_shrinks_as_the_threshold_rises(d8_trans
     strict = A.coset_circuit_neurons(model, group, min_top_share=0.9)
     assert loose is not None and strict is not None
     assert set(strict).issubset(set(loose))
+
+
+# ---------------------------------------------------------------------------
+# Carry-digit -> neuron bridge (carry_circuit_neurons): the causal
+# digit-attribution circuit for the abelian C3 members.
+# ---------------------------------------------------------------------------
+
+
+def test_carry_circuit_neurons_returns_none_on_a_non_abelian_group(q8_transformer):
+    """Q8 is non-abelian: ``polycyclic_digits`` DOES return a chain under this
+    artifact's enumeration, but that chain is an enumeration-dependent artefact
+    its own docstring warns against reading as structure, so the carry bridge
+    must decline (return ``None``) rather than audit an artefact -- keeping Q8
+    on the skip path the same way ``coset_circuit_neurons`` does."""
+    model, group = q8_transformer
+    assert A.carry_circuit_neurons(model, group) is None
+
+
+def test_carry_circuit_neurons_selects_a_valid_neuron_subset_on_c8(c8_transformer):
+    """C8 is abelian with polycyclic digits, so the bridge returns an in-range
+    neuron list (not ``None``) usable directly as ``circuit_audit``'s
+    ``inside_neurons``."""
+    model, group = c8_transformer
+    inside = A.carry_circuit_neurons(model, group)
+    assert inside is not None
+    assert all(0 <= i < model.d_mlp for i in inside)
+    assert len(set(inside)) == len(inside)  # no duplicates
+    record = A.circuit_audit(model, group, inside_neurons=inside)
+    assert record.n_inside == len(inside)
+
+
+def test_carry_circuit_neurons_selection_shrinks_as_the_threshold_rises(c8_transformer):
+    """A neuron selected at a high ``min_top_share`` must also be selected at a
+    lower one -- the threshold only removes candidates, never adds them."""
+    model, group = c8_transformer
+    loose = A.carry_circuit_neurons(model, group, min_top_share=0.0)
+    strict = A.carry_circuit_neurons(model, group, min_top_share=0.95)
+    assert loose is not None and strict is not None
+    assert set(strict).issubset(set(loose))
+
+
+def test_carry_circuit_neurons_selects_single_digit_and_rejects_diffuse():
+    """The causal digit-attribution criterion, pinned decisively: a neuron whose
+    output direction is a pure single-output-digit main effect is selected; a
+    neuron whose output direction spreads equally across the three digits (top
+    share 1/3) is not, at ``min_top_share=0.5``.
+
+    The neuron's causal (zero-ablation) logit direction is exactly its ``W_U``
+    row for the FC architecture, so hand-setting two rows controls the two
+    neurons' digit attribution while leaving the rest random."""
+    set_seed(0, deterministic=False)
+    group = resolve_group("C8")
+    model = build_model(_config(8, 1, "fc"), group)
+    from group_algorithm_interp.instruments.probes import polycyclic_digits
+
+    digits = polycyclic_digits(group).digits  # [8, 3], radix-2 columns
+    # A single-bit sign pattern for each digit coordinate (mean zero already).
+    bit = [np.where(digits[:, j] == 0, 1.0, -1.0) for j in range(3)]
+    pure_digit0 = bit[0]  # a function of output digit 0 only -> concentration 1.0
+    diffuse = bit[0] + bit[1] + bit[2]  # equal energy on all three -> share 1/3
+
+    with torch.no_grad():
+        model.W_U[0, :] = torch.as_tensor(pure_digit0, dtype=model.W_U.dtype)
+        model.W_U[1, :] = torch.as_tensor(diffuse, dtype=model.W_U.dtype)
+
+    selected = set(A.carry_circuit_neurons(model, group, min_top_share=0.5))
+    assert 0 in selected  # the pure single-digit neuron clears the bar
+    assert 1 not in selected  # the diffuse neuron does not (share 1/3 < 0.5)
+    # And the diffuse neuron stays out even at a threshold below 1/3's floor is
+    # not asserted; but the pure neuron survives an almost-unit threshold.
+    assert 0 in set(A.carry_circuit_neurons(model, group, min_top_share=0.99))
 
 
 # ---------------------------------------------------------------------------

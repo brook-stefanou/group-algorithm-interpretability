@@ -64,6 +64,34 @@ def dihedral_and_quaternion_runs(tmp_path_factory) -> tuple[Path, Path]:
     return _train(root, "D8"), _train(root, "Q8")
 
 
+@pytest.fixture(scope="module")
+def cyclic_run(tmp_path_factory) -> Path:
+    """C8: abelian, no coset target, but a genuine polycyclic carry structure --
+    the small stand-in for the C3 members the carry-digit bridge is built for."""
+    root = tmp_path_factory.mktemp("audit-runs-cyclic")
+    return _train(root, "C8")
+
+
+def test_measure_audit_run_measures_a_carry_digit_circuit_on_a_cyclic_member(cyclic_run):
+    """DECISIVE for the new bridge: C8 has no coset target, so the coset bridge
+    declines, but it is abelian with polycyclic digits, so the carry-digit
+    bridge produces the I-34 circuit audit -- circuit_source is
+    ``carry_digit_attribution`` and the record carries the polycyclic
+    provenance, not a skip."""
+    script = _load_script()
+    record = script.measure_audit_run(cyclic_run, threshold=0.0)
+    assert record["status"] == "measured"
+    assert record["group"] == {"order": 8, "index": 1, "name": "SmallGroup(8,1)"}
+    ca = record["circuit_audit"]
+    assert ca["status"] == "measured"
+    assert ca["circuit_source"] == "carry_digit_attribution"
+    assert ca["carry_composition_length"] == 3
+    assert ca["carry_radices"] == [2, 2, 2]
+    assert "carry_is_diagonal" in ca and "carry_coordinate_directions" in ca
+    assert "faithfulness" in ca and "completeness" in ca and "minimality" in ca
+    json.dumps(record)  # JSON-serialisable (modulo NaN)
+
+
 def test_measure_audit_run_is_measured_with_a_circuit_on_the_dihedral_member(
     dihedral_and_quaternion_runs,
 ):
@@ -92,9 +120,11 @@ def test_measure_audit_run_is_measured_with_a_circuit_on_the_dihedral_member(
 def test_measure_audit_run_skips_the_circuit_on_the_quaternionic_member(
     dihedral_and_quaternion_runs,
 ):
-    """DECISIVE: Q8 has no coset target (the same theorem as Q32), so
-    circuit_audit must not fabricate one -- it reports a skip with a reason --
-    while direct_logit_attribution still runs regardless."""
+    """DECISIVE: Q8 has no coset target (the same theorem as Q32) AND, being
+    non-abelian, no trusted polycyclic carry-digit structure -- so neither
+    circuit bridge applies and circuit_audit reports a skip with a reason,
+    rather than fabricating one from an enumeration artefact, while
+    direct_logit_attribution still runs regardless."""
     _, q8_run = dihedral_and_quaternion_runs
     script = _load_script()
     record = script.measure_audit_run(q8_run, threshold=0.0)
