@@ -1,0 +1,1160 @@
+{
+  "cell": {
+    "order": 216,
+    "index": 107,
+    "width": 128
+  },
+  "n_seeds_available": 50,
+  "max_seeds_per_cell": 5,
+  "summary": {
+    "order": 216,
+    "index": 107,
+    "width": 128,
+    "n_seeds_attempted": 5,
+    "n_measured": 4,
+    "n_skipped": 1,
+    "gain": {
+      "held_out_fve_gain_full_minus_character": {
+        "n": 4,
+        "mean": 0.02165452703870882,
+        "bootstrap_ci_95": [
+          0.018719653673778314,
+          0.025593772790753616
+        ],
+        "values": [
+          0.019768218607354004,
+          0.017782174666426065,
+          0.027535624185220153,
+          0.02153209069583506
+        ]
+      },
+      "character_only_held_out_fve": {
+        "n": 4,
+        "mean": 0.4205587316451651,
+        "bootstrap_ci_95": [
+          0.38752805950141855,
+          0.44274467716224025
+        ],
+        "values": [
+          0.44736790332278076,
+          0.37066359566799145,
+          0.43812145100169975,
+          0.42608197658818847
+        ]
+      },
+      "full_matrix_entry_held_out_fve": {
+        "n": 4,
+        "mean": 0.44221325868387396,
+        "bootstrap_ci_95": [
+          0.40774859654754314,
+          0.46639659855852733
+        ],
+        "values": [
+          0.46713612193013476,
+          0.3884457703344175,
+          0.4656570751869199,
+          0.44761406728402353
+        ]
+      },
+      "character_only_sufficient_fraction": 0.0,
+      "n_undefined": 0
+    },
+    "minimal_irrep_set": {
+      "n_selected": {
+        "n": 4,
+        "mean": 4.5,
+        "bootstrap_ci_95": [
+          3.5,
+          5.0
+        ],
+        "values": [
+          5.0,
+          5.0,
+          5.0,
+          3.0
+        ]
+      },
+      "most_common_selected_irrep_indices": [
+        1,
+        8,
+        12,
+        22,
+        28
+      ],
+      "most_common_count": 1,
+      "distinct_sets_observed": 4
+    },
+    "null": {
+      "character_only_null_held_out_fve": {
+        "n": 4,
+        "mean": -0.00045347171688764343,
+        "bootstrap_ci_95": [
+          -0.0006016838094807242,
+          -0.0003442895187123485
+        ],
+        "values": [
+          -0.0003815486419982417,
+          -0.0003099410239693068,
+          -0.00044733500294147355,
+          -0.0006750621986415517
+        ]
+      },
+      "full_matrix_entry_null_held_out_fve": {
+        "n": 4,
+        "mean": -0.01086697929041247,
+        "bootstrap_ci_95": [
+          -0.01444274442514748,
+          -0.008349672342197967
+        ],
+        "values": [
+          -0.01002011931609581,
+          -0.007792856684232019,
+          -0.00959692289168812,
+          -0.016058018269633934
+        ]
+      }
+    }
+  },
+  "runs": [
+    {
+      "instrument": "readout-characterisation-driver",
+      "run_id": "2026-07-20_163300_994774_core_549538",
+      "seed": 0,
+      "group": {
+        "order": 216,
+        "index": 107,
+        "name": "SmallGroup(216,107)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final_epoch_59999.pt",
+        "epoch": 59999,
+        "metric_value": 0.9999999403953552,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": null
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "fb31b3f81da9b8c0",
+        "config_group_hash": "77fb65ea81be12fa",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "92c367bd339b7267",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T14:10:16.966682+00:00",
+        "instrument_code_sha256": {
+          ".___init__.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._checkpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._cocycle.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._device.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._endpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._fit_backend.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._gcr_matmul.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._interventions.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._nulls.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._occupancy.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._probes.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._publish.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._readout_characterisation.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._report.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._templates.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "2cb1c5c143edf7a46c6923f037a2221cd0847bb57c700656e02a6b24935217da",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "4abe50a8de1539e654aa2ad5412055f9fc3dba5275bbc985215ad56d67ef41cb",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "fit_backend.py": "98322b6e4b800821cce524dee94f1c9764f472bce2e1df5ec784443fe35b475d",
+          "gcr_matmul.py": "d0b9af9fadad56a5a8957dd3911422f9816576a66877a578d7a33afe06e3ae91",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "b0e756197741297ba6a29964744076f08eeb656c5f8c6eccbc64db84fb20a57a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "readout_characterisation.py": "2c84b25ff5d2187fd5101cc8aa059abd7a4c3a3429b115bc42d9601e7bdc2656",
+          "recruited_dimension.py": "e2f219b3de86633f5336ec28f5c1e0e5239b232a766a033eeb723848bbe30670",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "3161e524db021add2b563c7d98a908a88cbaf3105db91d4113a94265dbf0b11f",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "14feaca85fb0baa675308caed4742184091175219981bb823f91071e3e561e8b",
+        "group_artifact_path": "data/group_artifacts/smallgroup_216_107.npz",
+        "group_artifact_sha256": "e2a3224d9dfcba01261201330f614345588453f7a2d6cf8a620fd8984e225cee"
+      },
+      "status": "measured",
+      "readout_characterisation": {
+        "instrument": "readout-characterisation",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "sampling": {
+          "row_sampling_applied": true,
+          "max_rows": 30000,
+          "sample_seed": 0,
+          "n_classes": 216,
+          "n_pairs_available": 46656,
+          "n_pairs_used": 138,
+          "n_design_rows_available": 10077696,
+          "n_design_rows_used": 29808
+        },
+        "n_candidate_irreps": 39,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "character_only_held_out_fve": 0.44736790332278076,
+        "full_matrix_entry_held_out_fve": 0.46713612193013476,
+        "held_out_fve_gain_full_minus_character": 0.019768218607354004,
+        "tie_tol": 0.01,
+        "character_only_sufficient": false,
+        "minimal_irrep_set": {
+          "target_fve": 0.95,
+          "improvement_tol": 0.01,
+          "n_candidates": 39,
+          "selected_irrep_indices": [
+            12,
+            1,
+            8,
+            22,
+            28
+          ],
+          "selected_irrep_dimensions": [
+            1,
+            1,
+            1,
+            3,
+            3
+          ],
+          "n_selected": 5,
+          "held_out_fve_at_selection": 0.4472715735050421,
+          "reached_target": false,
+          "search_trace": [
+            {
+              "irrep_index": 12,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.18450067614340449,
+              "improvement": 0.18450067614340449,
+              "selected": true
+            },
+            {
+              "irrep_index": 1,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.3011571114457514,
+              "improvement": 0.11665643530234693,
+              "selected": true
+            },
+            {
+              "irrep_index": 8,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.40674779697271,
+              "improvement": 0.1055906855269586,
+              "selected": true
+            },
+            {
+              "irrep_index": 22,
+              "irrep_dimension": 3,
+              "cumulative_held_out_fve": 0.4353119802703732,
+              "improvement": 0.028564183297663193,
+              "selected": true
+            },
+            {
+              "irrep_index": 28,
+              "irrep_dimension": 3,
+              "cumulative_held_out_fve": 0.4472715735050421,
+              "improvement": 0.011959593234668886,
+              "selected": true
+            },
+            {
+              "irrep_index": 23,
+              "irrep_dimension": 3,
+              "cumulative_held_out_fve": 0.44749692132826313,
+              "improvement": 0.00022534782322103375,
+              "selected": false
+            }
+          ]
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 0,
+          "n_fit_pairs": 97,
+          "n_held_out_pairs": 41,
+          "forms": [
+            {
+              "name": "character_only",
+              "n_features": 39,
+              "held_out_fve": 0.44736790332278076,
+              "null_held_out_fve": -0.0003815486419982417
+            },
+            {
+              "name": "full_matrix_entry",
+              "n_features": 430,
+              "held_out_fve": 0.46713612193013476,
+              "null_held_out_fve": -0.01002011931609581
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": -0.019768218607354004
+        },
+        "caveat": "M(a, b, c) = rho(a b) rho(c^-1) -- and every entry of it, including the trace -- is a function of the single product a*b once c is fixed, so a high raw held-out FVE for either design (character_only_held_out_fve or full_matrix_entry_held_out_fve) is consistent with any algorithm that computes the group product correctly, not only GCR, and is not by itself evidence for a character-only readout. The load-bearing statistics are held_out_fve_gain_full_minus_character (does the strictly larger full-matrix-entry span, which contains the character-only span, buy anything held out) and minimal_irrep_set (the sparse subset of irreps the character alone needs), never the raw FVE numbers on their own.",
+        "note": "character_only and full_matrix_entry are a genuinely nested FunctionalForm pair: Re tr(M) = sum_i Re(M_ii) is exactly a linear combination of full_matrix_entry's (Re, i == j) columns, so the full form can never fit worse in sample. character_only_sufficient is True when the extra columns buy no meaningful held-out FVE (gain <= tie_tol) -- the positive readout characterisation: the output stage reads off only the scalar character per occupied irrep and never reconstructs the full matrix. False means the readout uses more than the character.",
+        "null": {
+          "character_only_null_held_out_fve": -0.0003815486419982417,
+          "full_matrix_entry_null_held_out_fve": -0.01002011931609581
+        }
+      }
+    },
+    {
+      "instrument": "readout-characterisation-driver",
+      "run_id": "2026-07-20_163301_057301_core_a2f36d",
+      "seed": 1,
+      "group": {
+        "order": 216,
+        "index": 107,
+        "name": "SmallGroup(216,107)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final_epoch_59999.pt",
+        "epoch": 59999,
+        "metric_value": 0.9999999403953552,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": null
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "7b76a78c437e20e7",
+        "config_group_hash": "77fb65ea81be12fa",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "92c367bd339b7267",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T14:10:46.571397+00:00",
+        "instrument_code_sha256": {
+          ".___init__.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._checkpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._cocycle.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._device.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._endpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._fit_backend.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._gcr_matmul.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._interventions.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._nulls.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._occupancy.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._probes.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._publish.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._readout_characterisation.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._report.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._templates.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "2cb1c5c143edf7a46c6923f037a2221cd0847bb57c700656e02a6b24935217da",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "4abe50a8de1539e654aa2ad5412055f9fc3dba5275bbc985215ad56d67ef41cb",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "fit_backend.py": "98322b6e4b800821cce524dee94f1c9764f472bce2e1df5ec784443fe35b475d",
+          "gcr_matmul.py": "d0b9af9fadad56a5a8957dd3911422f9816576a66877a578d7a33afe06e3ae91",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "b0e756197741297ba6a29964744076f08eeb656c5f8c6eccbc64db84fb20a57a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "readout_characterisation.py": "2c84b25ff5d2187fd5101cc8aa059abd7a4c3a3429b115bc42d9601e7bdc2656",
+          "recruited_dimension.py": "e2f219b3de86633f5336ec28f5c1e0e5239b232a766a033eeb723848bbe30670",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "3161e524db021add2b563c7d98a908a88cbaf3105db91d4113a94265dbf0b11f",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "c83c6c9d64ae2838869fd9cde092227785fa32702541677ef40c1cc4e6e5864b",
+        "group_artifact_path": "data/group_artifacts/smallgroup_216_107.npz",
+        "group_artifact_sha256": "e2a3224d9dfcba01261201330f614345588453f7a2d6cf8a620fd8984e225cee"
+      },
+      "status": "measured",
+      "readout_characterisation": {
+        "instrument": "readout-characterisation",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "sampling": {
+          "row_sampling_applied": true,
+          "max_rows": 30000,
+          "sample_seed": 0,
+          "n_classes": 216,
+          "n_pairs_available": 46656,
+          "n_pairs_used": 138,
+          "n_design_rows_available": 10077696,
+          "n_design_rows_used": 29808
+        },
+        "n_candidate_irreps": 39,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "character_only_held_out_fve": 0.37066359566799145,
+        "full_matrix_entry_held_out_fve": 0.3884457703344175,
+        "held_out_fve_gain_full_minus_character": 0.017782174666426065,
+        "tie_tol": 0.01,
+        "character_only_sufficient": false,
+        "minimal_irrep_set": {
+          "target_fve": 0.95,
+          "improvement_tol": 0.01,
+          "n_candidates": 39,
+          "selected_irrep_indices": [
+            10,
+            2,
+            1,
+            22,
+            19
+          ],
+          "selected_irrep_dimensions": [
+            1,
+            1,
+            1,
+            3,
+            3
+          ],
+          "n_selected": 5,
+          "held_out_fve_at_selection": 0.3707046028236566,
+          "reached_target": false,
+          "search_trace": [
+            {
+              "irrep_index": 10,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.10954541047648558,
+              "improvement": 0.10954541047648558,
+              "selected": true
+            },
+            {
+              "irrep_index": 2,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.20940118037736943,
+              "improvement": 0.09985576990088385,
+              "selected": true
+            },
+            {
+              "irrep_index": 1,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.3005539235844381,
+              "improvement": 0.09115274320706868,
+              "selected": true
+            },
+            {
+              "irrep_index": 22,
+              "irrep_dimension": 3,
+              "cumulative_held_out_fve": 0.35951626637012135,
+              "improvement": 0.05896234278568324,
+              "selected": true
+            },
+            {
+              "irrep_index": 19,
+              "irrep_dimension": 3,
+              "cumulative_held_out_fve": 0.3707046028236566,
+              "improvement": 0.01118833645353523,
+              "selected": true
+            },
+            {
+              "irrep_index": 3,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.3708406682524784,
+              "improvement": 0.00013606542882182993,
+              "selected": false
+            }
+          ]
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 1,
+          "n_fit_pairs": 97,
+          "n_held_out_pairs": 41,
+          "forms": [
+            {
+              "name": "character_only",
+              "n_features": 39,
+              "held_out_fve": 0.37066359566799145,
+              "null_held_out_fve": -0.0003099410239693068
+            },
+            {
+              "name": "full_matrix_entry",
+              "n_features": 430,
+              "held_out_fve": 0.3884457703344175,
+              "null_held_out_fve": -0.007792856684232019
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": -0.017782174666426065
+        },
+        "caveat": "M(a, b, c) = rho(a b) rho(c^-1) -- and every entry of it, including the trace -- is a function of the single product a*b once c is fixed, so a high raw held-out FVE for either design (character_only_held_out_fve or full_matrix_entry_held_out_fve) is consistent with any algorithm that computes the group product correctly, not only GCR, and is not by itself evidence for a character-only readout. The load-bearing statistics are held_out_fve_gain_full_minus_character (does the strictly larger full-matrix-entry span, which contains the character-only span, buy anything held out) and minimal_irrep_set (the sparse subset of irreps the character alone needs), never the raw FVE numbers on their own.",
+        "note": "character_only and full_matrix_entry are a genuinely nested FunctionalForm pair: Re tr(M) = sum_i Re(M_ii) is exactly a linear combination of full_matrix_entry's (Re, i == j) columns, so the full form can never fit worse in sample. character_only_sufficient is True when the extra columns buy no meaningful held-out FVE (gain <= tie_tol) -- the positive readout characterisation: the output stage reads off only the scalar character per occupied irrep and never reconstructs the full matrix. False means the readout uses more than the character.",
+        "null": {
+          "character_only_null_held_out_fve": -0.0003099410239693068,
+          "full_matrix_entry_null_held_out_fve": -0.007792856684232019
+        }
+      }
+    },
+    {
+      "instrument": "readout-characterisation-driver",
+      "run_id": "2026-07-20_163301_123149_core_414aaa",
+      "seed": 2,
+      "group": {
+        "order": 216,
+        "index": 107,
+        "name": "SmallGroup(216,107)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final_epoch_59999.pt",
+        "epoch": 59999,
+        "metric_value": 0.9999999403953552,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": null
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "ae05c02fef2729b3",
+        "config_group_hash": "77fb65ea81be12fa",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "92c367bd339b7267",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T14:11:01.459895+00:00",
+        "instrument_code_sha256": {
+          ".___init__.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._checkpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._cocycle.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._device.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._endpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._fit_backend.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._gcr_matmul.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._interventions.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._nulls.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._occupancy.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._probes.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._publish.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._readout_characterisation.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._report.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._templates.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "2cb1c5c143edf7a46c6923f037a2221cd0847bb57c700656e02a6b24935217da",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "4abe50a8de1539e654aa2ad5412055f9fc3dba5275bbc985215ad56d67ef41cb",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "fit_backend.py": "98322b6e4b800821cce524dee94f1c9764f472bce2e1df5ec784443fe35b475d",
+          "gcr_matmul.py": "d0b9af9fadad56a5a8957dd3911422f9816576a66877a578d7a33afe06e3ae91",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "b0e756197741297ba6a29964744076f08eeb656c5f8c6eccbc64db84fb20a57a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "readout_characterisation.py": "2c84b25ff5d2187fd5101cc8aa059abd7a4c3a3429b115bc42d9601e7bdc2656",
+          "recruited_dimension.py": "e2f219b3de86633f5336ec28f5c1e0e5239b232a766a033eeb723848bbe30670",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "3161e524db021add2b563c7d98a908a88cbaf3105db91d4113a94265dbf0b11f",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "d6bb736fbc187d415299bd2181a24ce1e672a0468c738c21665669c7de9b48a0",
+        "group_artifact_path": "data/group_artifacts/smallgroup_216_107.npz",
+        "group_artifact_sha256": "e2a3224d9dfcba01261201330f614345588453f7a2d6cf8a620fd8984e225cee"
+      },
+      "status": "measured",
+      "readout_characterisation": {
+        "instrument": "readout-characterisation",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "sampling": {
+          "row_sampling_applied": true,
+          "max_rows": 30000,
+          "sample_seed": 0,
+          "n_classes": 216,
+          "n_pairs_available": 46656,
+          "n_pairs_used": 138,
+          "n_design_rows_available": 10077696,
+          "n_design_rows_used": 29808
+        },
+        "n_candidate_irreps": 39,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "character_only_held_out_fve": 0.43812145100169975,
+        "full_matrix_entry_held_out_fve": 0.4656570751869199,
+        "held_out_fve_gain_full_minus_character": 0.027535624185220153,
+        "tie_tol": 0.01,
+        "character_only_sufficient": false,
+        "minimal_irrep_set": {
+          "target_fve": 0.95,
+          "improvement_tol": 0.01,
+          "n_candidates": 39,
+          "selected_irrep_indices": [
+            2,
+            7,
+            22,
+            6,
+            32
+          ],
+          "selected_irrep_dimensions": [
+            1,
+            1,
+            3,
+            1,
+            3
+          ],
+          "n_selected": 5,
+          "held_out_fve_at_selection": 0.43880618468993615,
+          "reached_target": false,
+          "search_trace": [
+            {
+              "irrep_index": 2,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.22281427937102127,
+              "improvement": 0.22281427937102127,
+              "selected": true
+            },
+            {
+              "irrep_index": 7,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.34704275830555364,
+              "improvement": 0.12422847893453237,
+              "selected": true
+            },
+            {
+              "irrep_index": 22,
+              "irrep_dimension": 3,
+              "cumulative_held_out_fve": 0.3873540801588091,
+              "improvement": 0.04031132185325548,
+              "selected": true
+            },
+            {
+              "irrep_index": 6,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.41435483316875865,
+              "improvement": 0.02700075300994953,
+              "selected": true
+            },
+            {
+              "irrep_index": 32,
+              "irrep_dimension": 3,
+              "cumulative_held_out_fve": 0.43880618468993615,
+              "improvement": 0.0244513515211775,
+              "selected": true
+            },
+            {
+              "irrep_index": 3,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.4389318556551475,
+              "improvement": 0.00012567096521132193,
+              "selected": false
+            }
+          ]
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 2,
+          "n_fit_pairs": 97,
+          "n_held_out_pairs": 41,
+          "forms": [
+            {
+              "name": "character_only",
+              "n_features": 39,
+              "held_out_fve": 0.43812145100169975,
+              "null_held_out_fve": -0.00044733500294147355
+            },
+            {
+              "name": "full_matrix_entry",
+              "n_features": 430,
+              "held_out_fve": 0.4656570751869199,
+              "null_held_out_fve": -0.00959692289168812
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": -0.027535624185220153
+        },
+        "caveat": "M(a, b, c) = rho(a b) rho(c^-1) -- and every entry of it, including the trace -- is a function of the single product a*b once c is fixed, so a high raw held-out FVE for either design (character_only_held_out_fve or full_matrix_entry_held_out_fve) is consistent with any algorithm that computes the group product correctly, not only GCR, and is not by itself evidence for a character-only readout. The load-bearing statistics are held_out_fve_gain_full_minus_character (does the strictly larger full-matrix-entry span, which contains the character-only span, buy anything held out) and minimal_irrep_set (the sparse subset of irreps the character alone needs), never the raw FVE numbers on their own.",
+        "note": "character_only and full_matrix_entry are a genuinely nested FunctionalForm pair: Re tr(M) = sum_i Re(M_ii) is exactly a linear combination of full_matrix_entry's (Re, i == j) columns, so the full form can never fit worse in sample. character_only_sufficient is True when the extra columns buy no meaningful held-out FVE (gain <= tie_tol) -- the positive readout characterisation: the output stage reads off only the scalar character per occupied irrep and never reconstructs the full matrix. False means the readout uses more than the character.",
+        "null": {
+          "character_only_null_held_out_fve": -0.00044733500294147355,
+          "full_matrix_entry_null_held_out_fve": -0.00959692289168812
+        }
+      }
+    },
+    {
+      "instrument": "readout-characterisation-driver",
+      "run_id": "2026-07-20_163301_200287_core_d71f4f",
+      "seed": 3,
+      "group": {
+        "order": 216,
+        "index": 107,
+        "name": "SmallGroup(216,107)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final_epoch_59999.pt",
+        "epoch": 59999,
+        "metric_value": 0.9999999403953552,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": null
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "0610a8a5e8a45ca4",
+        "config_group_hash": "77fb65ea81be12fa",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "92c367bd339b7267",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T14:11:13.500671+00:00",
+        "instrument_code_sha256": {
+          ".___init__.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._checkpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._cocycle.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._device.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._endpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._fit_backend.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._gcr_matmul.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._interventions.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._nulls.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._occupancy.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._probes.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._publish.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._readout_characterisation.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._report.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._templates.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "2cb1c5c143edf7a46c6923f037a2221cd0847bb57c700656e02a6b24935217da",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "4abe50a8de1539e654aa2ad5412055f9fc3dba5275bbc985215ad56d67ef41cb",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "fit_backend.py": "98322b6e4b800821cce524dee94f1c9764f472bce2e1df5ec784443fe35b475d",
+          "gcr_matmul.py": "d0b9af9fadad56a5a8957dd3911422f9816576a66877a578d7a33afe06e3ae91",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "b0e756197741297ba6a29964744076f08eeb656c5f8c6eccbc64db84fb20a57a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "readout_characterisation.py": "2c84b25ff5d2187fd5101cc8aa059abd7a4c3a3429b115bc42d9601e7bdc2656",
+          "recruited_dimension.py": "e2f219b3de86633f5336ec28f5c1e0e5239b232a766a033eeb723848bbe30670",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "3161e524db021add2b563c7d98a908a88cbaf3105db91d4113a94265dbf0b11f",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "5d1137d0a8296d6594fadc833c424d4ef35fe5f963388b8ee2b661edcea8bb77",
+        "group_artifact_path": "data/group_artifacts/smallgroup_216_107.npz",
+        "group_artifact_sha256": "e2a3224d9dfcba01261201330f614345588453f7a2d6cf8a620fd8984e225cee"
+      },
+      "status": "measured",
+      "readout_characterisation": {
+        "instrument": "readout-characterisation",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "sampling": {
+          "row_sampling_applied": true,
+          "max_rows": 30000,
+          "sample_seed": 0,
+          "n_classes": 216,
+          "n_pairs_available": 46656,
+          "n_pairs_used": 138,
+          "n_design_rows_available": 10077696,
+          "n_design_rows_used": 29808
+        },
+        "n_candidate_irreps": 39,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "character_only_held_out_fve": 0.42608197658818847,
+        "full_matrix_entry_held_out_fve": 0.44761406728402353,
+        "held_out_fve_gain_full_minus_character": 0.02153209069583506,
+        "tie_tol": 0.01,
+        "character_only_sufficient": false,
+        "minimal_irrep_set": {
+          "target_fve": 0.95,
+          "improvement_tol": 0.01,
+          "n_candidates": 39,
+          "selected_irrep_indices": [
+            9,
+            10,
+            30
+          ],
+          "selected_irrep_dimensions": [
+            1,
+            1,
+            3
+          ],
+          "n_selected": 3,
+          "held_out_fve_at_selection": 0.42538829745006357,
+          "reached_target": false,
+          "search_trace": [
+            {
+              "irrep_index": 9,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.27540229295307384,
+              "improvement": 0.27540229295307384,
+              "selected": true
+            },
+            {
+              "irrep_index": 10,
+              "irrep_dimension": 1,
+              "cumulative_held_out_fve": 0.36668316777990995,
+              "improvement": 0.09128087482683611,
+              "selected": true
+            },
+            {
+              "irrep_index": 30,
+              "irrep_dimension": 3,
+              "cumulative_held_out_fve": 0.42538829745006357,
+              "improvement": 0.05870512967015362,
+              "selected": true
+            },
+            {
+              "irrep_index": 22,
+              "irrep_dimension": 3,
+              "cumulative_held_out_fve": 0.4271236791349745,
+              "improvement": 0.0017353816849109416,
+              "selected": false
+            }
+          ]
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 3,
+          "n_fit_pairs": 97,
+          "n_held_out_pairs": 41,
+          "forms": [
+            {
+              "name": "character_only",
+              "n_features": 39,
+              "held_out_fve": 0.42608197658818847,
+              "null_held_out_fve": -0.0006750621986415517
+            },
+            {
+              "name": "full_matrix_entry",
+              "n_features": 430,
+              "held_out_fve": 0.44761406728402353,
+              "null_held_out_fve": -0.016058018269633934
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": -0.02153209069583506
+        },
+        "caveat": "M(a, b, c) = rho(a b) rho(c^-1) -- and every entry of it, including the trace -- is a function of the single product a*b once c is fixed, so a high raw held-out FVE for either design (character_only_held_out_fve or full_matrix_entry_held_out_fve) is consistent with any algorithm that computes the group product correctly, not only GCR, and is not by itself evidence for a character-only readout. The load-bearing statistics are held_out_fve_gain_full_minus_character (does the strictly larger full-matrix-entry span, which contains the character-only span, buy anything held out) and minimal_irrep_set (the sparse subset of irreps the character alone needs), never the raw FVE numbers on their own.",
+        "note": "character_only and full_matrix_entry are a genuinely nested FunctionalForm pair: Re tr(M) = sum_i Re(M_ii) is exactly a linear combination of full_matrix_entry's (Re, i == j) columns, so the full form can never fit worse in sample. character_only_sufficient is True when the extra columns buy no meaningful held-out FVE (gain <= tie_tol) -- the positive readout characterisation: the output stage reads off only the scalar character per occupied irrep and never reconstructs the full matrix. False means the readout uses more than the character.",
+        "null": {
+          "character_only_null_held_out_fve": -0.0006750621986415517,
+          "full_matrix_entry_null_held_out_fve": -0.016058018269633934
+        }
+      }
+    },
+    {
+      "instrument": "readout-characterisation-driver",
+      "run_id": "2026-07-20_163301_307199_core_1850ca",
+      "seed": 4,
+      "group": {
+        "order": 216,
+        "index": 107,
+        "name": "SmallGroup(216,107)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "09e8988190ab47ee",
+        "config_group_hash": "77fb65ea81be12fa",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "92c367bd339b7267",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T14:11:26.084143+00:00",
+        "instrument_code_sha256": {
+          ".___init__.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._checkpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._cocycle.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._device.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._endpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._fit_backend.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._gcr_matmul.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._interventions.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._nulls.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._occupancy.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._probes.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._publish.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._readout_characterisation.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._report.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._templates.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "2cb1c5c143edf7a46c6923f037a2221cd0847bb57c700656e02a6b24935217da",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "4abe50a8de1539e654aa2ad5412055f9fc3dba5275bbc985215ad56d67ef41cb",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "fit_backend.py": "98322b6e4b800821cce524dee94f1c9764f472bce2e1df5ec784443fe35b475d",
+          "gcr_matmul.py": "d0b9af9fadad56a5a8957dd3911422f9816576a66877a578d7a33afe06e3ae91",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "b0e756197741297ba6a29964744076f08eeb656c5f8c6eccbc64db84fb20a57a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "readout_characterisation.py": "2c84b25ff5d2187fd5101cc8aa059abd7a4c3a3429b115bc42d9601e7bdc2656",
+          "recruited_dimension.py": "e2f219b3de86633f5336ec28f5c1e0e5239b232a766a033eeb723848bbe30670",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "3161e524db021add2b563c7d98a908a88cbaf3105db91d4113a94265dbf0b11f",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    }
+  ]
+}

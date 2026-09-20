@@ -1,0 +1,3911 @@
+{
+  "cell": {
+    "order": 64,
+    "index": 242,
+    "width": 128
+  },
+  "n_seeds_available": 50,
+  "max_seeds_per_cell": 50,
+  "summary": {
+    "order": 64,
+    "index": 242,
+    "width": 128,
+    "n_seeds_attempted": 50,
+    "n_measured": 7,
+    "n_skipped": 43,
+    "nested_comparison": {
+      "full_vs_fourier_held_out_fve_gain": {
+        "n": 7,
+        "mean": 0.010632492929203827,
+        "bootstrap_ci_95": [
+          0.006036539280465674,
+          0.016199397979007078
+        ],
+        "values": [
+          0.02506133891112916,
+          0.00509036293142251,
+          0.0034883391567270827,
+          0.006063979542213049,
+          0.015883337273598808,
+          0.008521885179614719,
+          0.010318207509721455
+        ]
+      },
+      "full_held_out_fve": {
+        "n": 7,
+        "mean": 0.4933402125002724,
+        "bootstrap_ci_95": [
+          0.4443793764007548,
+          0.5410476396832217
+        ],
+        "values": [
+          0.5321503530413247,
+          0.4099509609216512,
+          0.4306674458268116,
+          0.419322964522179,
+          0.5347080506140119,
+          0.543208346208351,
+          0.5833733663675773
+        ]
+      },
+      "fourier_only_held_out_fve": {
+        "n": 7,
+        "mean": 0.48270771957106856,
+        "bootstrap_ci_95": [
+          0.4376680255972495,
+          0.5277507908366494
+        ],
+        "values": [
+          0.5070890141301956,
+          0.40486059799022867,
+          0.4271791066700845,
+          0.41325898497996594,
+          0.5188247133404131,
+          0.5346864610287363,
+          0.5730551588578559
+        ]
+      },
+      "n_undefined": 0
+    },
+    "minimal_irrep_set": {
+      "n_selected": {
+        "n": 7,
+        "mean": 4.428571428571429,
+        "bootstrap_ci_95": [
+          4.0,
+          5.285714285714286
+        ],
+        "values": [
+          7.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0
+        ]
+      },
+      "most_common_selected_irrep_indices": [
+        1,
+        6,
+        10,
+        13,
+        14,
+        17,
+        18
+      ],
+      "most_common_count": 1,
+      "distinct_sets_observed": 7
+    },
+    "null": {
+      "full_null_held_out_fve": {
+        "n": 7,
+        "mean": -0.00010415318570771477,
+        "bootstrap_ci_95": [
+          -0.00013234553162685562,
+          -7.556892875545554e-05
+        ],
+        "values": [
+          -0.00011015928514357398,
+          -9.722313967075458e-05,
+          -0.00014272720109054227,
+          -0.0001651497340169339,
+          -0.00010328242635870843,
+          -7.138586996213725e-05,
+          -3.9144643711352956e-05
+        ]
+      },
+      "fourier_only_null_held_out_fve": {
+        "n": 7,
+        "mean": -8.21237935014921e-05,
+        "bootstrap_ci_95": [
+          -0.00010637793069499603,
+          -5.830928442564419e-05
+        ],
+        "values": [
+          -0.00010866468110526384,
+          -6.617406241171686e-05,
+          -0.00012696721177318793,
+          -0.00011938232509089985,
+          -5.6052366897541006e-05,
+          -6.286276832234705e-05,
+          -3.4763138909488234e-05
+        ]
+      }
+    }
+  },
+  "runs": [
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152937_854039_core_9ebcd2",
+      "seed": 0,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "08ac349653d8c6b4",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:27.493191+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152937_936692_core_8555c4",
+      "seed": 1,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "171899ddf6b55022",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:27.565429+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152938_042563_core_bb9f19",
+      "seed": 2,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 1.0,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "f7c22e64043464b0",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:27.634096+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        },
+        "checkpoint_sha256": "0016cfad6fdefdb7364e18d7540c1e3add66e08e7c5287a49c5ad0eab7d4e696",
+        "group_artifact_path": "data/group_artifacts/smallgroup_64_242.npz",
+        "group_artifact_sha256": "fafa59131c2f8ab3bb11b82268e94d8342d07d1d1df8b0ac05fef2c3fa9ddbb0"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "n_candidate_irreps": 18,
+        "n_fourier_irreps": 15,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.02506133891112916,
+            "full_held_out_fve": 0.5321503530413247,
+            "fourier_only_held_out_fve": 0.5070890141301956
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 18,
+            "selected_irrep_indices": [
+              14,
+              6,
+              1,
+              10,
+              13,
+              18,
+              17
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              4,
+              4
+            ],
+            "n_selected": 7,
+            "held_out_fve_at_selection": 0.5321709986477038,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 14,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.24773310007021632,
+                "improvement": 0.24773310007021632,
+                "selected": true
+              },
+              {
+                "irrep_index": 6,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.3206526913572344,
+                "improvement": 0.07291959128701808,
+                "selected": true
+              },
+              {
+                "irrep_index": 1,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.3878672209520836,
+                "improvement": 0.06721452959484919,
+                "selected": true
+              },
+              {
+                "irrep_index": 10,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.45169812071154736,
+                "improvement": 0.06383089975946377,
+                "selected": true
+              },
+              {
+                "irrep_index": 13,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.507109647073847,
+                "improvement": 0.055411526362299623,
+                "selected": true
+              },
+              {
+                "irrep_index": 18,
+                "irrep_dimension": 4,
+                "cumulative_held_out_fve": 0.5197878349711815,
+                "improvement": 0.012678187897334547,
+                "selected": true
+              },
+              {
+                "irrep_index": 17,
+                "irrep_dimension": 4,
+                "cumulative_held_out_fve": 0.5321709986477038,
+                "improvement": 0.012383163676522257,
+                "selected": true
+              },
+              {
+                "irrep_index": 16,
+                "irrep_dimension": 4,
+                "cumulative_held_out_fve": 0.532170985984976,
+                "improvement": -1.2662727755241576e-08,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.5321503530413247,
+          "saturated_lookup_ceiling_held_out_fve": 0.09208978404045065,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 2,
+          "n_fit_pairs": 2867,
+          "n_held_out_pairs": 1229,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 18,
+              "held_out_fve": 0.5321503530413247,
+              "null_held_out_fve": -0.00011015928514357398
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 15,
+              "held_out_fve": 0.5070890141301956,
+              "null_held_out_fve": -0.00010866468110526384
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.09208978404045065,
+              "null_held_out_fve": -2.698058839678552e-06
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.02506133891112916
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -0.00011015928514357398,
+          "fourier_only_null_held_out_fve": -0.00010866468110526384
+        }
+      }
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152938_146816_core_2275a1",
+      "seed": 3,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "a7987a7795ded5d9",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:35.446234+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152938_262198_core_b548ad",
+      "seed": 4,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "5ab8fffec6232a1e",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:35.513051+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152938_376628_core_60034c",
+      "seed": 5,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "bde0a4067b7b205d",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:35.577679+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152938_507905_core_2cd88a",
+      "seed": 6,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "671ad0129d15f0d4",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:35.646035+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152938_613699_core_1b7a56",
+      "seed": 7,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "ba53c06efc163e03",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:35.710659+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152938_721659_core_31fc0a",
+      "seed": 8,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "486b0b6c09b972aa",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:35.775932+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152938_844972_core_a6325c",
+      "seed": 9,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "3f54fd36101fe2ac",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:35.847552+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152938_965864_core_321533",
+      "seed": 10,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "95a87add1d47a2e9",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:35.915349+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152939_112805_core_76a03f",
+      "seed": 11,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 1.0,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "9bec4c46ff4908aa",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:35.994301+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        },
+        "checkpoint_sha256": "5aaecc4b4fce968a51bddfc471c11f92ed99744ab7842a8c03e5cf29c19ac45f",
+        "group_artifact_path": "data/group_artifacts/smallgroup_64_242.npz",
+        "group_artifact_sha256": "fafa59131c2f8ab3bb11b82268e94d8342d07d1d1df8b0ac05fef2c3fa9ddbb0"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "n_candidate_irreps": 18,
+        "n_fourier_irreps": 15,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.00509036293142251,
+            "full_held_out_fve": 0.4099509609216512,
+            "fourier_only_held_out_fve": 0.40486059799022867
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 18,
+            "selected_irrep_indices": [
+              14,
+              12,
+              6,
+              11
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "n_selected": 4,
+            "held_out_fve_at_selection": 0.4048953833166703,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 14,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.20810003347449257,
+                "improvement": 0.20810003347449257,
+                "selected": true
+              },
+              {
+                "irrep_index": 12,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.2756298348033951,
+                "improvement": 0.06752980132890252,
+                "selected": true
+              },
+              {
+                "irrep_index": 6,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.3413486955933086,
+                "improvement": 0.06571886078991351,
+                "selected": true
+              },
+              {
+                "irrep_index": 11,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.4048953833166703,
+                "improvement": 0.0635466877233617,
+                "selected": true
+              },
+              {
+                "irrep_index": 16,
+                "irrep_dimension": 4,
+                "cumulative_held_out_fve": 0.4075919680643043,
+                "improvement": 0.002696584747634012,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.4099509609216512,
+          "saturated_lookup_ceiling_held_out_fve": 0.042266726653717,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 11,
+          "n_fit_pairs": 2867,
+          "n_held_out_pairs": 1229,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 18,
+              "held_out_fve": 0.4099509609216512,
+              "null_held_out_fve": -9.722313967075458e-05
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 15,
+              "held_out_fve": 0.40486059799022867,
+              "null_held_out_fve": -6.617406241171686e-05
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.042266726653717,
+              "null_held_out_fve": -2.5322306582475917e-05
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.00509036293142251
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -9.722313967075458e-05,
+          "fourier_only_null_held_out_fve": -6.617406241171686e-05
+        }
+      }
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152939_244400_core_8c251c",
+      "seed": 12,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "9e930a520c4afbdc",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:39.386254+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152939_359796_core_8e5a02",
+      "seed": 13,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 0.9914530515670776,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "20d1f64fc82539a4",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:39.467164+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        },
+        "checkpoint_sha256": "7576c5492cd43c00bd5a08f980d90d3e6da5e7b93160b89b939c8f700ad9d9f7",
+        "group_artifact_path": "data/group_artifacts/smallgroup_64_242.npz",
+        "group_artifact_sha256": "fafa59131c2f8ab3bb11b82268e94d8342d07d1d1df8b0ac05fef2c3fa9ddbb0"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "n_candidate_irreps": 18,
+        "n_fourier_irreps": 15,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.0034883391567270827,
+            "full_held_out_fve": 0.4306674458268116,
+            "fourier_only_held_out_fve": 0.4271791066700845
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 18,
+            "selected_irrep_indices": [
+              14,
+              11,
+              1,
+              7
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "n_selected": 4,
+            "held_out_fve_at_selection": 0.42719317930971534,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 14,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.3004387769671639,
+                "improvement": 0.3004387769671639,
+                "selected": true
+              },
+              {
+                "irrep_index": 11,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.3437886907969836,
+                "improvement": 0.043349913829819675,
+                "selected": true
+              },
+              {
+                "irrep_index": 1,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.38565359507515184,
+                "improvement": 0.04186490427816825,
+                "selected": true
+              },
+              {
+                "irrep_index": 7,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.42719317930971534,
+                "improvement": 0.0415395842345635,
+                "selected": true
+              },
+              {
+                "irrep_index": 16,
+                "irrep_dimension": 4,
+                "cumulative_held_out_fve": 0.4289996957086153,
+                "improvement": 0.0018065163988999489,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.4306674458268116,
+          "saturated_lookup_ceiling_held_out_fve": 0.03552110193923108,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 13,
+          "n_fit_pairs": 2867,
+          "n_held_out_pairs": 1229,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 18,
+              "held_out_fve": 0.4306674458268116,
+              "null_held_out_fve": -0.00014272720109054227
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 15,
+              "held_out_fve": 0.4271791066700845,
+              "null_held_out_fve": -0.00012696721177318793
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.03552110193923108,
+              "null_held_out_fve": -3.6225767316988566e-06
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.0034883391567270827
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -0.00014272720109054227,
+          "fourier_only_null_held_out_fve": -0.00012696721177318793
+        }
+      }
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152939_474136_core_1f1e63",
+      "seed": 14,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "627d5224dbfe653e",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:42.551255+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152939_595332_core_5c997d",
+      "seed": 15,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "ba702c7fef276e50",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:42.639558+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152939_779155_core_1c3f87",
+      "seed": 16,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c0ce0a8b09b004eb",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:42.709510+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152939_892300_core_32d82d",
+      "seed": 17,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "29baac164ff4bf6c",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:42.781419+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152939_998596_core_38c2ac",
+      "seed": 18,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "b7dea90273363a37",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:42.835246+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152940_112569_core_0d7274",
+      "seed": 19,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "7d806ac8d2c1d6de",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:42.897277+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152940_217351_core_d6617a",
+      "seed": 20,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c4c350fd8223d33c",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:42.968093+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152940_323236_core_db2d92",
+      "seed": 21,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "44c4da848251171c",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:43.025178+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152940_457218_core_91eaf1",
+      "seed": 22,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 1.0,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "12582e65b0932f08",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:43.090517+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        },
+        "checkpoint_sha256": "379d23bca20a41943e98ec3464c53ccacdbb994d3664f7c7a626595ffad19fd6",
+        "group_artifact_path": "data/group_artifacts/smallgroup_64_242.npz",
+        "group_artifact_sha256": "fafa59131c2f8ab3bb11b82268e94d8342d07d1d1df8b0ac05fef2c3fa9ddbb0"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "n_candidate_irreps": 18,
+        "n_fourier_irreps": 15,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.006063979542213049,
+            "full_held_out_fve": 0.419322964522179,
+            "fourier_only_held_out_fve": 0.41325898497996594
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 18,
+            "selected_irrep_indices": [
+              1,
+              3,
+              14,
+              11
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "n_selected": 4,
+            "held_out_fve_at_selection": 0.4133055797543249,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 1,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.12000637666405933,
+                "improvement": 0.12000637666405933,
+                "selected": true
+              },
+              {
+                "irrep_index": 3,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.23354133469260863,
+                "improvement": 0.1135349580285493,
+                "selected": true
+              },
+              {
+                "irrep_index": 14,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.33564425041526313,
+                "improvement": 0.10210291572265451,
+                "selected": true
+              },
+              {
+                "irrep_index": 11,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.4133055797543249,
+                "improvement": 0.07766132933906178,
+                "selected": true
+              },
+              {
+                "irrep_index": 17,
+                "irrep_dimension": 4,
+                "cumulative_held_out_fve": 0.4165457442804167,
+                "improvement": 0.003240164526091771,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.419322964522179,
+          "saturated_lookup_ceiling_held_out_fve": 0.048481714467435544,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 22,
+          "n_fit_pairs": 2867,
+          "n_held_out_pairs": 1229,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 18,
+              "held_out_fve": 0.419322964522179,
+              "null_held_out_fve": -0.0001651497340169339
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 15,
+              "held_out_fve": 0.41325898497996594,
+              "null_held_out_fve": -0.00011938232509089985
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.048481714467435544,
+              "null_held_out_fve": -2.961106760368537e-05
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.006063979542213049
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -0.0001651497340169339,
+          "fourier_only_null_held_out_fve": -0.00011938232509089985
+        }
+      }
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152940_561713_core_358df3",
+      "seed": 23,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "1892c9c9e573553e",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:46.519009+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152940_677074_core_f9af40",
+      "seed": 24,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "62772139eb5e462c",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:46.589951+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152940_786970_core_020bea",
+      "seed": 25,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "2b25befcd8121f1b",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:46.643658+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152940_890285_core_c73179",
+      "seed": 26,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "eee36d66d584d63a",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:46.715566+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152940_993479_core_2633ba",
+      "seed": 27,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c58b91b466b1f4e4",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:46.785538+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152941_120129_core_1bc5b2",
+      "seed": 28,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "a04dc06a2e6742c8",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:46.844319+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152941_221603_core_7c007d",
+      "seed": 29,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "6c7f3d5e76181858",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:46.903737+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152941_342487_core_909c8a",
+      "seed": 30,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 1.0,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "7269958d77443661",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:46.967459+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        },
+        "checkpoint_sha256": "edb924906b7eb462261afd21746144e0ec2985e8ed992395a12690b3333b261e",
+        "group_artifact_path": "data/group_artifacts/smallgroup_64_242.npz",
+        "group_artifact_sha256": "fafa59131c2f8ab3bb11b82268e94d8342d07d1d1df8b0ac05fef2c3fa9ddbb0"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "n_candidate_irreps": 18,
+        "n_fourier_irreps": 15,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.015883337273598808,
+            "full_held_out_fve": 0.5347080506140119,
+            "fourier_only_held_out_fve": 0.5188247133404131
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 18,
+            "selected_irrep_indices": [
+              11,
+              4,
+              12,
+              13
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "n_selected": 4,
+            "held_out_fve_at_selection": 0.5188429724015703,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 11,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.16421528517966166,
+                "improvement": 0.16421528517966166,
+                "selected": true
+              },
+              {
+                "irrep_index": 4,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.2840621542194338,
+                "improvement": 0.11984686903977215,
+                "selected": true
+              },
+              {
+                "irrep_index": 12,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.4016025544162781,
+                "improvement": 0.11754040019684431,
+                "selected": true
+              },
+              {
+                "irrep_index": 13,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.5188429724015703,
+                "improvement": 0.11724041798529217,
+                "selected": true
+              },
+              {
+                "irrep_index": 17,
+                "irrep_dimension": 4,
+                "cumulative_held_out_fve": 0.5269104614251471,
+                "improvement": 0.00806748902357679,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.5347080506140119,
+          "saturated_lookup_ceiling_held_out_fve": 0.07323142782693348,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 30,
+          "n_fit_pairs": 2867,
+          "n_held_out_pairs": 1229,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 18,
+              "held_out_fve": 0.5347080506140119,
+              "null_held_out_fve": -0.00010328242635870843
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 15,
+              "held_out_fve": 0.5188247133404131,
+              "null_held_out_fve": -5.6052366897541006e-05
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.07323142782693348,
+              "null_held_out_fve": -5.339404316906382e-05
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.015883337273598808
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -0.00010328242635870843,
+          "fourier_only_null_held_out_fve": -5.6052366897541006e-05
+        }
+      }
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152941_464559_core_5c2603",
+      "seed": 31,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "a05fb52c4bd460b6",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:49.934619+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152941_583709_core_f333dd",
+      "seed": 32,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 1.0,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "97e78d51ed83559d",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:49.992253+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        },
+        "checkpoint_sha256": "9cdbaca994ec6ed9651b30012b65e84831a37719d0084135e52c7ab69a198307",
+        "group_artifact_path": "data/group_artifacts/smallgroup_64_242.npz",
+        "group_artifact_sha256": "fafa59131c2f8ab3bb11b82268e94d8342d07d1d1df8b0ac05fef2c3fa9ddbb0"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "n_candidate_irreps": 18,
+        "n_fourier_irreps": 15,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.008521885179614719,
+            "full_held_out_fve": 0.543208346208351,
+            "fourier_only_held_out_fve": 0.5346864610287363
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 18,
+            "selected_irrep_indices": [
+              4,
+              13,
+              12,
+              10
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "n_selected": 4,
+            "held_out_fve_at_selection": 0.5346938442667508,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 4,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.14903605833446465,
+                "improvement": 0.14903605833446465,
+                "selected": true
+              },
+              {
+                "irrep_index": 13,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.2840508802675086,
+                "improvement": 0.13501482193304393,
+                "selected": true
+              },
+              {
+                "irrep_index": 12,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.4144036434331235,
+                "improvement": 0.13035276316561495,
+                "selected": true
+              },
+              {
+                "irrep_index": 10,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.5346938442667508,
+                "improvement": 0.12029020083362729,
+                "selected": true
+              },
+              {
+                "irrep_index": 17,
+                "irrep_dimension": 4,
+                "cumulative_held_out_fve": 0.5396835433108682,
+                "improvement": 0.0049896990441173905,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.543208346208351,
+          "saturated_lookup_ceiling_held_out_fve": 0.0678107842711072,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 32,
+          "n_fit_pairs": 2867,
+          "n_held_out_pairs": 1229,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 18,
+              "held_out_fve": 0.543208346208351,
+              "null_held_out_fve": -7.138586996213725e-05
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 15,
+              "held_out_fve": 0.5346864610287363,
+              "null_held_out_fve": -6.286276832234705e-05
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.0678107842711072,
+              "null_held_out_fve": -6.3418599181019886e-06
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.008521885179614719
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -7.138586996213725e-05,
+          "fourier_only_null_held_out_fve": -6.286276832234705e-05
+        }
+      }
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152941_695825_core_ceba5f",
+      "seed": 33,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 0.9914530515670776,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "ae23b5baec152572",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:53.820368+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        },
+        "checkpoint_sha256": "26916d30e818788c261a3f6e68cd5b12a2c99d5b455cd393b7a8e963ce797ab8",
+        "group_artifact_path": "data/group_artifacts/smallgroup_64_242.npz",
+        "group_artifact_sha256": "fafa59131c2f8ab3bb11b82268e94d8342d07d1d1df8b0ac05fef2c3fa9ddbb0"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "n_candidate_irreps": 18,
+        "n_fourier_irreps": 15,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.010318207509721455,
+            "full_held_out_fve": 0.5833733663675773,
+            "fourier_only_held_out_fve": 0.5730551588578559
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 18,
+            "selected_irrep_indices": [
+              4,
+              7,
+              8,
+              5
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "n_selected": 4,
+            "held_out_fve_at_selection": 0.5730566257189572,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 4,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.15688006723053294,
+                "improvement": 0.15688006723053294,
+                "selected": true
+              },
+              {
+                "irrep_index": 7,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.3022164104031597,
+                "improvement": 0.14533634317262678,
+                "selected": true
+              },
+              {
+                "irrep_index": 8,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.4405946842856361,
+                "improvement": 0.13837827388247637,
+                "selected": true
+              },
+              {
+                "irrep_index": 5,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.5730566257189572,
+                "improvement": 0.13246194143332113,
+                "selected": true
+              },
+              {
+                "irrep_index": 17,
+                "irrep_dimension": 4,
+                "cumulative_held_out_fve": 0.5795099287046077,
+                "improvement": 0.0064533029856505,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.5833733663675773,
+          "saturated_lookup_ceiling_held_out_fve": 0.07445862007484172,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 33,
+          "n_fit_pairs": 2867,
+          "n_held_out_pairs": 1229,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 18,
+              "held_out_fve": 0.5833733663675773,
+              "null_held_out_fve": -3.9144643711352956e-05
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 15,
+              "held_out_fve": 0.5730551588578559,
+              "null_held_out_fve": -3.4763138909488234e-05
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.07445862007484172,
+              "null_held_out_fve": -2.1159137630899494e-06
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.010318207509721455
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -3.9144643711352956e-05,
+          "fourier_only_null_held_out_fve": -3.4763138909488234e-05
+        }
+      }
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152941_814355_core_b3534b",
+      "seed": 34,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c40d76e809eafda1",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.051184+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152941_937408_core_acf548",
+      "seed": 35,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c40dbbd16f7912c8",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.125513+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152942_039227_core_b07f91",
+      "seed": 36,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "527065f2b65780d3",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.203233+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152942_140759_core_8b4230",
+      "seed": 37,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "09c8ff9cc6ccc42e",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.271244+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152942_243883_core_c0f77e",
+      "seed": 38,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "0b5cbe9ad955aab4",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.341691+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152942_358058_core_372c03",
+      "seed": 39,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "9848b6fdd40af0ed",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.427737+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152942_481753_core_71473f",
+      "seed": 40,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "4c1346db861f9ac2",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.491199+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152942_590375_core_01ec62",
+      "seed": 41,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "5e3bf4d78513953a",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.554326+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152942_700403_core_c8d503",
+      "seed": 42,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "94fd8efd11644e8e",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.615239+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152942_814290_core_3a81b9",
+      "seed": 43,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "4a2649da626edda5",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.680779+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152942_918018_core_963a20",
+      "seed": 44,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "fada1fdd2c015f40",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.741634+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152943_023536_core_0606e1",
+      "seed": 45,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "96fc82099ef4696a",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.797427+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152943_140978_core_228305",
+      "seed": 46,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "96661328c8e35750",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.869480+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152943_243047_core_f803ae",
+      "seed": 47,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c20e0f74b4993985",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.934573+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152943_345911_core_09217f",
+      "seed": 48,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "70390887987a0dfa",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:57.996091+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_152943_458362_core_5c800a",
+      "seed": 49,
+      "group": {
+        "order": 64,
+        "index": 242,
+        "name": "SmallGroup(64,242)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "648666892370226d",
+        "config_group_hash": "d2faef988f0c3faf",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "618db70a65d73e0b",
+        "analysis_git_commit": "496f809",
+        "analysed_at": "2026-09-20T06:27:58.060346+00:00",
+        "instrument_code_sha256": {
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "b6bf6021dac5200e3f305a888efbbf2b44af8fd8f2e616c283dc9ab2e9062041",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "82ae9253f993340054c8b0e326192422d2b9d16c0a4e0ff78dd27f43e013d128",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+        }
+      },
+      "status": "skipped"
+    }
+  ]
+}

@@ -1,0 +1,3658 @@
+{
+  "cell": {
+    "order": 32,
+    "index": 19,
+    "width": 128
+  },
+  "n_seeds_available": 50,
+  "max_seeds_per_cell": 50,
+  "summary": {
+    "order": 32,
+    "index": 19,
+    "width": 128,
+    "n_seeds_attempted": 50,
+    "n_measured": 3,
+    "n_skipped": 47,
+    "theoretical": {
+      "minimal_faithful_real": {
+        "order": 32,
+        "real_dimension": 4,
+        "example_set": [
+          7
+        ],
+        "example_set_cardinality": 1,
+        "example_set_degrees": [
+          2
+        ],
+        "example_set_real_dims": [
+          4
+        ],
+        "n_sets_at_min": 2,
+        "all_real_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          4,
+          4
+        ],
+        "fallback_used": false
+      },
+      "minimal_faithful_real_dimension": 4,
+      "regular_rep": 32,
+      "tensor_rank_lower": 32,
+      "tensor_rank_upper": 53,
+      "tensor_rank_naive_additive": 53,
+      "tensor_rank_coincides_with_regular": true
+    },
+    "primary_recruited": {
+      "n": 3,
+      "mean": 7.659848635227827,
+      "bootstrap_ci_95": [
+        6.771216327269493,
+        8.114557411398021
+      ],
+      "values": [
+        8.093772167015965,
+        8.114557411398021,
+        6.771216327269493
+      ]
+    },
+    "primary_measure_counts": {
+      "activation_left_centered": 3
+    },
+    "activation_available_counts": {
+      "True": 3
+    },
+    "discrimination_ratios": {
+      "minimal_faithful_real": {
+        "n": 3,
+        "mean": 1.9149621588069567,
+        "bootstrap_ci_95": [
+          1.6928040818173733,
+          2.0286393528495053
+        ],
+        "values": [
+          2.0234430417539913,
+          2.0286393528495053,
+          1.6928040818173733
+        ]
+      },
+      "tensor_rank_lower": {
+        "n": 3,
+        "mean": 0.2393702698508696,
+        "bootstrap_ci_95": [
+          0.21160051022717166,
+          0.25357991910618816
+        ],
+        "values": [
+          0.2529303802192489,
+          0.25357991910618816,
+          0.21160051022717166
+        ]
+      },
+      "regular_rep": {
+        "n": 3,
+        "mean": 0.2393702698508696,
+        "bootstrap_ci_95": [
+          0.21160051022717166,
+          0.25357991910618816
+        ],
+        "values": [
+          0.2529303802192489,
+          0.25357991910618816,
+          0.21160051022717166
+        ]
+      }
+    },
+    "closest_anchor_counts": {
+      "minimal_faithful_real": 3
+    }
+  },
+  "runs": [
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123529_475318_core_5abbf7",
+      "seed": 0,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": "trajectory",
+        "substitution_recorded": true,
+        "rejected": [
+          {
+            "checkpoint": "final_epoch_59999.pt",
+            "epoch": 59999,
+            "value": 0.9804878234863281
+          },
+          {
+            "checkpoint": "final_epoch_59998.pt",
+            "epoch": 59998,
+            "value": 0.9804878234863281
+          },
+          {
+            "checkpoint": "final_epoch_59997.pt",
+            "epoch": 59997,
+            "value": 0.9804878234863281
+          },
+          {
+            "checkpoint": "final_epoch_59996.pt",
+            "epoch": 59996,
+            "value": 0.9804878234863281
+          },
+          {
+            "checkpoint": "final_epoch_59995.pt",
+            "epoch": 59995,
+            "value": 0.9804878234863281
+          }
+        ],
+        "reason": "selection.json names 'step_59600.pt' but the checkpoint is not on disk"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "4fa46017b8f97554",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.111399+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123529_569226_core_267b42",
+      "seed": 1,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "425a0248f13d7103",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.121255+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123529_680415_core_cd4c86",
+      "seed": 2,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "8298eff375fff244",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.131091+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123529_788523_core_5ae12a",
+      "seed": 3,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "fdc2d06f19d48fe7",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.142078+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123529_891347_core_26c0a2",
+      "seed": 4,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "e5db056b768a4caa",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.156227+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123529_992096_core_e38656",
+      "seed": 5,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "0a719e86a34b7a55",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.168198+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123530_113111_core_e7edf6",
+      "seed": 6,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "3b3df92c8a782921",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.179593+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123530_219695_core_e67a95",
+      "seed": 7,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "79ae45e788036d91",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.190117+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123530_331390_core_17bb7d",
+      "seed": 8,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "4fd9f572bcd81b59",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.200394+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123530_442816_core_9ba08f",
+      "seed": 9,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "ee9d8602333433f9",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.211191+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123530_545367_core_4d9079",
+      "seed": 10,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 0.995121955871582,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "10be5d0c3f2aef85",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.225012+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "f49b67c8fb99f330b92a1c1ce2e0baa4adb09dce738222c93ef9c7b432a99cb2",
+        "group_artifact_path": "data/group_artifacts/smallgroup_32_19.npz",
+        "group_artifact_sha256": "943bb59a078594cb7792d82e2b104ea07042c61a5ed547866c842584cabc4302"
+      },
+      "status": "measured",
+      "recruited_dimension": {
+        "instrument": "recruited-dimension",
+        "canonical_id": [
+          32,
+          19
+        ],
+        "theoretical": {
+          "minimal_faithful_real": {
+            "order": 32,
+            "real_dimension": 4,
+            "example_set": [
+              7
+            ],
+            "example_set_cardinality": 1,
+            "example_set_degrees": [
+              2
+            ],
+            "example_set_real_dims": [
+              4
+            ],
+            "n_sets_at_min": 2,
+            "all_real_dimensions": [
+              1,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              4,
+              4
+            ],
+            "fallback_used": false
+          },
+          "minimal_faithful_real_dimension": 4,
+          "regular_rep": 32,
+          "tensor_rank_lower": 32,
+          "tensor_rank_upper": 53,
+          "tensor_rank_naive_additive": 53,
+          "tensor_rank_coincides_with_regular": true
+        },
+        "embedding_centered": {
+          "participation_ratio": 15.668424503286653,
+          "participation_ratio_sq": 10.929992168717748,
+          "stable_rank": 8.310346101176481,
+          "n_singular_values": 32,
+          "max_singular_value": 3.424405202212214,
+          "frobenius_energy": 97.45169729116871
+        },
+        "embedding_uncentered": {
+          "participation_ratio": 16.455196056090365,
+          "participation_ratio_sq": 11.312380550114375,
+          "stable_rank": 8.452764693697171,
+          "n_singular_values": 32,
+          "max_singular_value": 3.429957442788135,
+          "frobenius_energy": 99.44346363915508
+        },
+        "activation_available": true,
+        "activation_left_centered": {
+          "participation_ratio": 8.093772167015965,
+          "participation_ratio_sq": 5.337512225964383,
+          "stable_rank": 3.679713057007655,
+          "n_singular_values": 32,
+          "max_singular_value": 842.6689454136953,
+          "frobenius_energy": 2612930.946135357
+        },
+        "activation_left_uncentered": {
+          "participation_ratio": 5.360866981311676,
+          "participation_ratio_sq": 1.808939748170377,
+          "stable_rank": 1.3614094277172293,
+          "n_singular_values": 32,
+          "max_singular_value": 2683.0181116584768,
+          "frobenius_energy": 9800223.101880398
+        },
+        "activation_right_centered": {
+          "participation_ratio": 10.527021899148831,
+          "participation_ratio_sq": 9.202097707307054,
+          "stable_rank": 6.741649031704037,
+          "n_singular_values": 32,
+          "max_singular_value": 654.5409184371182,
+          "frobenius_energy": 2888282.9901952315
+        },
+        "activation_right_uncentered": {
+          "participation_ratio": 6.73418306548197,
+          "participation_ratio_sq": 1.9703462990847238,
+          "stable_rank": 1.4168881056799267,
+          "n_singular_values": 32,
+          "max_singular_value": 2629.9664237818083,
+          "frobenius_energy": 9800223.101880396
+        },
+        "primary_measure": "activation_left_centered",
+        "primary_recruited": 8.093772167015965,
+        "discrimination": {
+          "recruited": 8.093772167015965,
+          "ratios": {
+            "minimal_faithful_real": 2.0234430417539913,
+            "tensor_rank_lower": 0.2529303802192489,
+            "regular_rep": 0.2529303802192489
+          },
+          "log_distance": {
+            "minimal_faithful_real": 0.7048005365580654,
+            "tensor_rank_lower": 1.3746410051217706,
+            "regular_rep": 1.3746410051217706
+          },
+          "closest": "minimal_faithful_real",
+          "closest_tie": [
+            "minimal_faithful_real"
+          ]
+        }
+      }
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123530_646242_core_5b9608",
+      "seed": 11,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "a941c41f8c7f7c9b",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.414685+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123530_783285_core_e2fa29",
+      "seed": 12,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "3ebda80fbd9c254f",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.425936+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123530_894130_core_ecf283",
+      "seed": 13,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "aae62a479c60c778",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.437090+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123530_996399_core_dbc2b4",
+      "seed": 14,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "212d90063b3a3f75",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.447743+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123531_131980_core_b4b92d",
+      "seed": 15,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "b9acf9f2bd9de5b9",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.457517+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123531_253262_core_1a7543",
+      "seed": 16,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "aced2f0bd185d2be",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.470123+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123531_360393_core_99616b",
+      "seed": 17,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "e074fd1dd14ca9f2",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.481280+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123531_486382_core_0b8c76",
+      "seed": 18,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "8bfa3d0df5d08577",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.494509+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123531_595746_core_26acf7",
+      "seed": 19,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "b000a64db71ede1e",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.507993+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123531_699339_core_210b38",
+      "seed": 20,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "3aaa07899cc8d581",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.517328+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123531_813961_core_3a0fcf",
+      "seed": 21,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "21328bc36d3a0a65",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.526828+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123531_920220_core_0e4372",
+      "seed": 22,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "8e43c2b1eff28ca5",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.537028+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123532_029456_core_e164ea",
+      "seed": 23,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "4768b2adfc977cc2",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.549774+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123532_160550_core_763d32",
+      "seed": 24,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "2dcee1cdd55b1019",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.561983+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123532_259318_core_7bfd16",
+      "seed": 25,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "a69a60838fcaf496",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.573662+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123532_368649_core_c90a03",
+      "seed": 26,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "ee602ac3d3e9aad4",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.585226+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123532_475043_core_48edee",
+      "seed": 27,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "315f300398635141",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.596264+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123532_582910_core_e111bd",
+      "seed": 28,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "98ebe1130464fedf",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.605321+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123532_689709_core_9bc1b4",
+      "seed": 29,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "a6244cdef96b422e",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.614256+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123532_815429_core_efa32a",
+      "seed": 30,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "8c2250ddbedef774",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.622927+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123532_936737_core_272a8d",
+      "seed": 31,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "426f74e2733e314c",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.631585+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123533_055613_core_64d677",
+      "seed": 32,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "44c1ed017f8d8cb7",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.640507+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123533_163903_core_8f2a8f",
+      "seed": 33,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "c9a2fcdfc09c9527",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:24.649772+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123533_274597_core_2f01b8",
+      "seed": 34,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": "trajectory",
+        "substitution_recorded": true,
+        "rejected": [
+          {
+            "checkpoint": "final_epoch_59999.pt",
+            "epoch": 59999,
+            "value": 0.9756097793579102
+          },
+          {
+            "checkpoint": "final_epoch_59998.pt",
+            "epoch": 59998,
+            "value": 0.9756097793579102
+          },
+          {
+            "checkpoint": "final_epoch_59997.pt",
+            "epoch": 59997,
+            "value": 0.9756097793579102
+          },
+          {
+            "checkpoint": "final_epoch_59996.pt",
+            "epoch": 59996,
+            "value": 0.9756097793579102
+          },
+          {
+            "checkpoint": "final_epoch_59995.pt",
+            "epoch": 59995,
+            "value": 0.9756097793579102
+          }
+        ],
+        "reason": "selection.json names 'step_57600.pt' but the checkpoint is not on disk"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "a9b4bff53e999e82",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:26.593488+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123533_386464_core_1f6eed",
+      "seed": 35,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "8e64cb15d2df28f0",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:26.603511+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123533_490649_core_bcd9a5",
+      "seed": 36,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 1.0,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "2e7dc2c2624872e2",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:26.617388+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "bad0ec6bcae69f16be8c0a8d9129894a2deda55a49372776fb8a05e0b66f2e84",
+        "group_artifact_path": "data/group_artifacts/smallgroup_32_19.npz",
+        "group_artifact_sha256": "943bb59a078594cb7792d82e2b104ea07042c61a5ed547866c842584cabc4302"
+      },
+      "status": "measured",
+      "recruited_dimension": {
+        "instrument": "recruited-dimension",
+        "canonical_id": [
+          32,
+          19
+        ],
+        "theoretical": {
+          "minimal_faithful_real": {
+            "order": 32,
+            "real_dimension": 4,
+            "example_set": [
+              7
+            ],
+            "example_set_cardinality": 1,
+            "example_set_degrees": [
+              2
+            ],
+            "example_set_real_dims": [
+              4
+            ],
+            "n_sets_at_min": 2,
+            "all_real_dimensions": [
+              1,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              4,
+              4
+            ],
+            "fallback_used": false
+          },
+          "minimal_faithful_real_dimension": 4,
+          "regular_rep": 32,
+          "tensor_rank_lower": 32,
+          "tensor_rank_upper": 53,
+          "tensor_rank_naive_additive": 53,
+          "tensor_rank_coincides_with_regular": true
+        },
+        "embedding_centered": {
+          "participation_ratio": 15.927649077437637,
+          "participation_ratio_sq": 9.663695970013277,
+          "stable_rank": 5.994357906035823,
+          "n_singular_values": 32,
+          "max_singular_value": 3.49633637247683,
+          "frobenius_energy": 73.2772371439515
+        },
+        "embedding_uncentered": {
+          "participation_ratio": 16.444894164698482,
+          "participation_ratio_sq": 9.834261268207019,
+          "stable_rank": 6.050888924859026,
+          "n_singular_values": 32,
+          "max_singular_value": 3.4993733584630706,
+          "frobenius_energy": 74.09684953723418
+        },
+        "activation_available": true,
+        "activation_left_centered": {
+          "participation_ratio": 8.114557411398021,
+          "participation_ratio_sq": 5.300594490557696,
+          "stable_rank": 4.39584683469291,
+          "n_singular_values": 32,
+          "max_singular_value": 1098.3020444012573,
+          "frobenius_energy": 5302566.64740157
+        },
+        "activation_left_uncentered": {
+          "participation_ratio": 7.107639980169453,
+          "participation_ratio_sq": 3.023212536136527,
+          "stable_rank": 1.8546382136490185,
+          "n_singular_values": 32,
+          "max_singular_value": 2483.7126519821063,
+          "frobenius_energy": 11440945.139311202
+        },
+        "activation_right_centered": {
+          "participation_ratio": 10.373453760226262,
+          "participation_ratio_sq": 6.759700685004758,
+          "stable_rank": 4.413535087204138,
+          "n_singular_values": 32,
+          "max_singular_value": 1047.6907749183692,
+          "frobenius_energy": 4844543.092472532
+        },
+        "activation_right_uncentered": {
+          "participation_ratio": 8.083240217407125,
+          "participation_ratio_sq": 2.7735560929615226,
+          "stable_rank": 1.7301209160650795,
+          "n_singular_values": 32,
+          "max_singular_value": 2571.536679365582,
+          "frobenius_energy": 11440945.139311211
+        },
+        "primary_measure": "activation_left_centered",
+        "primary_recruited": 8.114557411398021,
+        "discrimination": {
+          "recruited": 8.114557411398021,
+          "ratios": {
+            "minimal_faithful_real": 2.0286393528495053,
+            "tensor_rank_lower": 0.25357991910618816,
+            "regular_rep": 0.25357991910618816
+          },
+          "log_distance": {
+            "minimal_faithful_real": 0.7073652987903838,
+            "tensor_rank_lower": 1.3720762428894522,
+            "regular_rep": 1.3720762428894522
+          },
+          "closest": "minimal_faithful_real",
+          "closest_tie": [
+            "minimal_faithful_real"
+          ]
+        }
+      }
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123533_614827_core_58a534",
+      "seed": 37,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "cbd9f98fcbb72519",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:26.810602+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123533_729035_core_a41f29",
+      "seed": 38,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "42897efe9e885911",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:26.822949+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123533_837943_core_aefae0",
+      "seed": 39,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "7011c941d64db291",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:26.834794+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123533_945310_core_0f81c7",
+      "seed": 40,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "b6a9633f848534fc",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:26.849185+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123534_062343_core_c3a039",
+      "seed": 41,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "4067fb75e99372aa",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:26.861152+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123534_171913_core_00d859",
+      "seed": 42,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final.pt",
+        "epoch": 59999,
+        "metric_value": 0.9902439117431641,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "selection.json named final_epoch_59999.pt (epoch 59999 == optim.epochs - 1, the run's final training epoch) but the curated layout kept only final.pt; substituted final.pt, which training saves from the identical in-memory model state at the same epoch with no optimiser step in between -- a documented weight-safe equivalence, not a guess"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "f7677ddbd81743d6",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:26.878059+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "40b04e9afb17e33e3bc7e0b094d641a625801b00500755dfc1a61246e095f782",
+        "group_artifact_path": "data/group_artifacts/smallgroup_32_19.npz",
+        "group_artifact_sha256": "943bb59a078594cb7792d82e2b104ea07042c61a5ed547866c842584cabc4302"
+      },
+      "status": "measured",
+      "recruited_dimension": {
+        "instrument": "recruited-dimension",
+        "canonical_id": [
+          32,
+          19
+        ],
+        "theoretical": {
+          "minimal_faithful_real": {
+            "order": 32,
+            "real_dimension": 4,
+            "example_set": [
+              7
+            ],
+            "example_set_cardinality": 1,
+            "example_set_degrees": [
+              2
+            ],
+            "example_set_real_dims": [
+              4
+            ],
+            "n_sets_at_min": 2,
+            "all_real_dimensions": [
+              1,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              4,
+              4
+            ],
+            "fallback_used": false
+          },
+          "minimal_faithful_real_dimension": 4,
+          "regular_rep": 32,
+          "tensor_rank_lower": 32,
+          "tensor_rank_upper": 53,
+          "tensor_rank_naive_additive": 53,
+          "tensor_rank_coincides_with_regular": true
+        },
+        "embedding_centered": {
+          "participation_ratio": 13.220203719983973,
+          "participation_ratio_sq": 7.8841608758451605,
+          "stable_rank": 4.494585450559468,
+          "n_singular_values": 32,
+          "max_singular_value": 4.062110281923539,
+          "frobenius_energy": 74.16398566906614
+        },
+        "embedding_uncentered": {
+          "participation_ratio": 13.39749195672285,
+          "participation_ratio_sq": 7.896541068526141,
+          "stable_rank": 4.499727259839014,
+          "n_singular_values": 32,
+          "max_singular_value": 4.064709626049197,
+          "frobenius_energy": 74.34388337249553
+        },
+        "activation_available": true,
+        "activation_left_centered": {
+          "participation_ratio": 6.771216327269493,
+          "participation_ratio_sq": 3.75093377294583,
+          "stable_rank": 2.774443428306599,
+          "n_singular_values": 32,
+          "max_singular_value": 1592.902022378754,
+          "frobenius_energy": 7039697.556923904
+        },
+        "activation_left_uncentered": {
+          "participation_ratio": 6.764686740808057,
+          "participation_ratio_sq": 3.554679083606302,
+          "stable_rank": 2.2363179489067297,
+          "n_singular_values": 32,
+          "max_singular_value": 2382.664932084406,
+          "frobenius_energy": 12695783.136567166
+        },
+        "activation_right_centered": {
+          "participation_ratio": 7.183576702240151,
+          "participation_ratio_sq": 3.6859375505172807,
+          "stable_rank": 2.6113090594523034,
+          "n_singular_values": 32,
+          "max_singular_value": 1490.7041629616633,
+          "frobenius_energy": 5802848.123316788
+        },
+        "activation_right_uncentered": {
+          "participation_ratio": 6.460151302346849,
+          "participation_ratio_sq": 2.8247988113238733,
+          "stable_rank": 1.8310339537174845,
+          "n_singular_values": 32,
+          "max_singular_value": 2633.186069464967,
+          "frobenius_energy": 12695783.13656717
+        },
+        "primary_measure": "activation_left_centered",
+        "primary_recruited": 6.771216327269493,
+        "discrimination": {
+          "recruited": 6.771216327269493,
+          "ratios": {
+            "minimal_faithful_real": 1.6928040818173733,
+            "tensor_rank_lower": 0.21160051022717166,
+            "regular_rep": 0.21160051022717166
+          },
+          "log_distance": {
+            "minimal_faithful_real": 0.5263863739604656,
+            "tensor_rank_lower": 1.5530551677193702,
+            "regular_rep": 1.5530551677193702
+          },
+          "closest": "minimal_faithful_real",
+          "closest_tie": [
+            "minimal_faithful_real"
+          ]
+        }
+      }
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123534_294049_core_9a3b24",
+      "seed": 43,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "13d9ea813a14e59c",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:27.066648+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123534_400223_core_52e9e0",
+      "seed": 44,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "828b82b7b1dbc561",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:27.076516+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123534_516324_core_7e3b9a",
+      "seed": 45,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "2008613360ac8df7",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:27.086983+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123534_618083_core_999f03",
+      "seed": 46,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "16a1533625a0bedf",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:27.097053+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123534_720441_core_227b51",
+      "seed": 47,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "76d277cabc55909a",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:27.106804+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123534_820583_core_f6015b",
+      "seed": 48,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "3b9d6d9c625e17b6",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:27.117323+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    },
+    {
+      "instrument": "recruited-dimension-driver",
+      "run_id": "2026-07-20_123534_939047_core_f19e8d",
+      "seed": 49,
+      "group": {
+        "order": 32,
+        "index": 19,
+        "name": "SmallGroup(32,19)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": null,
+        "epoch": null,
+        "metric_value": null,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": "stable_end: no checkpoint has a run.log row with val/accuracy >= 0.99 at its own epoch (a censored or never-stable run)"
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "76529b0927a3f7c6",
+        "config_group_hash": "f400e6eb76f91164",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "48816ff47d3e18da",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T11:17:27.128151+00:00",
+        "instrument_code_sha256": {
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "defc7b38dcbd9bb860673d83c11ca21783dca224936ff052a3d18d51a244dd62",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "227951e5f3738d4550028f006b81206f8c71143b99f5c8428374684f2482a78d",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "gcr_matmul.py": "c02a25239a56cd940076647131d3b121c1b391738883dcc151c984eba0373fef",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "924ff535f6cf1e075d8d1ed21e78f23577f1038ba966e4845150b7721adccc2a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "recruited_dimension.py": "53c11acc4f0b88adfd90a02338b102bcf4d535edfa71413af129fab11575d4ce",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "aedae435230b414cbe916697aa8a4afeaf038e93600532788b4951165f08830b",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        }
+      },
+      "status": "skipped"
+    }
+  ]
+}

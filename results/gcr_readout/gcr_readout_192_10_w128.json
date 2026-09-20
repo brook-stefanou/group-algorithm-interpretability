@@ -1,0 +1,890 @@
+{
+  "cell": {
+    "order": 192,
+    "index": 10,
+    "width": 128
+  },
+  "n_seeds_available": 50,
+  "max_seeds_per_cell": 3,
+  "summary": {
+    "order": 192,
+    "index": 10,
+    "width": 128,
+    "n_seeds_attempted": 3,
+    "n_measured": 3,
+    "n_skipped": 0,
+    "nested_comparison": {
+      "full_vs_fourier_held_out_fve_gain": {
+        "n": 3,
+        "mean": 0.1449026421613686,
+        "bootstrap_ci_95": [
+          0.07164420400732119,
+          0.23535834981443204
+        ],
+        "values": [
+          0.07164420400732119,
+          0.23535834981443204,
+          0.1277053726623526
+        ]
+      },
+      "full_held_out_fve": {
+        "n": 3,
+        "mean": 0.4248290666042462,
+        "bootstrap_ci_95": [
+          0.36369322823794903,
+          0.4762663068057413
+        ],
+        "values": [
+          0.36369322823794903,
+          0.4762663068057412,
+          0.43452766476904836
+        ]
+      },
+      "fourier_only_held_out_fve": {
+        "n": 3,
+        "mean": 0.2799264244428776,
+        "bootstrap_ci_95": [
+          0.24090795699130918,
+          0.30682229210669576
+        ],
+        "values": [
+          0.29204902423062784,
+          0.24090795699130918,
+          0.30682229210669576
+        ]
+      },
+      "n_undefined": 0
+    },
+    "minimal_irrep_set": {
+      "n_selected": {
+        "n": 3,
+        "mean": 5.333333333333333,
+        "bootstrap_ci_95": [
+          4.0,
+          7.0
+        ],
+        "values": [
+          5.0,
+          4.0,
+          7.0
+        ]
+      },
+      "most_common_selected_irrep_indices": [
+        1,
+        3,
+        14,
+        22,
+        32
+      ],
+      "most_common_count": 1,
+      "distinct_sets_observed": 3
+    },
+    "null": {
+      "full_null_held_out_fve": {
+        "n": 3,
+        "mean": -0.001276884701217229,
+        "bootstrap_ci_95": [
+          -0.0024662948680154173,
+          -0.0003199157579927281
+        ],
+        "values": [
+          -0.0010444434776435418,
+          -0.0003199157579927281,
+          -0.0024662948680154173
+        ]
+      },
+      "fourier_only_null_held_out_fve": {
+        "n": 3,
+        "mean": 4.745218680024532e-05,
+        "bootstrap_ci_95": [
+          -2.366123205721493e-05,
+          8.76239328649886e-05
+        ],
+        "values": [
+          7.83938595929623e-05,
+          -2.366123205721493e-05,
+          8.76239328649886e-05
+        ]
+      }
+    }
+  },
+  "runs": [
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_234259_660300_core_69db63",
+      "seed": 0,
+      "group": {
+        "order": 192,
+        "index": 10,
+        "name": "SmallGroup(192,10)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final_epoch_59999.pt",
+        "epoch": 59999,
+        "metric_value": 1.0,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": null
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "27b58e5dd6f0e2ee",
+        "config_group_hash": "346fea69636f5aa0",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "4bb8f8ed23b267d0",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T14:10:16.560815+00:00",
+        "instrument_code_sha256": {
+          ".___init__.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._checkpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._cocycle.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._device.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._endpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._fit_backend.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._gcr_matmul.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._interventions.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._nulls.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._occupancy.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._probes.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._publish.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._readout_characterisation.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._report.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._templates.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "2cb1c5c143edf7a46c6923f037a2221cd0847bb57c700656e02a6b24935217da",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "4abe50a8de1539e654aa2ad5412055f9fc3dba5275bbc985215ad56d67ef41cb",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "fit_backend.py": "98322b6e4b800821cce524dee94f1c9764f472bce2e1df5ec784443fe35b475d",
+          "gcr_matmul.py": "d0b9af9fadad56a5a8957dd3911422f9816576a66877a578d7a33afe06e3ae91",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "b0e756197741297ba6a29964744076f08eeb656c5f8c6eccbc64db84fb20a57a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "readout_characterisation.py": "2c84b25ff5d2187fd5101cc8aa059abd7a4c3a3429b115bc42d9601e7bdc2656",
+          "recruited_dimension.py": "e2f219b3de86633f5336ec28f5c1e0e5239b232a766a033eeb723848bbe30670",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "3161e524db021add2b563c7d98a908a88cbaf3105db91d4113a94265dbf0b11f",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "c2a6bc210f2afb118548c0076c602a2da2593007f3f68f7dcf6cd22b0b056fb9",
+        "group_artifact_path": "data/group_artifacts/smallgroup_192_10.npz",
+        "group_artifact_sha256": "5616f72eaabce7b20eb0a576677ca3b211345570aa32a7ba84fca69f504c0214"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "sampling": {
+          "row_sampling_applied": true,
+          "max_rows": 30000,
+          "sample_seed": 0,
+          "n_classes": 192,
+          "n_pairs_available": 36864,
+          "n_pairs_used": 156,
+          "n_design_rows_available": 7077888,
+          "n_design_rows_used": 29952
+        },
+        "n_candidate_irreps": 38,
+        "n_fourier_irreps": 7,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.07164420400732119,
+            "full_held_out_fve": 0.36369322823794903,
+            "fourier_only_held_out_fve": 0.29204902423062784
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 38,
+            "selected_irrep_indices": [
+              3,
+              1,
+              22,
+              14,
+              32
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              1,
+              2,
+              2,
+              2
+            ],
+            "n_selected": 5,
+            "held_out_fve_at_selection": 0.3519705262371261,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 3,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.18323403441602093,
+                "improvement": 0.18323403441602093,
+                "selected": true
+              },
+              {
+                "irrep_index": 1,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.2927975353408906,
+                "improvement": 0.10956350092486966,
+                "selected": true
+              },
+              {
+                "irrep_index": 22,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.32117611220682407,
+                "improvement": 0.02837857686593348,
+                "selected": true
+              },
+              {
+                "irrep_index": 14,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.33755950441131477,
+                "improvement": 0.0163833922044907,
+                "selected": true
+              },
+              {
+                "irrep_index": 32,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.3519705262371261,
+                "improvement": 0.014411021825811332,
+                "selected": true
+              },
+              {
+                "irrep_index": 8,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.35829369056245297,
+                "improvement": 0.006323164325326869,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.36369322823794903,
+          "saturated_lookup_ceiling_held_out_fve": 0.028050374896821495,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 0,
+          "n_fit_pairs": 109,
+          "n_held_out_pairs": 47,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 38,
+              "held_out_fve": 0.36369322823794903,
+              "null_held_out_fve": -0.0010444434776435418
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 7,
+              "held_out_fve": 0.29204902423062784,
+              "null_held_out_fve": 7.83938595929623e-05
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.028050374896821495,
+              "null_held_out_fve": 1.2887909380254747e-05
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.07164420400732119
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -0.0010444434776435418,
+          "fourier_only_null_held_out_fve": 7.83938595929623e-05
+        }
+      }
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_234259_789691_core_d05036",
+      "seed": 1,
+      "group": {
+        "order": 192,
+        "index": 10,
+        "name": "SmallGroup(192,10)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final_epoch_59999.pt",
+        "epoch": 59999,
+        "metric_value": 1.0,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": null
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "3742b4574d6865b9",
+        "config_group_hash": "346fea69636f5aa0",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "4bb8f8ed23b267d0",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T14:10:38.487370+00:00",
+        "instrument_code_sha256": {
+          ".___init__.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._checkpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._cocycle.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._device.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._endpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._fit_backend.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._gcr_matmul.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._interventions.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._nulls.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._occupancy.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._probes.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._publish.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._readout_characterisation.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._report.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._templates.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "2cb1c5c143edf7a46c6923f037a2221cd0847bb57c700656e02a6b24935217da",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "4abe50a8de1539e654aa2ad5412055f9fc3dba5275bbc985215ad56d67ef41cb",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "fit_backend.py": "98322b6e4b800821cce524dee94f1c9764f472bce2e1df5ec784443fe35b475d",
+          "gcr_matmul.py": "d0b9af9fadad56a5a8957dd3911422f9816576a66877a578d7a33afe06e3ae91",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "b0e756197741297ba6a29964744076f08eeb656c5f8c6eccbc64db84fb20a57a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "readout_characterisation.py": "2c84b25ff5d2187fd5101cc8aa059abd7a4c3a3429b115bc42d9601e7bdc2656",
+          "recruited_dimension.py": "e2f219b3de86633f5336ec28f5c1e0e5239b232a766a033eeb723848bbe30670",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "3161e524db021add2b563c7d98a908a88cbaf3105db91d4113a94265dbf0b11f",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "023449eeaae0ca0d356f83e9aa5aca76950810f6e52d612b4bdfae3ff522dc1c",
+        "group_artifact_path": "data/group_artifacts/smallgroup_192_10.npz",
+        "group_artifact_sha256": "5616f72eaabce7b20eb0a576677ca3b211345570aa32a7ba84fca69f504c0214"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "sampling": {
+          "row_sampling_applied": true,
+          "max_rows": 30000,
+          "sample_seed": 0,
+          "n_classes": 192,
+          "n_pairs_available": 36864,
+          "n_pairs_used": 156,
+          "n_design_rows_available": 7077888,
+          "n_design_rows_used": 29952
+        },
+        "n_candidate_irreps": 38,
+        "n_fourier_irreps": 7,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.23535834981443204,
+            "full_held_out_fve": 0.4762663068057412,
+            "fourier_only_held_out_fve": 0.24090795699130918
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 38,
+            "selected_irrep_indices": [
+              3,
+              22,
+              30,
+              14
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              2,
+              2,
+              2
+            ],
+            "n_selected": 4,
+            "held_out_fve_at_selection": 0.47649755219468415,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 3,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.2410425271414749,
+                "improvement": 0.2410425271414749,
+                "selected": true
+              },
+              {
+                "irrep_index": 22,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.3599090135387504,
+                "improvement": 0.11886648639727548,
+                "selected": true
+              },
+              {
+                "irrep_index": 30,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.4618114910157284,
+                "improvement": 0.101902477476978,
+                "selected": true
+              },
+              {
+                "irrep_index": 14,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.47649755219468415,
+                "improvement": 0.014686061178955767,
+                "selected": true
+              },
+              {
+                "irrep_index": 15,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.47652094383822474,
+                "improvement": 2.339164354059342e-05,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.4762663068057412,
+          "saturated_lookup_ceiling_held_out_fve": 0.03489483345559119,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 1,
+          "n_fit_pairs": 109,
+          "n_held_out_pairs": 47,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 38,
+              "held_out_fve": 0.4762663068057412,
+              "null_held_out_fve": -0.0003199157579927281
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 7,
+              "held_out_fve": 0.24090795699130918,
+              "null_held_out_fve": -2.366123205721493e-05
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.03489483345559119,
+              "null_held_out_fve": -2.1235022752419397e-05
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.23535834981443204
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -0.0003199157579927281,
+          "fourier_only_null_held_out_fve": -2.366123205721493e-05
+        }
+      }
+    },
+    {
+      "instrument": "gcr-character-readout-driver",
+      "run_id": "2026-07-20_234259_913642_core_8ca4be",
+      "seed": 2,
+      "group": {
+        "order": 192,
+        "index": 10,
+        "name": "SmallGroup(192,10)"
+      },
+      "model": {
+        "arch": "transformer",
+        "d_model": 128,
+        "d_mlp": 256,
+        "activation": "relu"
+      },
+      "checkpoint_selection": {
+        "rule": "final_window",
+        "metric": "val/accuracy",
+        "threshold": 0.99,
+        "checkpoint": "final_epoch_59999.pt",
+        "epoch": 59999,
+        "metric_value": 1.0,
+        "substitution": null,
+        "substitution_recorded": true,
+        "rejected": [],
+        "reason": null
+      },
+      "provenance": {
+        "git_commit": null,
+        "config_hash": "02b9dbc604caf014",
+        "config_group_hash": "346fea69636f5aa0",
+        "campaign_id": "20260720T123500Z-a40x8",
+        "dataset_spec_hash": "4bb8f8ed23b267d0",
+        "analysis_git_commit": null,
+        "analysed_at": "2026-09-20T14:10:44.872728+00:00",
+        "instrument_code_sha256": {
+          ".___init__.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._checkpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._cocycle.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._coset_quotient.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._device.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._endpoints.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._fit_backend.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._gcr_matmul.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._interventions.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._nulls.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._occupancy.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._probes.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._publish.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._readout_characterisation.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._recruited_dimension.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._report.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._template_divergence.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._templates.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "._used_set_audit.py": "0c00f2937ec8f8aa6ec5ffa56d3dc74195e2555e34a491769f93a18520adcdab",
+          "__init__.py": "c39935b740cc6c6f772fefbdcd20c51721d421c9d79e0f0c466f6d814adba2ec",
+          "audit.py": "2cb1c5c143edf7a46c6923f037a2221cd0847bb57c700656e02a6b24935217da",
+          "checkpoints.py": "6407965703f84bc3c1607fce3d969db3f760cc7c376b5c7cf8b06cf3529c8d46",
+          "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+          "coset.py": "bbb50f68cbb03203841a9aee25600d45574ce47801b83707d1272e888f1f987a",
+          "coset_quotient.py": "bdd014119b7d763666a51701371e5d55f33dddc2662e6af575fb6aaa61dac245",
+          "device.py": "4abe50a8de1539e654aa2ad5412055f9fc3dba5275bbc985215ad56d67ef41cb",
+          "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+          "fit_backend.py": "98322b6e4b800821cce524dee94f1c9764f472bce2e1df5ec784443fe35b475d",
+          "gcr_matmul.py": "d0b9af9fadad56a5a8957dd3911422f9816576a66877a578d7a33afe06e3ae91",
+          "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+          "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+          "occupancy.py": "c877007fcc803c473218909c99243bfdded83195714f3c1c0fd3bf2761dd1f02",
+          "probes.py": "b0e756197741297ba6a29964744076f08eeb656c5f8c6eccbc64db84fb20a57a",
+          "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+          "readout_characterisation.py": "2c84b25ff5d2187fd5101cc8aa059abd7a4c3a3429b115bc42d9601e7bdc2656",
+          "recruited_dimension.py": "e2f219b3de86633f5336ec28f5c1e0e5239b232a766a033eeb723848bbe30670",
+          "report.py": "89df7e2ff8d1f3fe713d4eb9b8ab487fe0a8df9d95a52d778239b2799f5c5b7a",
+          "template_divergence.py": "3161e524db021add2b563c7d98a908a88cbaf3105db91d4113a94265dbf0b11f",
+          "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c",
+          "used_set_audit.py": "2aeb10f26bbcc74e2a848b55e071b0d2a75e83aa252f191a59c3815c9b7a3064"
+        },
+        "checkpoint_sha256": "be922839012dca5ea80458d609186ea043628198df7691382d831ece446b9a9e",
+        "group_artifact_path": "data/group_artifacts/smallgroup_192_10.npz",
+        "group_artifact_sha256": "5616f72eaabce7b20eb0a576677ca3b211345570aa32a7ba84fca69f504c0214"
+      },
+      "status": "measured",
+      "gcr_readout": {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "sampling": {
+          "row_sampling_applied": true,
+          "max_rows": 30000,
+          "sample_seed": 0,
+          "n_classes": 192,
+          "n_pairs_available": 36864,
+          "n_pairs_used": 156,
+          "n_design_rows_available": 7077888,
+          "n_design_rows_used": 29952
+        },
+        "n_candidate_irreps": 38,
+        "n_fourier_irreps": 7,
+        "candidate_irrep_dimensions": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "primary": {
+          "nested_comparison": {
+            "full_vs_fourier_held_out_fve_gain": 0.1277053726623526,
+            "full_held_out_fve": 0.43452766476904836,
+            "fourier_only_held_out_fve": 0.30682229210669576
+          },
+          "minimal_irrep_set": {
+            "target_fve": 0.95,
+            "improvement_tol": 0.01,
+            "n_candidates": 38,
+            "selected_irrep_indices": [
+              2,
+              5,
+              1,
+              30,
+              14,
+              26,
+              8
+            ],
+            "selected_irrep_dimensions": [
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              2
+            ],
+            "n_selected": 7,
+            "held_out_fve_at_selection": 0.4309701014298898,
+            "reached_target": false,
+            "search_trace": [
+              {
+                "irrep_index": 2,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.10771145693602491,
+                "improvement": 0.10771145693602491,
+                "selected": true
+              },
+              {
+                "irrep_index": 5,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.2105655595892305,
+                "improvement": 0.1028541026532056,
+                "selected": true
+              },
+              {
+                "irrep_index": 1,
+                "irrep_dimension": 1,
+                "cumulative_held_out_fve": 0.3066928555079991,
+                "improvement": 0.09612729591876856,
+                "selected": true
+              },
+              {
+                "irrep_index": 30,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.35260978833035606,
+                "improvement": 0.04591693282235698,
+                "selected": true
+              },
+              {
+                "irrep_index": 14,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.39102178813192123,
+                "improvement": 0.03841199980156518,
+                "selected": true
+              },
+              {
+                "irrep_index": 26,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.41996599840531246,
+                "improvement": 0.028944210273391224,
+                "selected": true
+              },
+              {
+                "irrep_index": 8,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.4309701014298898,
+                "improvement": 0.011004103024577327,
+                "selected": true
+              },
+              {
+                "irrep_index": 15,
+                "irrep_dimension": 2,
+                "cumulative_held_out_fve": 0.4347459331472868,
+                "improvement": 0.003775831717397038,
+                "selected": false
+              }
+            ]
+          }
+        },
+        "secondary_raw_fve": {
+          "full_held_out_fve": 0.43452766476904836,
+          "saturated_lookup_ceiling_held_out_fve": 0.039390807814517426,
+          "note": "Raw FVE, including the saturated one-hot ceiling: informational only, never the reported evidence for GCR -- see the caveat."
+        },
+        "functional_form_fit": {
+          "instrument": "functional-form-fit",
+          "rung": 5,
+          "train_frac": 0.7,
+          "split_seed": 2,
+          "n_fit_pairs": 109,
+          "n_held_out_pairs": 47,
+          "forms": [
+            {
+              "name": "gcr_character_full",
+              "n_features": 38,
+              "held_out_fve": 0.43452766476904836,
+              "null_held_out_fve": -0.0024662948680154173
+            },
+            {
+              "name": "gcr_character_fourier_only",
+              "n_features": 7,
+              "held_out_fve": 0.30682229210669576,
+              "null_held_out_fve": 8.76239328649886e-05
+            },
+            {
+              "name": "saturated_lookup_ceiling",
+              "n_features": 1,
+              "held_out_fve": 0.039390807814517426,
+              "null_held_out_fve": -0.0001850846560642605
+            }
+          ],
+          "note": "Held-out FVE on (a, b) pairs never used to fit; nested forms are compared on held-out FVE, never an in-sample gain. Logits and design are class-axis mean-centred (softmax shift-invariance).",
+          "held_out_fve_gain": 0.1277053726623526
+        },
+        "caveat": "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high raw held-out FVE is consistent with any correct algorithm, not only GCR. The load-bearing statistics are primary.nested_comparison (full irrep set vs the Fourier-only/abelian rival, out of sample) and primary.minimal_irrep_set (the sparse subset a greedy search needs to reach target_fve), never secondary_raw_fve.",
+        "null": {
+          "full_null_held_out_fve": -0.0024662948680154173,
+          "fourier_only_null_held_out_fve": 8.76239328649886e-05
+        }
+      }
+    }
+  ]
+}
