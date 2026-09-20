@@ -1,0 +1,89 @@
+{
+  "instrument": "endpoints",
+  "run_id": "2026-07-20_152155_823626_core_cfdf0c",
+  "seed": 0,
+  "group": {
+    "order": 64,
+    "index": 74,
+    "name": "SmallGroup(64,74)"
+  },
+  "model": {
+    "arch": "transformer",
+    "d_model": 128,
+    "d_mlp": 256,
+    "activation": "relu"
+  },
+  "endpoint_metric": "val/unleaked_accuracy",
+  "endpoint_metric_is_fallback": false,
+  "leak_covariate": {
+    "transpose_leak_fraction": 0.2490842490842491,
+    "commuting_probability": 0.34375,
+    "train_frac": 0.8,
+    "leak_estimate_trainfrac_times_commuting": 0.275,
+    "realised_minus_estimate": -0.025915750915750935,
+    "test_size": 819,
+    "unleaked_test_size": 615,
+    "unleaked_empty": false,
+    "generalize_metric": "unleaked_accuracy"
+  },
+  "chance_accuracy": 0.015625,
+  "provenance": {
+    "git_commit": null,
+    "config_hash": "ae7aaf186fa6477c",
+    "config_group_hash": "ebd3cedd13aec50c",
+    "campaign_id": "20260720T123500Z-a40x8",
+    "dataset_spec_hash": "20f0a70503860a2e",
+    "analysis_git_commit": "baba7a2",
+    "analysed_at": "2026-07-24T04:44:03.438040+00:00",
+    "endpoint_code_sha256": {
+      "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+      "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+      "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+      "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+      "stats.py": "306c88b343d270d7862e244dcde5cd7f1835d8e9f1047972f38e1bf898f5d24d"
+    },
+    "checkpoint_sha256": "2cabeebd64a0d1c6980e6409bbc8b20f866072e585e737a7d413ccfadbb0ed91"
+  },
+  "note": "Estimation-first measurement vector (I-06): endpoint signals with provenance and no verdict label. Grok is the onset of a sustained run above the unleaked bar; a censored seed carries no epoch.",
+  "status": "measured",
+  "epochs_to_grok": {
+    "epoch": 4630,
+    "censored": false,
+    "ceiling": 60000,
+    "metric": "val/unleaked_accuracy",
+    "threshold": 0.99,
+    "sustain": 5,
+    "grok_value": 0.9902438521385193,
+    "n_evaluated_rows": 60000,
+    "max_epoch_recorded": 59999,
+    "reached_ceiling": true
+  },
+  "checkpoint_selection": {
+    "rule": "final_window",
+    "metric": "val/accuracy",
+    "threshold": 0.99,
+    "checkpoint": "final_epoch_59999.pt",
+    "epoch": 59999,
+    "metric_value": 1.0,
+    "substitution": null,
+    "substitution_recorded": true,
+    "rejected": [],
+    "reason": null,
+    "requested_metric": "val/unleaked_accuracy",
+    "requested_threshold": 0.99
+  },
+  "accuracy": {
+    "at_selected_checkpoint": {
+      "epoch": 59999,
+      "unleaked": 1.0,
+      "raw": 1.0,
+      "loss": 5.245785246188461e-07
+    },
+    "at_final_epoch": {
+      "epoch": 59999,
+      "unleaked": 1.0,
+      "raw": 1.0,
+      "loss": 5.245785246188461e-07
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "anomalies": [],
+  "categories": {
+    "first": {
+      "epoch": 0,
+      "filename": "step_0.pt",
+      "metric_key": null,
+      "metric_value": null
+    },
+    "intermediate": [
+      {
+        "epoch": 4600,
+        "filename": "step_4600.pt",
+        "metric_key": "val/accuracy",
+        "metric_value": 0.9914530515670776
+      }
+    ],
+    "last": {
+      "epoch": 59999,
+      "filename": "final.pt",
+      "metric_key": null,
+      "metric_value": null
+    },
+    "leaked_onset": {
+      "epoch": 4600,
+      "filename": "step_4600.pt",
+      "metric_key": "val/accuracy",
+      "metric_value": 0.9914530515670776
+    },
+    "stable_end": {
+      "epoch": 59999,
+      "filename": "final_epoch_59999.pt",
+      "metric_key": "val/accuracy",
+      "metric_value": 1.0
+    },
+    "unleaked_onset": {
+      "epoch": 4700,
+      "filename": "step_4700.pt",
+      "metric_key": "val/unleaked_accuracy",
+      "metric_value": 0.9934959411621094
+    }
+  },
+  "censored": false,
+  "interrupted": false,
+  "leaked_metric_key": "val/accuracy",
+  "run_id": "2026-07-20_152155_823626_core_cfdf0c",
+  "threshold": 0.99,
+  "unleaked_metric_key": "val/unleaked_accuracy"
+}

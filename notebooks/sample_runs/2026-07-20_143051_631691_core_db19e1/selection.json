@@ -1,0 +1,42 @@
+{
+  "anomalies": [],
+  "categories": {
+    "first": {
+      "epoch": 0,
+      "filename": "step_0.pt",
+      "metric_key": null,
+      "metric_value": null
+    },
+    "intermediate": [],
+    "last": {
+      "epoch": 59999,
+      "filename": "final.pt",
+      "metric_key": null,
+      "metric_value": null
+    },
+    "leaked_onset": {
+      "epoch": 11400,
+      "filename": "step_11400.pt",
+      "metric_key": "val/accuracy",
+      "metric_value": 0.9951160550117493
+    },
+    "stable_end": {
+      "epoch": 59999,
+      "filename": "final_epoch_59999.pt",
+      "metric_key": "val/accuracy",
+      "metric_value": 1.0
+    },
+    "unleaked_onset": {
+      "epoch": 11400,
+      "filename": "step_11400.pt",
+      "metric_key": "val/unleaked_accuracy",
+      "metric_value": 0.9931972622871399
+    }
+  },
+  "censored": false,
+  "interrupted": false,
+  "leaked_metric_key": "val/accuracy",
+  "run_id": "2026-07-20_143051_631691_core_db19e1",
+  "threshold": 0.99,
+  "unleaked_metric_key": "val/unleaked_accuracy"
+}

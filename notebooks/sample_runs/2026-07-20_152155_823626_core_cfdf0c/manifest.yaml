@@ -1,0 +1,60 @@
+run_id: 2026-07-20_152155_823626_core_cfdf0c
+status: completed
+created_at: '2026-07-20T15:21:55.837727+00:00'
+completed_at: '2026-07-20T17:24:11.157349+00:00'
+project_name: group-algorithm-interp
+experiment_name: core
+provenance:
+  git_commit: null
+  git_dirty: null
+  command: run_batch.py experiment=core data.group.order=64 data.group.index=74 model.d_model=128
+    --seeds 0:50
+  config_hash: ae7aaf186fa6477c
+  config_group_hash: ebd3cedd13aec50c
+  lockfile_hash: 8ec6b6caea2184929fc65ec6aef02c291bc49ea1f6dbe8e67e53602338d5c64a
+  python_version: 3.12.3
+  torch_version: 2.12.1+cu129
+  platform: Linux-6.8.0-65-generic-x86_64-with-glibc2.39
+  available_device: cuda
+  campaign_id: 20260720T123500Z-a40x8
+dataset:
+  name: SmallGroup(64,74)
+  spec_hash: 20f0a70503860a2e
+  train_frac: 0.8
+  split_seed: 0
+  leakage:
+    transpose_leak_fraction: 0.2490842490842491
+    commuting_probability: 0.34375
+    test_size: 819
+    unleaked_test_size: 615
+    unleaked_empty: false
+    generalize_metric: unleaked_accuracy
+    note: null
+tracking:
+  backend: wandb
+  mode: disabled
+  wandb_entity: null
+  wandb_project: group-algorithm-interp
+  wandb_run_id: null
+  wandb_url: null
+artifacts:
+  checkpoint_dir: runs/2026-07-20_152155_823626_core_cfdf0c/checkpoints
+  final_checkpoint: runs/2026-07-20_152155_823626_core_cfdf0c/checkpoints/final.pt
+  analysis_dir: runs/2026-07-20_152155_823626_core_cfdf0c/analysis
+summary:
+  completed_steps: 60000
+  best_metric: null
+  best_step: null
+  metrics:
+    train/loss: 1.605341850563491e-07
+    train/accuracy: 1.0
+    val/loss: 5.245785246188461e-07
+    val/accuracy: 1.0
+    val/unleaked_accuracy: 1.0
+    val/weight_norm: 36.59849166870117
+validation:
+  stance: exploratory
+  prediction: null
+  holdout: null
+  holdout_result: null
+warnings: []

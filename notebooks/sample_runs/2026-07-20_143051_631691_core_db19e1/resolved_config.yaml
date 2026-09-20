@@ -1,0 +1,63 @@
+project_name: group-algorithm-interp
+seed: 0
+deterministic: false
+device: auto
+allow_expensive: false
+model:
+  arch: transformer
+  d_model: 128
+  n_heads: 4
+  d_mlp: 256
+  use_mlp: true
+  activation: relu
+data:
+  group:
+    order: 64
+    index: 228
+  train_frac: 0.8
+  split_seed: 0
+optim:
+  lr: 0.001
+  lr_base_width: 64
+  scale_lr_with_width: false
+  lr_effective: 0.001
+  betas:
+  - 0.9
+  - 0.98
+  weight_decay: 1.0
+  epochs: 60000
+  log_every: 1
+  print_every: 1000
+  wandb_every: 100
+  stop_on_generalize: false
+  generalize_test_acc: 0.99
+  generalize_patience: 5
+snapshot:
+  enabled: true
+  log_dense_until: 1024
+  interval: 100
+  event_based: true
+  event_rel_drop: 0.1
+  save_final: true
+  final_window_epochs: 5
+  history_flush_epochs: 250
+logging:
+  backend: wandb
+  mode: disabled
+  project: group-algorithm-interp
+  entity: null
+  tags: []
+  notes: null
+  group: null
+  job_type: run
+  save_code: false
+  watch_model: false
+  watch_log_freq: 100
+  log_checkpoints: false
+experiment:
+  name: core
+eval:
+  max_steps_warn: 100000
+validation:
+  stance: exploratory
+  prediction: null

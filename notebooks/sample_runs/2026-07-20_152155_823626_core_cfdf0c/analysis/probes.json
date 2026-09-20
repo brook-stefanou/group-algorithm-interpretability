@@ -1,0 +1,144 @@
+{
+  "instrument": "mechanism-probes",
+  "run_id": "2026-07-20_152155_823626_core_cfdf0c",
+  "seed": 0,
+  "group": {
+    "order": 64,
+    "index": 74,
+    "name": "SmallGroup(64,74)"
+  },
+  "model": {
+    "arch": "transformer",
+    "d_model": 128,
+    "d_mlp": 256,
+    "activation": "relu"
+  },
+  "source": "embed",
+  "checkpoint_selection": {
+    "rule": "final_window",
+    "metric": "val/accuracy",
+    "threshold": 0.99,
+    "checkpoint": "final_epoch_59999.pt",
+    "epoch": 59999,
+    "metric_value": 1.0,
+    "substitution": null,
+    "substitution_recorded": true,
+    "rejected": [],
+    "reason": null
+  },
+  "provenance": {
+    "git_commit": null,
+    "config_hash": "ae7aaf186fa6477c",
+    "config_group_hash": "ebd3cedd13aec50c",
+    "campaign_id": "20260720T123500Z-a40x8",
+    "dataset_spec_hash": "20f0a70503860a2e",
+    "analysis_git_commit": "baba7a2",
+    "analysed_at": "2026-07-24T04:54:37.650989+00:00",
+    "instrument_code_sha256": {
+      "__init__.py": "918af93c1cf7dbab077be3cee034dd380c80a9dfc1dbba584da4686853bf1696",
+      "audit.py": "b573c18d67ea48e94691d945aa77e9266f4981a43005c10f2b237f74de08e06f",
+      "checkpoints.py": "9e44f673adf7041ada71f175389916a1db3244c9cf172e165781af46ae6892b2",
+      "cocycle.py": "ed74d8fb46988c5d28562095bae20190a22e1006187c44eaaec84d84fcc5895d",
+      "coset.py": "c214f4fde53fc8fb40bdba1682014bf0589adcaaf59302856392e5a36bcc04c7",
+      "endpoints.py": "3eda5c59b8447a66685d33dbb4367f4befd6e73bc247be22be00633cebf72918",
+      "interventions.py": "c36c6214762916bda33deb9ff53e0fac9bae3ccf9f680491b8486f750d2f76ab",
+      "nulls.py": "4a7b68393da8ee19671661e8d35ef36be3dfa654533eca0f1ba6f3eb35386b76",
+      "occupancy.py": "1427fc5032246d921fd8a0c9c86872ce76fbabb3ee525570a5f5ecbff3170cd1",
+      "probes.py": "8e12ee015a98993bb7aa44c3699efdf790c5e03eddd4ddc216879ca26af8bf51",
+      "publish.py": "4ea27cbe1468f2e970e91abc58b67cb25fe3efffd6c42ab9980845cb59e9fc91",
+      "report.py": "358e2fe24bb38228550cc6dc6a80ae1d06eb5eff6ce7277d5ee829cb3dfd91c5",
+      "templates.py": "f5413360b54d27d8f65e398dcc4fb5c56c8e256d77bb74b521e5da381726e15c"
+    },
+    "checkpoint_sha256": "2cabeebd64a0d1c6980e6409bbc8b20f866072e585e737a7d413ccfadbb0ed91",
+    "group_artifact_path": "data/group_artifacts/smallgroup_64_74.npz",
+    "group_artifact_sha256": "0602ec4e5457cc5a726333ed4ff162a96f88515b4376ae1aca25260699b56740"
+  },
+  "status": "measured",
+  "probes": {
+    "power_map": {
+      "instrument": "power-map-probe",
+      "target_theory": "T10",
+      "rung": 1,
+      "source": "embed",
+      "metric": "adjusted_balanced_accuracy",
+      "n_involutions": 15,
+      "probes": {
+        "element_order": {
+          "adjusted_balanced_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "chance_level": 0.5,
+          "n_classes": 2,
+          "n_splits": 5,
+          "class_counts": {
+            "2": 15,
+            "4": 48
+          }
+        },
+        "is_involution": {
+          "adjusted_balanced_accuracy": 0.9795918367346939,
+          "balanced_accuracy": 0.9897959183673469,
+          "chance_level": 0.5,
+          "n_classes": 2,
+          "n_splits": 5,
+          "class_counts": {
+            "0": 49,
+            "1": 15
+          }
+        },
+        "square_map": {
+          "adjusted_balanced_accuracy": 0.9062500000000001,
+          "balanced_accuracy": 0.925,
+          "chance_level": 0.2,
+          "n_classes": 5,
+          "n_splits": 5,
+          "class_counts": {
+            "0": 16,
+            "4": 24,
+            "19": 8,
+            "20": 8,
+            "41": 8
+          }
+        },
+        "cube_map": "UNDEFINED"
+      },
+      "note": "Chance-corrected (adjusted balanced accuracy): random init scores ~0, and the score is never compared raw across orders. Rung 1 -- decodable, not used; see involution_direction_ablation for the causal check."
+    },
+    "involution_ablation": {
+      "instrument": "involution-direction-ablation",
+      "target_theory": "T10",
+      "rung": 3,
+      "source": "embed",
+      "status": "measured",
+      "n_scored_pairs": 4096,
+      "baseline_correct": 4096,
+      "ablated_correct": 1892,
+      "involution_direction_drop_flips": 2204,
+      "random_direction_drop_flips": {
+        "mean": 0.0,
+        "per_control": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "note": "Effect size in flips (change in correctly-answered pairs). The involution-direction drop is read against the norm-matched random-direction control, not an absolute threshold."
+    },
+    "signed_cyclic": {
+      "instrument": "signed-cyclic",
+      "target_theory": "T12",
+      "status": "UNDEFINED",
+      "reason": "no split C_m : C_2 inversion structure: the (r, s) coordinate system does not exist on this group (the quaternionic / non-split member), so the signed-cyclic probe and fit are structurally undefined -- a success here would fit an artefact"
+    },
+    "carry_digit": {
+      "instrument": "carry-digit",
+      "target_theory": "T16",
+      "status": "UNDEFINED",
+      "reason": "no polycyclic (mixed-radix) coordinate system for this group"
+    }
+  }
+}
