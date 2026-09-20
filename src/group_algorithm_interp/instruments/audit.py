@@ -68,6 +68,48 @@ MeasureFn = Callable[[GroupModel, FiniteGroup], float]
 
 _ABLATION_MODES = ("zero", "mean", "resample")
 
+#: The accuracy-drop mean below/above which :func:`circuit_audit`'s
+#: completeness/minimality ``note`` reads "small"/"large" -- named and
+#: overridable rather than a literal so the label's basis is visible.
+#: Matches ``used_set_audit.SUFFICIENCY_RETENTION_FRACTION``'s implied 0.1
+#: drop bar (retention >= 0.9 <=> drop <= 0.1), kept as its own constant here
+#: since this module does not import that one.
+COMPLETENESS_DROP_SMALL_THRESHOLD = 0.1
+MINIMALITY_DROP_LARGE_THRESHOLD = 0.1
+
+
+def _completeness_note(mean_drop: float) -> str:
+    """The completeness ``note``, branched on the *actual* measured drop
+    rather than a static template -- a failing seed (a large drop) must read
+    as failing, not as a boilerplate "complete" regardless of the number."""
+    if not np.isfinite(mean_drop):
+        return f"accuracy drop is non-finite ({mean_drop}); completeness is undetermined"
+    if mean_drop <= COMPLETENESS_DROP_SMALL_THRESHOLD:
+        return (
+            f"small drop ({mean_drop:.4f} <= {COMPLETENESS_DROP_SMALL_THRESHOLD}): "
+            "ablating outside the circuit does not hurt (complete)"
+        )
+    return (
+        f"large drop ({mean_drop:.4f} > {COMPLETENESS_DROP_SMALL_THRESHOLD}): "
+        "ablating outside the circuit DOES hurt -- the circuit is NOT shown complete"
+    )
+
+
+def _minimality_note(mean_drop: float) -> str:
+    """The minimality ``note``, branched on the actual measured drop (see
+    :func:`_completeness_note`)."""
+    if not np.isfinite(mean_drop):
+        return f"accuracy drop is non-finite ({mean_drop}); minimality is undetermined"
+    if mean_drop >= MINIMALITY_DROP_LARGE_THRESHOLD:
+        return (
+            f"large drop ({mean_drop:.4f} >= {MINIMALITY_DROP_LARGE_THRESHOLD}): "
+            "ablating inside the circuit hurts (load-bearing)"
+        )
+    return (
+        f"small drop ({mean_drop:.4f} < {MINIMALITY_DROP_LARGE_THRESHOLD}): "
+        "ablating inside the circuit does NOT hurt -- not shown load-bearing"
+    )
+
 
 # ---------------------------------------------------------------------------
 # Held-out subset and per-forward component access
@@ -549,6 +591,9 @@ def circuit_audit(
     if checkpoint_path is not None:
         provenance["checkpoint_sha256"] = file_sha256(checkpoint_path)
 
+    completeness_drop_ci = _mean_ci(completeness_drop.tolist())
+    minimality_drop_ci = _mean_ci(minimality_drop.tolist())
+
     return AuditRecord(
         order=group.order,
         index=group.index,
@@ -559,12 +604,12 @@ def circuit_audit(
         seed=seed,
         baseline_accuracy=_mean_ci(baseline_correct.tolist()),
         completeness={
-            "accuracy_drop": _mean_ci(completeness_drop.tolist()),
-            "note": "small drop -> ablating outside the circuit does not hurt (complete)",
+            "accuracy_drop": completeness_drop_ci,
+            "note": _completeness_note(completeness_drop_ci["mean"]),
         },
         minimality={
-            "accuracy_drop": _mean_ci(minimality_drop.tolist()),
-            "note": "large drop -> ablating inside the circuit hurts (load-bearing)",
+            "accuracy_drop": minimality_drop_ci,
+            "note": _minimality_note(minimality_drop_ci["mean"]),
         },
         faithfulness={
             "kl_model_to_circuit": _mean_ci(faithfulness_kl.tolist()),

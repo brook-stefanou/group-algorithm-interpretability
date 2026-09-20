@@ -168,6 +168,48 @@ def test_ablation_modes_are_accepted(s3_transformer, mode):
     assert record.causal_scrubbing["accuracy_resample_outside"]["n"] == record.n_held_out
 
 
+def test_completeness_and_minimality_notes_reflect_the_measured_value(s3_transformer):
+    """The ``note`` strings must branch on the actual drop, not restate a fixed
+    template: a passing case (full-circuit completeness, drop == 0) reads
+    "small"/"complete", and a failing case (empty-circuit completeness,
+    ablating the whole learned MLP) reads "large"/NOT complete -- never the
+    other way around regardless of which case produced the number."""
+    model, group = s3_transformer
+
+    full = A.circuit_audit(model, group, inside_neurons=list(range(model.d_mlp)))
+    assert full.completeness["accuracy_drop"]["mean"] == pytest.approx(0.0)
+    assert "small drop" in full.completeness["note"]
+    assert "(complete)" in full.completeness["note"]
+
+    empty = A.circuit_audit(model, group, inside_neurons=[])
+    assert empty.completeness["accuracy_drop"]["mean"] > A.COMPLETENESS_DROP_SMALL_THRESHOLD
+    assert "large drop" in empty.completeness["note"]
+    assert "NOT shown complete" in empty.completeness["note"]
+
+    assert empty.minimality["accuracy_drop"]["mean"] == pytest.approx(0.0)
+    assert "small drop" in empty.minimality["note"]
+    assert "not shown load-bearing" in empty.minimality["note"]
+
+
+def test_completeness_note_hand_values_at_the_threshold():
+    """Exact boundary behaviour of the branching helpers, independent of any
+    trained model: at the threshold itself completeness reads "small" (<=)
+    and minimality reads "large" (>=) -- the two bars are not symmetric
+    accidentally, they are each written with their own named constant."""
+    small = A._completeness_note(A.COMPLETENESS_DROP_SMALL_THRESHOLD)
+    assert "small drop" in small and "(complete)" in small
+    large = A._completeness_note(A.COMPLETENESS_DROP_SMALL_THRESHOLD + 1e-6)
+    assert "large drop" in large and "NOT shown complete" in large
+
+    large_min = A._minimality_note(A.MINIMALITY_DROP_LARGE_THRESHOLD)
+    assert "large drop" in large_min and "load-bearing)" in large_min
+    small_min = A._minimality_note(A.MINIMALITY_DROP_LARGE_THRESHOLD - 1e-6)
+    assert "small drop" in small_min and "not shown load-bearing" in small_min
+
+    assert "non-finite" in A._completeness_note(float("nan"))
+    assert "non-finite" in A._minimality_note(float("nan"))
+
+
 def test_circuit_audit_validates_inputs(s3_transformer):
     model, group = s3_transformer
     with pytest.raises(ValueError, match="out of range"):
