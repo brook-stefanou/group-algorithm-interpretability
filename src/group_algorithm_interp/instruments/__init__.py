@@ -17,6 +17,12 @@ Modules:
 * ``templates`` -- core-free subgroup enumeration (I-12) and the
   ``Ind_H^G 1`` energy-template library (I-13), ``UNDEFINED`` where no
   nontrivial core-free subgroup exists.
+* ``template_divergence`` -- the GCR-vs-coset template-divergence instrument:
+  screens whether the coset target's isotypic support is non-degenerate
+  (``degeneracy_screen``) and, when it is, compares a model's occupancy
+  against the analytic null, the coset ``Ind_H^G 1`` template and the GCR
+  sparse-irrep template by total-variation distance (``compare_to_templates``),
+  ``UNDEFINED`` where the coset target is absent or degenerate.
 * ``report`` -- the record builders the ``scripts/measure_occupancy.py`` entry
   point drives: per-run measurement records with provenance, seed pooling, and
   the I-11 null-calibration gate.
@@ -34,7 +40,17 @@ Modules:
 * ``probes`` -- the mechanism arm (I-20/I-26/I-27/I-28, +I-28b): the generic
   functional-form fit, the polycyclic digit probe, the signed-cyclic probe and
   twisted-rule fit, and the power-map / element-order probe, driven by
-  ``scripts/measure_probes.py``.
+  ``scripts/measure_probes.py``. It also carries the GCR character-readout
+  functional form (``gcr_character_readout_instrument``), built on the I-20
+  harness: read-position logits as a sparse sum over occupied irreps of
+  ``Phi_rho(a, b, c) = Re tr(rho(a) rho(b) rho(c^-1))``, load-bearing on the
+  out-of-sample Fourier-only comparison and minimal irrep subset, never raw
+  FVE.
+* ``gcr_matmul`` -- the GCR matrix-product test: on each degree->=2 isotypic
+  block, fits the shared-index matrix-product model against a generic
+  bilinear alternative and the function-of-``ab`` ceiling on the neuron
+  activation grid (``fit_matmul_gcr``, ``screen_gcr_matmul``,
+  ``measure_gcr_matmul``), ``UNDEFINED`` on degree-1-dominated groups.
 * ``coset`` -- the coset arm and isotypic-block usage for the C2 case study
   (I-15/I-17/I-18/I-19), ``UNDEFINED`` by theorem where no nontrivial core-free
   subgroup exists, driven by ``scripts/measure_coset.py``.

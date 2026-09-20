@@ -557,6 +557,194 @@ def test_curated_checkpoint_named_but_missing_on_disk(tmp_path):
     assert selection.reason is not None and "not on disk" in selection.reason
 
 
+# ---------------------------------------------------------------------------
+# Weight-safe final.pt fallback for a pruned final_epoch_<ceiling-1>.pt pick
+# (curated runs re-downloaded pruned to a single final.pt, per the pod
+# recovery: the recorded pick and final.pt are provably the same in-memory
+# tensors when the recorded epoch is exactly optim.epochs - 1).
+# ---------------------------------------------------------------------------
+
+
+def test_pruned_final_epoch_at_ceiling_falls_back_to_final_pt(tmp_path):
+    """selections.stable_end names final_epoch_11.pt (epoch == optim.epochs -
+    1) but only final.pt survived the re-download: resolution substitutes
+    final.pt, keeps the recorded epoch/metric_value unchanged, and notes the
+    substitution in reason."""
+    run = tmp_path / "pruned-flat"
+    run.mkdir()
+    run_dir = _curated_run(run, selection=_selections_stable_end("final_epoch_11.pt"), epochs=12)
+    # _curated_run stubs the named filename; delete it and keep only final.pt,
+    # mirroring the re-downloaded curated layout.
+    (run_dir / "final_epoch_11.pt").unlink()
+    (run_dir / "final.pt").write_bytes(b"stub")
+    selection = select_checkpoint(run_dir)
+    assert selection.path is not None and selection.path.name == "final.pt"
+    assert selection.epoch == 11
+    assert selection.metric_value == 1.0
+    assert selection.substitution is None  # unchanged: the recorded pick was unsubstituted
+    assert selection.reason is not None
+    assert "final_epoch_11.pt" in selection.reason
+    assert "final.pt" in selection.reason
+
+
+def test_pruned_final_epoch_categories_shape_falls_back_to_final_pt(tmp_path):
+    """The same fallback through ship_runs.py's lighter categories-shape
+    entry, with substitution/rejected already recorded by the fixed hook."""
+    entry = {
+        "epoch": 11,
+        "metric_key": "val/accuracy",
+        "metric_value": 0.995,
+        "filename": "final_epoch_11.pt",
+        "substitution": None,
+        "rejected": [],
+    }
+    run = tmp_path / "pruned-cat"
+    run.mkdir()
+    run_dir = _curated_run(run, selection=_categories_stable_end(entry), epochs=12)
+    (run_dir / "final_epoch_11.pt").unlink()
+    (run_dir / "final.pt").write_bytes(b"stub")
+    selection = select_checkpoint(run_dir)
+    assert selection.path is not None and selection.path.name == "final.pt"
+    assert selection.epoch == 11
+    assert selection.metric_value == 0.995
+    assert selection.substitution is None
+    assert selection.substitution_recorded is True
+    assert selection.reason is not None and "final.pt" in selection.reason
+
+
+def test_final_epoch_at_ceiling_present_uses_it_directly_no_fallback(tmp_path):
+    """Negative control (c): when the named final_epoch file IS present, it is
+    used as before -- no behaviour change, no substitution noted."""
+    run = tmp_path / "present"
+    run.mkdir()
+    run_dir = _curated_run(run, selection=_selections_stable_end("final_epoch_11.pt"), epochs=12)
+    selection = select_checkpoint(run_dir)
+    assert selection.path is not None and selection.path.name == "final_epoch_11.pt"
+    assert selection.reason is None
+
+
+def test_step_checkpoint_absent_is_never_substituted(tmp_path):
+    """Negative control (a): a trajectory (step_*.pt) pick absent on disk is
+    still unresolved -- only final_epoch_<ceiling-1>.pt substitutes."""
+    run = tmp_path / "pruned-step"
+    run.mkdir()
+    selection = _selections_stable_end("step_8.pt")
+    selection["selections"]["stable_end"]["epoch"] = 8
+    run_dir = _curated_run(run, selection=selection, epochs=12)
+    (run_dir / "step_8.pt").unlink()
+    (run_dir / "final.pt").write_bytes(b"stub")
+    result = select_checkpoint(run_dir)
+    assert result.path is None
+    assert result.reason is not None and "not on disk" in result.reason
+
+
+def test_final_epoch_before_ceiling_absent_is_never_substituted(tmp_path):
+    """Negative control (b): final_epoch_<E>.pt with E != optim.epochs - 1
+    absent on disk is still unresolved even though final.pt exists."""
+    run = tmp_path / "pruned-early"
+    run.mkdir()
+    selection = _selections_stable_end("final_epoch_8.pt")
+    selection["selections"]["stable_end"]["epoch"] = 8
+    run_dir = _curated_run(run, selection=selection, epochs=12)
+    (run_dir / "final_epoch_8.pt").unlink()
+    (run_dir / "final.pt").write_bytes(b"stub")
+    result = select_checkpoint(run_dir)
+    assert result.path is None
+    assert result.reason is not None and "not on disk" in result.reason
+
+
+# ---------------------------------------------------------------------------
+# Same weight-safe final.pt fallback, but for the DIRECT recompute path (a
+# local-layout run dir -- nested checkpoints/, plain run.log, no
+# selection.json -- that never goes through selection_from_json at all).
+# ---------------------------------------------------------------------------
+
+
+def _local_run(
+    run_dir: Path,
+    *,
+    window: int,
+    epochs: int,
+    run_log: dict[int, float],
+    checkpoint_epochs: tuple[int, ...] = (),
+) -> Path:
+    """A minimal local-training-layout run dir: resolved config with
+    ``optim.epochs``/``snapshot.final_window_epochs``, a plain ``run.log``,
+    nested ``checkpoints/`` holding ``final.pt`` plus a stub
+    ``final_epoch_<E>.pt`` for each epoch in ``checkpoint_epochs``, and
+    deliberately NO ``selection.json`` (so ``select_checkpoint`` falls through
+    to the direct window-search recompute)."""
+    run_dir.mkdir(parents=True, exist_ok=True)
+    (run_dir / "resolved_config.yaml").write_text(
+        f"snapshot:\n  final_window_epochs: {window}\noptim:\n  epochs: {epochs}\n"
+    )
+    lines = [f"epoch {e} | {{'val/accuracy': {v}}}" for e, v in sorted(run_log.items())]
+    (run_dir / "run.log").write_text("\n".join(lines) + "\n")
+    checkpoints = run_dir / "checkpoints"
+    checkpoints.mkdir()
+    (checkpoints / "final.pt").write_bytes(b"stub")
+    for epoch in checkpoint_epochs:
+        (checkpoints / f"final_epoch_{epoch}.pt").write_bytes(b"stub")
+    return run_dir
+
+
+def test_local_layout_pruned_ceiling_epoch_falls_back_to_final_pt(tmp_path):
+    """Local-layout run (nested checkpoints/, plain run.log, no
+    selection.json) pruned down to just checkpoints/final.pt: the window rule
+    picks the ceiling epoch (11 == optim.epochs - 1), its final_epoch_11.pt is
+    absent, so resolution substitutes final.pt and records the substitution."""
+    run_dir = _local_run(
+        tmp_path / "local-pruned",
+        window=3,
+        epochs=12,
+        run_log={9: 0.995, 10: 0.995, 11: 0.995},
+        checkpoint_epochs=(),  # every final_epoch_*.pt pruned away
+    )
+    assert (run_dir / "selection.json").exists() is False
+    selection = select_checkpoint(run_dir)
+    assert selection.path is not None and selection.path.name == "final.pt"
+    assert selection.epoch == 11
+    assert selection.metric_value == 0.995
+    assert selection.substitution is None
+    assert selection.reason is not None
+    assert "final_epoch_11.pt" in selection.reason and "final.pt" in selection.reason
+
+
+def test_local_layout_dip_at_ceiling_earlier_epoch_absent_not_substituted(tmp_path):
+    """Negative control (a): the ceiling epoch (11) is dipped, so the dip rule
+    would pick an earlier window epoch (10) instead -- genuinely different
+    weights. That epoch's file is also absent, so it must NOT fall back to
+    final.pt; the run resolves to nothing (or a trajectory pick), never a
+    silent substitution of the wrong checkpoint."""
+    run_dir = _local_run(
+        tmp_path / "local-dip",
+        window=3,
+        epochs=12,
+        run_log={9: 0.995, 10: 0.995, 11: 0.5},  # epoch 11 dipped below threshold
+        checkpoint_epochs=(),  # 10 and 11 both pruned away; only final.pt survives
+    )
+    selection = select_checkpoint(run_dir)
+    assert selection.path is None or selection.path.name != "final.pt"
+    if selection.path is None:
+        assert selection.reason is not None
+
+
+def test_local_layout_ceiling_epoch_present_used_directly_no_fallback(tmp_path):
+    """Negative control (b): when final_epoch_11.pt (the ceiling epoch) IS
+    present on disk, it is used directly -- no substitution attempted."""
+    run_dir = _local_run(
+        tmp_path / "local-present",
+        window=3,
+        epochs=12,
+        run_log={9: 0.995, 10: 0.995, 11: 0.995},
+        checkpoint_epochs=(9, 10, 11),
+    )
+    selection = select_checkpoint(run_dir)
+    assert selection.path is not None and selection.path.name == "final_epoch_11.pt"
+    assert selection.substitution is None
+    assert selection.reason is None
+
+
 def test_selection_from_json_absent_returns_none(tmp_path):
     run = tmp_path / "plain"
     run.mkdir()

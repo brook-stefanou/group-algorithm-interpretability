@@ -43,6 +43,17 @@ The four instruments and where they are consumed:
   metric is chance-corrected balanced accuracy (adjusted so random = 0), never
   raw accuracy -- a raw score would encode the condition, a condition-dependent
   normaliser in a second guise.
+* **GCR character-readout** ``gcr_character_readout_instrument`` -- builds on
+  I-20's harness to test the Group Composition via Representations (GCR)
+  account's readout prediction: read-position logits as a sparse sum over
+  occupied irreps of ``Phi_rho(a, b, c) = Re tr(rho(a) rho(b) rho(c^-1))``.
+  ``Phi_rho`` is a class function of the single product ``a*b`` (for fixed
+  ``c``), so a high raw held-out FVE is consistent with *any* correct
+  algorithm, not only GCR, and proves nothing on its own -- the load-bearing
+  statistics are the out-of-sample nested comparison against a Fourier-only
+  (abelian, degree-1-irrep) rival and the minimal irrep subset a greedy search
+  needs, both under the record's ``primary`` key; raw FVE (including a
+  saturated one-hot lookup ceiling) is demoted to ``secondary_raw_fve``.
 
 Every element-level probe uses a parameter-free nearest-class-mean classifier
 under stratified cross-validation: it cannot overfit random high-dimensional
@@ -53,7 +64,7 @@ at chance (adjusted 0) as the mandatory rule-1 regression requires.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any, Callable, Sequence
 
 import numpy as np
 import torch
@@ -62,6 +73,7 @@ from sklearn.model_selection import StratifiedKFold
 
 from ..groups.group import FiniteGroup
 from ..model import GroupModel
+from .device import run_with_device_fallback
 from .interventions import ablate_direction, model_correct_mask
 from .occupancy import cayley_grid_tokens, neuron_activations
 
@@ -800,13 +812,34 @@ class FunctionalForm:
     design: np.ndarray
 
 
-def read_position_logits(model: GroupModel, order: int) -> np.ndarray:
+def read_position_logits(
+    model: GroupModel, order: int, *, device: torch.device = torch.device("cpu")
+) -> np.ndarray:
     """The model's read-position logits over the whole Cayley grid, shaped
-    ``[order, order, n_classes]`` (row ``(a, b)``)."""
+    ``[order, order, n_classes]`` (row ``(a, b)``).
+
+    ``device`` runs the forward pass there in the model's native dtype
+    (float32); the logits returned are cast to CPU float64 exactly as before,
+    so the fits this feeds are unaffected in precision. The model is moved to
+    ``device`` for the duration of this call and always restored to CPU on
+    return. An MPS op gap falls back to CPU automatically, logged as a
+    ``RuntimeWarning`` (see :func:`.device.run_with_device_fallback`)."""
     tokens = cayley_grid_tokens(order)
     model.eval()
-    with torch.no_grad():
-        logits = model(tokens)[:, -1, :].to(torch.float64).cpu().numpy()
+
+    def _compute(dev: torch.device) -> np.ndarray:
+        moved = dev.type != "cpu"
+        if moved:
+            model.to(dev)
+        try:
+            with torch.no_grad():
+                logits = model(tokens.to(dev))[:, -1, :].detach().cpu().to(torch.float64).numpy()
+            return logits
+        finally:
+            if moved:
+                model.to(torch.device("cpu"))
+
+    logits, _note = run_with_device_fallback(_compute, device)
     _assert_finite(logits, "read_position_logits")
     return logits.reshape(order, order, -1)
 
@@ -866,6 +899,7 @@ def functional_form_fit(
     train_frac: float = 0.7,
     seed: int = 0,
     null_model: GroupModel | None = None,
+    device: torch.device = torch.device("cpu"),
 ) -> dict[str, Any]:
     """I-20: regress the model's logits onto each candidate closed-form rule and
     report held-out FVE, with a nested comparison and an untrained-model null.
@@ -877,14 +911,19 @@ def functional_form_fit(
     When ``null_model`` (a random-init model of the same shape) is supplied its
     held-out FVE is reported alongside and must be ~0 -- the rule-1 regression.
 
+    ``device`` runs both models' read-position forward passes there (see
+    :func:`read_position_logits`); the fit itself is unaffected in precision.
+
     Gates every rung-5 claim; consumed by C1 [D32], C3, C5 and I-27's twisted-
     rule fit. Rung 5 only when connected to circuit or causal evidence.
     """
-    logits = read_position_logits(model, order)
+    logits = read_position_logits(model, order, device=device)
     # Computed once, not per form: the null model's logits do not depend on
     # the form being scored, so recomputing them inside the loop was a
     # wasted forward pass per form for no different result.
-    null_logits = read_position_logits(null_model, order) if null_model is not None else None
+    null_logits = (
+        read_position_logits(null_model, order, device=device) if null_model is not None else None
+    )
     fit_pairs, test_pairs = pair_split(order, train_frac=train_frac, seed=seed)
     per_form: list[dict[str, Any]] = []
     for form in forms:
@@ -1123,6 +1162,317 @@ def carry_digit_instrument(
     }
 
 
+# ---------------------------------------------------------------------------
+# GCR character-readout functional form: the readout prediction of the Group
+# Composition via Representations account, built on I-20's harness.
+# ---------------------------------------------------------------------------
+
+
+def _is_trivial_irrep(irrep: Any) -> bool:
+    """The trivial irrep: degree 1, character identically 1."""
+    return int(irrep.dimension) == 1 and bool(np.allclose(irrep.character, 1.0))
+
+
+def gcr_candidate_irreps(group: FiniteGroup, *, include_trivial: bool = False) -> list[int]:
+    """Indices into ``group.irreps`` of the GCR readout's candidate irreps:
+    every nontrivial irrep by default. ``include_trivial=True`` adds the
+    trivial irrep back (its ``Phi_rho`` column is the constant ``1``, which the
+    fit's class-axis mean-centring removes anyway -- useful mainly to confirm
+    it contributes nothing beyond that null column)."""
+    return [
+        i for i, irrep in enumerate(group.irreps) if include_trivial or not _is_trivial_irrep(irrep)
+    ]
+
+
+def gcr_fourier_only_irreps(group: FiniteGroup) -> list[int]:
+    """The nontrivial one-dimensional (abelian-character) irreps: the
+    "Fourier-only" rival to the full GCR irrep set. Every column this produces
+    is also a column the full candidate set produces (a genuinely nested
+    restriction, :class:`FunctionalForm`'s sense), so comparing the full set
+    against it isolates what the matrix (degree >= 2) irreps buy over the
+    group's abelianisation alone -- :func:`gcr_character_readout_instrument`'s
+    primary, out-of-sample statistic."""
+    return [i for i in gcr_candidate_irreps(group) if int(group.irreps[i].dimension) == 1]
+
+
+def gcr_character_design(group: FiniteGroup, irrep_indices: Sequence[int]) -> np.ndarray:
+    """The GCR readout's design matrix over a chosen irrep set: shape
+    ``[order, order, order, len(irrep_indices)]``, column ``k`` at ``(a, b,
+    c)`` equal to ``Phi_rho(a, b, c) = Re tr(rho(a) rho(b) rho(c^-1))`` for
+    ``rho = group.irreps[irrep_indices[k]]``. Full irrep matrices come
+    straight from the Sage/GAP artifact (``IrrepData.matrices``, ``[order,
+    degree, degree]`` complex128, ``groups/data.py``); ``rho(c^-1)`` is read
+    off by indexing the matrices with the Cayley-table inverse map.
+
+    CAVEAT -- load-bearing, read before treating a fit against this design
+    matrix as evidence (see :func:`gcr_character_readout_instrument` for the
+    full statement): ``tr(rho(a) rho(b) rho(c^-1)) = tr(rho(a*b) rho(c^-1))``
+    is fixed once the product ``a*b`` and ``c`` are fixed -- it does not
+    depend on ``a`` and ``b`` separately. Any algorithm that computes the
+    group product correctly therefore produces logits whose *information
+    content* this design matrix can represent, so a high raw (held-out) FVE
+    from it is consistent with every correct algorithm, not only GCR, and is
+    not by itself evidence for GCR specifically.
+    """
+    table = group.cayley_table
+    order = int(table.shape[0])
+    e = identity_index(table)
+    inv = inverses(table, e)
+    irrep_indices = list(irrep_indices)
+    design = np.empty((order, order, order, len(irrep_indices)), dtype=np.float64)
+    for k, idx in enumerate(irrep_indices):
+        matrices = group.irreps[idx].matrices  # [order, d, d] complex128: rho(g)
+        matrices_inv = matrices[inv]  # rho(c^-1), indexed directly by c
+        # ab[a, b]_{ik} = sum_j rho(a)_{ij} rho(b)_{jk} = (rho(a) @ rho(b))_{ik}.
+        ab = np.einsum("aij,bjk->abik", matrices, matrices)
+        # phi[a, b, c] = sum_{i,k} ab[a, b]_{ik} * rho(c^-1)_{ki} = trace(rho(a) rho(b) rho(c^-1)).
+        phi = np.einsum("abik,cki->abc", ab, matrices_inv)
+        design[:, :, :, k] = phi.real
+    return design
+
+
+def gcr_character_form(
+    group: FiniteGroup,
+    irrep_indices: Sequence[int] | None = None,
+    *,
+    name: str | None = None,
+) -> FunctionalForm:
+    """A :class:`FunctionalForm` whose design is the GCR character readout
+    (:func:`gcr_character_design`) over ``irrep_indices`` (every nontrivial
+    irrep by default, :func:`gcr_candidate_irreps`). Passing a specified
+    sparse subset is what lets the minimal-key-irrep-set search in
+    :func:`gcr_character_readout_instrument` score any candidate subset with
+    the same nested-safe held-out machinery as the full fit."""
+    resolved_indices = gcr_candidate_irreps(group) if irrep_indices is None else list(irrep_indices)
+    design = gcr_character_design(group, resolved_indices)
+    if name is None:
+        dims = ",".join(str(group.irreps[i].dimension) for i in resolved_indices)
+        name = f"gcr_character[{dims}]"
+    return FunctionalForm(name=name, design=design)
+
+
+def _saturated_lookup_form(group: FiniteGroup, name: str) -> FunctionalForm:
+    """A saturated one-hot lookup of the true product ``a*b`` -- the accuracy
+    ceiling any correct model's logits approach regardless of mechanism.
+    Reported only as secondary context (:func:`gcr_character_readout_instrument`):
+    this ceiling is not GCR-specific either, it is the accuracy ceiling itself,
+    the same construction as :func:`_signed_cyclic_forms`'s full rule."""
+    table = group.cayley_table
+    order = int(table.shape[0])
+    design = np.zeros((order, order, order, 1), dtype=np.float64)
+    for a in range(order):
+        for b in range(order):
+            design[a, b, int(table[a, b]), 0] = 1.0
+    return FunctionalForm(name=name, design=design)
+
+
+def _greedy_minimal_irrep_search(
+    group: FiniteGroup,
+    logits: np.ndarray,
+    fit_pairs: np.ndarray,
+    test_pairs: np.ndarray,
+    *,
+    target_fve: float,
+    improvement_tol: float,
+) -> dict[str, Any]:
+    """Greedy forward selection over the candidate nontrivial irreps -- the
+    MINIMAL-irrep-set statistic :func:`gcr_character_readout_instrument` leads
+    with, since raw full-set FVE cannot discriminate GCR from any other
+    correct algorithm. At each step, add whichever remaining irrep raises the
+    cumulative design's held-out FVE (:func:`_held_out_fve`, reused directly,
+    not reimplemented) the most; stop once ``target_fve`` is reached, or the
+    best available step improves held-out FVE by less than
+    ``improvement_tol`` (once at least one irrep is already selected -- the
+    first pick is always taken, so an empty selection is never reported for a
+    nondegenerate search). A small selected set reaching high held-out FVE is
+    a specific, falsifiable GCR prediction (sparse occupancy); the search
+    trace records every step considered, selected or not.
+    """
+    remaining = gcr_candidate_irreps(group)
+    selected: list[int] = []
+    trace: list[dict[str, Any]] = []
+    best_fve = 0.0
+    while remaining:
+        scored = [
+            (
+                _held_out_fve(
+                    logits,
+                    gcr_character_design(group, [*selected, idx]),
+                    fit_pairs,
+                    test_pairs,
+                ),
+                idx,
+            )
+            for idx in remaining
+        ]
+        scored.sort(key=lambda pair: pair[0], reverse=True)
+        step_fve, step_idx = scored[0]
+        improvement = step_fve - best_fve
+        accept = not selected or improvement >= improvement_tol
+        trace.append(
+            {
+                "irrep_index": int(step_idx),
+                "irrep_dimension": int(group.irreps[step_idx].dimension),
+                "cumulative_held_out_fve": float(step_fve),
+                "improvement": float(improvement),
+                "selected": bool(accept),
+            }
+        )
+        if not accept:
+            break
+        selected.append(step_idx)
+        remaining.remove(step_idx)
+        best_fve = step_fve
+        if best_fve >= target_fve:
+            break
+    return {
+        "target_fve": float(target_fve),
+        "improvement_tol": float(improvement_tol),
+        "n_candidates": len(gcr_candidate_irreps(group)),
+        "selected_irrep_indices": [int(i) for i in selected],
+        "selected_irrep_dimensions": [int(group.irreps[i].dimension) for i in selected],
+        "n_selected": len(selected),
+        "held_out_fve_at_selection": float(best_fve),
+        "reached_target": bool(best_fve >= target_fve),
+        "search_trace": trace,
+    }
+
+
+def gcr_character_readout_instrument(
+    model: GroupModel,
+    group: FiniteGroup,
+    *,
+    train_frac: float = 0.7,
+    seed: int = 0,
+    null_model: GroupModel | None = None,
+    target_fve: float = 0.95,
+    improvement_tol: float = 0.01,
+    device: torch.device = torch.device("cpu"),
+) -> dict[str, Any]:
+    """The GCR character-readout functional form: tests the Group Composition
+    via Representations account's readout prediction that a model's
+    read-position logits are a sparse sum over occupied irreps of
+    ``Phi_rho(a, b, c) = Re tr(rho(a) rho(b) rho(c^-1))``
+    (:func:`gcr_character_design`).
+
+    CAVEAT -- READ BEFORE CITING RAW FVE (the overclaim this instrument is
+    built to avoid): ``Phi_rho`` is a class function of the single product
+    ``a*b`` once ``c`` is fixed, so a high raw held-out FVE from the full
+    irrep set is consistent with ANY correct algorithm, not only GCR -- it
+    proves nothing about GCR specifically on its own. This instrument's
+    load-bearing, reported statistics are therefore, under ``primary``:
+
+    * ``nested_comparison`` -- the out-of-sample nested comparison (I-20) of
+      the full candidate irrep set against the Fourier-only (abelian,
+      degree-1-irrep) rival (:func:`gcr_fourier_only_irreps`, a genuine subset
+      of the full set's columns): does the full set beat the abelian
+      restriction out of sample, and by how much (``full_vs_fourier_held_out_fve_gain``).
+    * ``minimal_irrep_set`` -- the minimal irrep subset a greedy forward
+      search (:func:`_greedy_minimal_irrep_search`) needs to reach
+      ``target_fve``: a small selected set is the specific, falsifiable GCR
+      prediction (sparse occupancy) that raw full-set FVE cannot distinguish
+      from any other correct algorithm.
+
+    Raw held-out FVE -- including a saturated one-hot lookup ceiling (the
+    accuracy ceiling any correct model's logits approach, GCR-specific or not)
+    -- is reported only as secondary context, under ``secondary_raw_fve``,
+    never as the headline number.
+
+    Reuses I-20's nested-safe held-out machinery throughout:
+    :func:`functional_form_fit` for the primary nested comparison (with the
+    same untrained-model-null convention when ``null_model`` is supplied), and
+    :func:`_held_out_fve` directly, not reimplemented, for the minimal-set
+    search. When the group is perfect (no nontrivial one-dimensional irrep --
+    no Fourier-only rival exists), ``primary.nested_comparison`` comes back
+    ``UNDEFINED`` rather than compared against an empty design; the
+    minimal-set search and secondary raw FVE are unaffected.
+    """
+    order = group.order
+    full_irreps = gcr_candidate_irreps(group)
+    fourier_irreps = gcr_fourier_only_irreps(group)
+
+    full_form = gcr_character_form(group, full_irreps, name="gcr_character_full")
+    ceiling_form = _saturated_lookup_form(group, name="saturated_lookup_ceiling")
+    forms = [full_form]
+    if fourier_irreps:
+        forms.append(gcr_character_form(group, fourier_irreps, name="gcr_character_fourier_only"))
+    forms.append(ceiling_form)
+
+    fit = functional_form_fit(
+        model, order, forms, train_frac=train_frac, seed=seed, null_model=null_model, device=device
+    )
+    fve_by_name = {entry["name"]: entry["held_out_fve"] for entry in fit["forms"]}
+    null_fve_by_name = (
+        {entry["name"]: entry.get("null_held_out_fve") for entry in fit["forms"]}
+        if null_model is not None
+        else None
+    )
+
+    if fourier_irreps:
+        nested_comparison: dict[str, Any] = {
+            "full_vs_fourier_held_out_fve_gain": fit["held_out_fve_gain"],
+            "full_held_out_fve": fve_by_name["gcr_character_full"],
+            "fourier_only_held_out_fve": fve_by_name["gcr_character_fourier_only"],
+        }
+    else:
+        nested_comparison = {
+            "status": UNDEFINED,
+            "reason": (
+                "group has no nontrivial one-dimensional irrep (perfect group): "
+                "no Fourier-only rival exists to compare against"
+            ),
+            "full_held_out_fve": fve_by_name["gcr_character_full"],
+        }
+
+    logits = read_position_logits(model, order, device=device)
+    fit_pairs, test_pairs = pair_split(order, train_frac=train_frac, seed=seed)
+    minimal_set = _greedy_minimal_irrep_search(
+        group,
+        logits,
+        fit_pairs,
+        test_pairs,
+        target_fve=target_fve,
+        improvement_tol=improvement_tol,
+    )
+
+    record: dict[str, Any] = {
+        "instrument": "gcr-character-readout",
+        "target_theory": "GCR",
+        "rung": 5,
+        "status": "measured",
+        "n_candidate_irreps": len(full_irreps),
+        "n_fourier_irreps": len(fourier_irreps),
+        "candidate_irrep_dimensions": [int(group.irreps[i].dimension) for i in full_irreps],
+        "primary": {
+            "nested_comparison": nested_comparison,
+            "minimal_irrep_set": minimal_set,
+        },
+        "secondary_raw_fve": {
+            "full_held_out_fve": fve_by_name["gcr_character_full"],
+            "saturated_lookup_ceiling_held_out_fve": fve_by_name["saturated_lookup_ceiling"],
+            "note": (
+                "Raw FVE, including the saturated one-hot ceiling: informational "
+                "only, never the reported evidence for GCR -- see the caveat."
+            ),
+        },
+        "functional_form_fit": fit,
+        "caveat": (
+            "Phi_rho(a, b, c) is a class function of a*b (for fixed c), so a high "
+            "raw held-out FVE is consistent with any correct algorithm, not only "
+            "GCR. The load-bearing statistics are primary.nested_comparison (full "
+            "irrep set vs the Fourier-only/abelian rival, out of sample) and "
+            "primary.minimal_irrep_set (the sparse subset a greedy search needs "
+            "to reach target_fve), never secondary_raw_fve."
+        ),
+    }
+    if null_fve_by_name is not None:
+        record["null"] = {
+            "full_null_held_out_fve": null_fve_by_name.get("gcr_character_full"),
+            "fourier_only_null_held_out_fve": null_fve_by_name.get("gcr_character_fourier_only"),
+        }
+    return record
+
+
 def effective_rank(matrix: np.ndarray) -> float:
     """The participation-ratio effective rank of a matrix's singular spectrum,
     ``(sum sigma)^2 / sum sigma^2`` -- a smooth stand-in for the rank of the
@@ -1148,6 +1498,11 @@ __all__ = [
     "element_orders",
     "embedding_features",
     "functional_form_fit",
+    "gcr_candidate_irreps",
+    "gcr_character_design",
+    "gcr_character_form",
+    "gcr_character_readout_instrument",
+    "gcr_fourier_only_irreps",
     "identity_index",
     "inverses",
     "involution_direction_ablation",

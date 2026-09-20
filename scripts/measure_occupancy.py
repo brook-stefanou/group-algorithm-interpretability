@@ -60,6 +60,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from group_algorithm_interp.instruments.device import resolve_device  # noqa: E402
 from group_algorithm_interp.instruments.publish import (  # noqa: E402
     publish_records,
     publish_skip_reason,
@@ -118,10 +119,13 @@ def _write_json(path: Path, payload: object) -> None:
 def _cmd_measure(args: argparse.Namespace) -> int:
     if args.artifacts_dir is not None:
         os.environ["GROUP_ARTIFACTS_DIR"] = str(args.artifacts_dir)
+    device = resolve_device(args.device)
     records = []
     n_skipped = 0
     for run_dir in args.run_dirs:
-        record = measure_run(Path(run_dir), metric=args.metric, threshold=args.threshold)
+        record = measure_run(
+            Path(run_dir), metric=args.metric, threshold=args.threshold, device=device
+        )
         records.append(record)
         _write_json(Path(run_dir) / "analysis" / "occupancy.json", record)
         if record["status"] == "measured":
@@ -209,6 +213,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     measure.add_argument(
         "--artifacts-dir", default=None, help="override the group-artifact directory"
+    )
+    measure.add_argument(
+        "--device",
+        default="auto",
+        choices=["auto", "mps", "cpu"],
+        help="device for the I-08 neuron-activation forward pass; 'auto' is MPS when "
+        "available, else CPU (default: auto). The occupancy analysis always stays "
+        "CPU float64.",
     )
     measure.set_defaults(func=_cmd_measure)
 

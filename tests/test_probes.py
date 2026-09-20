@@ -435,9 +435,9 @@ def test_functional_form_fit_computes_null_logits_once_not_per_form(monkeypatch)
     calls = []
     real_read_position_logits = P.read_position_logits
 
-    def _counting_read_position_logits(m, order):
+    def _counting_read_position_logits(m, order, **kwargs):
         calls.append(m)
-        return real_read_position_logits(m, order)
+        return real_read_position_logits(m, order, **kwargs)
 
     monkeypatch.setattr(P, "read_position_logits", _counting_read_position_logits)
     P.functional_form_fit(model, group.order, forms, null_model=null_model, seed=0)
@@ -501,6 +501,140 @@ def test_read_position_logits_rejects_nan_logits():
     model = _FakeModel(grid)
     with pytest.raises(ValueError, match="non-finite"):
         P.read_position_logits(model, order)
+
+
+# ---------------------------------------------------------------------------
+# GCR character-readout functional form
+# ---------------------------------------------------------------------------
+
+
+def test_gcr_candidate_and_fourier_irreps_on_s3():
+    """S3 has three irreps: trivial, the sign (1-D, nontrivial), and the
+    standard 2-D representation. The candidate set excludes only the trivial
+    irrep; the Fourier-only set is exactly the sign representation."""
+    group = resolve_group("S3")
+    candidates = P.gcr_candidate_irreps(group)
+    fourier = P.gcr_fourier_only_irreps(group)
+    assert sorted(group.irreps[i].dimension for i in candidates) == [1, 2]
+    assert [group.irreps[i].dimension for i in fourier] == [1]
+    trivial = next(i for i in range(len(group.irreps)) if i not in candidates)
+    assert np.allclose(group.irreps[trivial].character, 1.0)
+    # include_trivial=True adds it back.
+    assert trivial in P.gcr_candidate_irreps(group, include_trivial=True)
+
+
+def test_gcr_character_design_matches_direct_trace_computation():
+    """The design column is exactly Re tr(rho(a) rho(b) rho(c^-1)), computed
+    directly from the artifact's irrep matrices -- not merely self-consistent
+    with the vectorised implementation."""
+    group = resolve_group("S3")
+    std_idx = next(i for i in P.gcr_candidate_irreps(group) if group.irreps[i].dimension == 2)
+    design = P.gcr_character_design(group, [std_idx])
+    matrices = group.irreps[std_idx].matrices
+    table = group.cayley_table
+    inv = P.inverses(table, P.identity_index(table))
+    for a, b, c in [(2, 4, 5), (0, 1, 2), (5, 5, 0)]:
+        expected = np.trace(matrices[a] @ matrices[b] @ matrices[int(inv[c])]).real
+        assert design[a, b, c, 0] == pytest.approx(expected)
+
+
+def _sparse_gcr_target(
+    group, irrep_indices: list[int], coeffs: list[float], *, noise_scale: float = 0.0, seed: int = 0
+) -> np.ndarray:
+    design = P.gcr_character_design(group, irrep_indices)
+    logits = (design * np.asarray(coeffs)).sum(axis=-1)
+    if noise_scale:
+        logits = logits + np.random.default_rng(seed).normal(scale=noise_scale, size=logits.shape)
+    return logits
+
+
+def test_gcr_character_readout_recovers_a_sparse_two_dimensional_irrep_target():
+    """Positive control + discrimination: logits that ARE the GCR readout of
+    the 2-D standard irrep alone (plus small noise). The full irrep set
+    recovers them out of sample; the Fourier-only (1-D, abelian) rival --
+    the deliberately mismatched form -- does not, so the nested comparison
+    shows a large gap; and the minimal-set search identifies exactly the
+    true 2-D irrep, not the full candidate set."""
+    group = resolve_group("S3")
+    candidates = P.gcr_candidate_irreps(group)
+    std_idx = next(i for i in candidates if group.irreps[i].dimension == 2)
+    logits = _sparse_gcr_target(group, [std_idx], [1.0], noise_scale=0.01, seed=0)
+    model = _FakeModel(logits)
+    record = P.gcr_character_readout_instrument(model, group, seed=0)
+
+    nested = record["primary"]["nested_comparison"]
+    assert nested["full_held_out_fve"] > 0.9
+    assert nested["fourier_only_held_out_fve"] < 0.6
+    assert nested["full_vs_fourier_held_out_fve_gain"] > 0.3
+
+    minimal = record["primary"]["minimal_irrep_set"]
+    assert minimal["selected_irrep_indices"] == [std_idx]
+    assert minimal["reached_target"]
+
+    # Raw FVE is present but demoted -- never the sole headline statistic.
+    assert "secondary_raw_fve" in record
+    assert "class function" in record["caveat"]
+
+
+def test_gcr_character_readout_recovers_a_two_irrep_sum():
+    """Positive control on a sparse sum of TWO irreps (sign + standard), as
+    the GCR readout prediction allows ('a sparse sum over occupied irreps').
+    Since S3 has only these two nontrivial irreps, the minimal set found is
+    the full candidate set -- both are needed, neither is spurious."""
+    group = resolve_group("S3")
+    candidates = P.gcr_candidate_irreps(group)
+    sign_idx = next(i for i in candidates if group.irreps[i].dimension == 1)
+    std_idx = next(i for i in candidates if group.irreps[i].dimension == 2)
+    logits = _sparse_gcr_target(group, [sign_idx, std_idx], [0.7, 1.0], noise_scale=0.01, seed=1)
+    model = _FakeModel(logits)
+    record = P.gcr_character_readout_instrument(model, group, seed=0)
+    assert record["primary"]["nested_comparison"]["full_held_out_fve"] > 0.9
+    assert set(record["primary"]["minimal_irrep_set"]["selected_irrep_indices"]) == {
+        sign_idx,
+        std_idx,
+    }
+
+
+def test_gcr_character_readout_negative_control_on_a_random_lookup_target():
+    """Negative control: a random one-hot lookup table, unrelated to any
+    Phi_rho. Raw held-out FVE must not be spuriously high, and the
+    minimal-set search must not reach the target FVE -- the instrument does
+    not manufacture GCR support out of an arbitrary target."""
+    group = resolve_group("S3")
+    order = group.order
+    rng = np.random.default_rng(0)
+    random_answer = rng.integers(0, order, size=(order, order))
+    logits = np.zeros((order, order, order))
+    for a in range(order):
+        for b in range(order):
+            logits[a, b, random_answer[a, b]] = 1.0
+    model = _FakeModel(logits)
+    record = P.gcr_character_readout_instrument(model, group, seed=0)
+    assert record["primary"]["nested_comparison"]["full_held_out_fve"] < 0.3
+    assert not record["primary"]["minimal_irrep_set"]["reached_target"]
+
+
+def test_gcr_character_readout_null_model_scores_near_zero():
+    """The untrained-model null (I-20's convention, reused here): a random-init
+    model's logits carry no GCR structure, so held-out FVE for both the full
+    and Fourier-only forms is ~0."""
+    model, group = _random_model("D8")
+    null_model, _ = _random_model("D8", seed=1)
+    record = P.gcr_character_readout_instrument(model, group, null_model=null_model, seed=0)
+    assert record["null"]["full_null_held_out_fve"] < 0.2
+    assert record["null"]["fourier_only_null_held_out_fve"] < 0.2
+
+
+def test_gcr_character_readout_undefined_nested_comparison_without_fourier_rival(monkeypatch):
+    """A group with no nontrivial one-dimensional irrep (simulated by
+    monkeypatching the Fourier-only lookup to empty, since no perfect-group
+    fixture exists at this scale) reports the nested comparison as UNDEFINED
+    rather than comparing against an empty design."""
+    model, group = _random_model("D8")
+    monkeypatch.setattr(P, "gcr_fourier_only_irreps", lambda g: [])
+    record = P.gcr_character_readout_instrument(model, group, seed=0)
+    assert record["primary"]["nested_comparison"]["status"] == P.UNDEFINED
+    assert record["n_fourier_irreps"] == 0
 
 
 def test_fc_model_is_accepted_by_the_probes():

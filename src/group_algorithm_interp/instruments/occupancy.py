@@ -58,6 +58,7 @@ import torch
 
 from ..groups.group import FiniteGroup
 from ..model import GroupModel
+from .device import run_with_device_fallback
 
 _REL_TOL = 1e-6
 
@@ -80,32 +81,53 @@ def neuron_activations(
     order: int,
     *,
     batch_size: int = 8192,
+    device: torch.device = torch.device("cpu"),
 ) -> np.ndarray:
     """I-08: the per-neuron function on ``G x G``, ``A[m, a, b]`` with shape
     ``[d_mlp, |G|, |G|]``, read from ``mlp_pre`` at the read position (-1) over
     the full Cayley grid. Requires an MLP (``use_mlp=false`` models have no
     neurons to measure).
 
+    ``device`` runs the forward pass there in the model's native dtype
+    (float32); activations are moved back to CPU and cast to float64 before
+    this returns, so the analysis this feeds stays exactly CPU float64 as
+    before regardless of ``device``. The model is moved to ``device`` for the
+    duration of this call and always restored to CPU on return (including on
+    an exception). An MPS op gap falls back to CPU automatically
+    (:func:`.device.run_with_device_fallback`), logged as a ``RuntimeWarning``
+    since this function's return is a bare array with nowhere to carry a note.
+
     Contract: this calls ``model.eval()``, which mutates the caller's model --
     training mode is not restored on return, so a caller that needs the model
-    back in ``train()`` must set it themselves. Tokens are built and the forward
-    pass runs on CPU only (the grid is enumerated as CPU ``long`` tensors); the
-    model is expected to be on CPU."""
+    back in ``train()`` must set it themselves. Tokens are built as CPU
+    ``long`` tensors and moved to ``device`` per batch."""
     if batch_size < 1:
         raise ValueError(f"batch_size must be >= 1, got {batch_size}")
     tokens = cayley_grid_tokens(order)
-    chunks: list[torch.Tensor] = []
     model.eval()
-    with torch.no_grad():
-        for start in range(0, tokens.shape[0], batch_size):
-            cache = model(tokens[start : start + batch_size], return_cache=True)
-            mlp_pre = cache["mlp_pre"]
-            if mlp_pre is None:
-                raise ValueError(
-                    "model has no MLP (use_mlp=false); neuron activations are undefined"
-                )
-            chunks.append(mlp_pre[:, -1, :].detach().to(torch.float64).cpu())
-    flat = torch.cat(chunks, dim=0)  # [|G|^2, d_mlp]
+
+    def _compute(dev: torch.device) -> torch.Tensor:
+        moved = dev.type != "cpu"
+        if moved:
+            model.to(dev)
+        try:
+            chunks: list[torch.Tensor] = []
+            with torch.no_grad():
+                for start in range(0, tokens.shape[0], batch_size):
+                    batch = tokens[start : start + batch_size].to(dev)
+                    cache = model(batch, return_cache=True)
+                    mlp_pre = cache["mlp_pre"]
+                    if mlp_pre is None:
+                        raise ValueError(
+                            "model has no MLP (use_mlp=false); neuron activations are undefined"
+                        )
+                    chunks.append(mlp_pre[:, -1, :].detach().cpu().to(torch.float64))
+            return torch.cat(chunks, dim=0)  # [|G|^2, d_mlp]
+        finally:
+            if moved:
+                model.to(torch.device("cpu"))
+
+    flat, _note = run_with_device_fallback(_compute, device)
     d_mlp = flat.shape[1]
     return flat.numpy().reshape(order, order, d_mlp).transpose(2, 0, 1)
 

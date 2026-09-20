@@ -74,6 +74,7 @@ import torch
 from .. import stats
 from ..groups.group import FiniteGroup
 from ..model import GroupModel, OneLayerTransformer
+from .device import run_with_device_fallback
 from .occupancy import (
     neuron_activations,
     trivial_block_index,
@@ -128,12 +129,19 @@ def unleaked_heldout(
 
 def correct_mask(model: GroupModel, tokens: torch.Tensor, targets: torch.Tensor) -> np.ndarray:
     """Per-example correctness at the read position, ``argmax logits[:, -1] ==
-    target``. The behavioural unit every ablation is scored in (flips)."""
+    target``. The behavioural unit every ablation is scored in (flips).
+
+    Device-agnostic: tokens are moved to wherever ``model``'s parameters
+    currently live (CPU by default, unchanged), and the prediction is brought
+    back to CPU before comparing to ``targets`` -- so a caller that has
+    temporarily moved the model to an accelerator (e.g.
+    :func:`isotypic_block_ablation`) needs no other change here."""
     model.eval()
+    device = next(model.parameters()).device
     with torch.no_grad():
-        logits = model(tokens)
-    pred = logits[:, -1, :].argmax(dim=-1)
-    return (pred == targets).cpu().numpy().astype(bool)
+        logits = model(tokens.to(device))
+    pred = logits[:, -1, :].argmax(dim=-1).cpu()
+    return (pred == targets).numpy().astype(bool)
 
 
 def _flip_stats(clean: np.ndarray, ablated: np.ndarray) -> dict[str, Any]:
@@ -201,7 +209,9 @@ def _swapped_embedding(model: GroupModel, new_element_embed: np.ndarray) -> Iter
     order = new_element_embed.shape[0]
     original = model.W_E
     full = original.detach().clone()
-    full[:order] = torch.from_numpy(np.asarray(new_element_embed, dtype=np.float64)).to(full.dtype)
+    full[:order] = torch.from_numpy(np.asarray(new_element_embed, dtype=np.float64)).to(
+        dtype=full.dtype, device=full.device
+    )
     model.W_E = torch.nn.Parameter(full, requires_grad=False)
     try:
         yield
@@ -293,6 +303,7 @@ def isotypic_block_ablation(
     block_indices: Sequence[int] | None = None,
     n_random: int = 16,
     seed: int = 0,
+    device: torch.device = torch.device("cpu"),
 ) -> dict[str, Any]:
     """I-15 (rung 3, Necessary): ablate each isotypic block from the shared input
     embedding and measure the behavioural drop on ``(tokens, targets)`` against a
@@ -305,44 +316,71 @@ def isotypic_block_ablation(
     block whose ablation costs no more than a matched random subspace is occupied
     but not shown to be used. No verdict is emitted -- the reading is the effect
     size and its CI.
-    """
-    clean = correct_mask(model, tokens, targets)
-    trivial = trivial_block_index(group)
-    if block_indices is None:
-        block_indices = [j for j in range(len(group.isotypic_blocks)) if j != trivial]
-    rng = np.random.default_rng(seed)
 
-    blocks: list[dict[str, Any]] = []
-    for j in block_indices:
-        block = group.isotypic_blocks[j]
-        projector = np.asarray(block.projector, dtype=np.float64)
-        record = _ablation_flip_record(
-            model,
-            projector,
-            tokens,
-            targets,
-            clean,
-            rank=block.block_rank,
-            n_random=n_random,
-            rng=rng,
-        )
-        blocks.append(
-            {
-                "block_index": j,
-                "irrep_degree": block.irrep_degree,
-                "block_rank": block.block_rank,
-                "is_trivial": j == trivial,
-                **record,
+    ``device`` runs this instrument's many forward passes there in the
+    model's native dtype (float32); every downstream statistic (flip
+    fractions, bootstrap CIs) is computed exactly as before from CPU
+    ``bool``/``float64`` arrays -- ``correct_mask`` always brings predictions
+    back to CPU. The model is moved to ``device`` for the duration of this
+    call and always restored to CPU on return. An MPS op gap falls back to a
+    full CPU rerun (the RNG stream is reseeded from ``seed`` identically, so
+    this is exact, not an approximation), recorded in the returned record's
+    ``device_fallback``.
+    """
+
+    def _compute(dev: torch.device) -> dict[str, Any]:
+        moved = dev.type != "cpu"
+        if moved:
+            model.to(dev)
+        try:
+            clean = correct_mask(model, tokens, targets)
+            trivial = trivial_block_index(group)
+            indices = (
+                [j for j in range(len(group.isotypic_blocks)) if j != trivial]
+                if block_indices is None
+                else block_indices
+            )
+            rng = np.random.default_rng(seed)
+
+            blocks: list[dict[str, Any]] = []
+            for j in indices:
+                block = group.isotypic_blocks[j]
+                projector = np.asarray(block.projector, dtype=np.float64)
+                record = _ablation_flip_record(
+                    model,
+                    projector,
+                    tokens,
+                    targets,
+                    clean,
+                    rank=block.block_rank,
+                    n_random=n_random,
+                    rng=rng,
+                )
+                blocks.append(
+                    {
+                        "block_index": j,
+                        "irrep_degree": block.irrep_degree,
+                        "block_rank": block.block_rank,
+                        "is_trivial": j == trivial,
+                        **record,
+                    }
+                )
+            return {
+                "instrument": "isotypic-block-ablation",
+                "rung": 3,
+                "trivial_block_index": trivial,
+                "clean_accuracy": float(clean.mean()) if clean.size else float("nan"),
+                "n_test": int(clean.size),
+                "blocks": blocks,
             }
-        )
-    return {
-        "instrument": "isotypic-block-ablation",
-        "rung": 3,
-        "trivial_block_index": trivial,
-        "clean_accuracy": float(clean.mean()) if clean.size else float("nan"),
-        "n_test": int(clean.size),
-        "blocks": blocks,
-    }
+        finally:
+            if moved:
+                model.to(torch.device("cpu"))
+
+    result, note = run_with_device_fallback(_compute, device)
+    if note is not None:
+        result["device_fallback"] = note
+    return result
 
 
 # ---------------------------------------------------------------------------

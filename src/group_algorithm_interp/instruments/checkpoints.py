@@ -428,6 +428,51 @@ def _recompute_curated_substitution(
     return None, [], False
 
 
+def _final_epoch_prune_fallback(
+    run_dir: Path, filename: Any, epoch: Any
+) -> tuple[Path | None, str | None]:
+    """When a recorded ``stable_end`` pick names ``final_epoch_<E>.pt`` for
+    ``E`` exactly the run's final training epoch (``optim.epochs - 1``, read
+    from ``resolved_config.yaml``) and that exact file is absent from a
+    re-downloaded, pruned run dir, substitutes ``final.pt``.
+
+    Weight-safe, not a heuristic: :mod:`training.ensemble`'s per-epoch loop
+    writes ``final_epoch_<epoch>.pt`` for the final-window epochs from the
+    post-optimiser-step in-memory model state, and immediately after the loop
+    ``_finalize`` writes ``final.pt`` from that *same* still-unmodified state
+    -- no optimiser step runs in between. At the ceiling epoch the two files
+    are two ``torch.save`` calls of bit-identical tensors. That equivalence
+    holds only there: an earlier ``final_epoch_<E>.pt`` (``E < ceiling - 1``)
+    or a ``step_*.pt``/``generalized_step_*.pt`` trajectory snapshot shares no
+    such guarantee, so this never substitutes for those -- they stay
+    unresolved (``None``) when absent, and the caller's usual "not on disk"
+    handling applies.
+
+    Returns ``(final_path, note)`` when every condition holds -- ``filename``
+    starts with ``final_epoch_``, its recorded ``epoch`` is exactly
+    ``optim.epochs - 1``, and ``final.pt`` is present on disk (flat or under
+    ``checkpoints/``) -- else ``(None, None)``."""
+    if not isinstance(filename, str) or not filename.startswith("final_epoch_"):
+        return None, None
+    if not isinstance(epoch, int) or isinstance(epoch, bool):
+        return None, None
+    resolved = _read_resolved_config(run_dir)
+    ceiling = _optim_epochs(resolved)
+    if ceiling is None or epoch != ceiling - 1:
+        return None, None
+    final_path = resolve_checkpoint(run_dir, "final.pt")
+    if final_path is None:
+        return None, None
+    note = (
+        f"selection.json named {filename} (epoch {epoch} == optim.epochs - 1, the run's "
+        "final training epoch) but the curated layout kept only final.pt; substituted "
+        "final.pt, which training saves from the identical in-memory model state at the "
+        "same epoch with no optimiser step in between -- a documented weight-safe "
+        "equivalence, not a guess"
+    )
+    return final_path, note
+
+
 _NO_STABLE_REASON = "selection.json recorded no stable checkpoint (censored/never-stable run)"
 
 
@@ -527,8 +572,13 @@ def _selection_from_full_record(
     filename = record.get("checkpoint")
     ckpt_path = resolve_checkpoint(run_dir, filename)
     reason = record.get("reason")
+    substituted_note: str | None = None
     if filename and ckpt_path is None:
-        reason = f"selection.json names {filename!r} but the checkpoint is not on disk"
+        ckpt_path, substituted_note = _final_epoch_prune_fallback(
+            run_dir, filename, record.get("epoch")
+        )
+        if ckpt_path is None:
+            reason = f"selection.json names {filename!r} but the checkpoint is not on disk"
     elif ckpt_path is None and not reason:
         reason = _NO_STABLE_REASON
     return CheckpointSelection(
@@ -541,7 +591,7 @@ def _selection_from_full_record(
         metric_value=record.get("metric_value") if ckpt_path is not None else None,
         substitution=record.get("substitution"),
         rejected=list(record.get("rejected") or []),
-        reason=None if ckpt_path is not None else reason,
+        reason=substituted_note if ckpt_path is not None else reason,
     )
 
 
@@ -585,8 +635,13 @@ def _selection_from_curated_entry(
     filename = entry.get("filename")
     ckpt_path = resolve_checkpoint(run_dir, filename)
     reason = None
+    substituted_note: str | None = None
     if filename and ckpt_path is None:
-        reason = f"selection.json names {filename!r} but the checkpoint is not on disk"
+        ckpt_path, substituted_note = _final_epoch_prune_fallback(
+            run_dir, filename, entry.get("epoch")
+        )
+        if ckpt_path is None:
+            reason = f"selection.json names {filename!r} but the checkpoint is not on disk"
 
     if "substitution" in entry:
         substitution = entry.get("substitution")
@@ -608,7 +663,7 @@ def _selection_from_curated_entry(
         substitution=substitution,
         substitution_recorded=substitution_recorded,
         rejected=rejected,
-        reason=reason,
+        reason=substituted_note if substituted_note is not None else reason,
     )
 
 
@@ -692,6 +747,39 @@ def select_checkpoint(
 
     if has_window:
         window = _snapshot_epochs(run_dir, ("final_epoch_*.pt",))
+        ceiling = _optim_epochs(resolved)
+        # Weight-safe prune fallback for this path's own layout (mirrors
+        # _final_epoch_prune_fallback, used by the selection.json-driven
+        # paths): a local run dir re-downloaded/pruned to just checkpoints/
+        # final.pt has no final_epoch_<E>.pt files at all, so the loop below
+        # -- which only ever looks at files present on disk -- would never
+        # even consider the ceiling epoch. Check it explicitly: only when the
+        # window's OWN top epoch (optim.epochs - 1) is both what the dip rule
+        # would pick (its run.log row is stable) and missing on disk does
+        # final.pt substitute -- a genuine dip that lands on an earlier,
+        # non-ceiling epoch never triggers this, so it stays unresolved when
+        # that epoch's file is also absent (different, non-substitutable
+        # weights).
+        if ceiling is not None and not any(epoch == ceiling - 1 for epoch, _ in window):
+            ceiling_epoch = ceiling - 1
+            stable, value = _stability(rows, ceiling_epoch, metric, threshold)
+            if stable:
+                fallback_path, note = _final_epoch_prune_fallback(
+                    run_dir, f"final_epoch_{ceiling_epoch}.pt", ceiling_epoch
+                )
+                if fallback_path is not None:
+                    return CheckpointSelection(
+                        run_dir=run_dir,
+                        rule=rule,
+                        metric=metric,
+                        threshold=threshold,
+                        path=fallback_path,
+                        epoch=ceiling_epoch,
+                        metric_value=value,
+                        substitution=None,
+                        rejected=rejected,
+                        reason=note,
+                    )
         for position, (epoch, path) in enumerate(reversed(window)):
             stable, value = _stability(rows, epoch, metric, threshold)
             if stable:

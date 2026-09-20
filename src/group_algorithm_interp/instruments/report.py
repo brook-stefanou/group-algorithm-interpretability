@@ -200,6 +200,8 @@ def _occupancy_block(
     model: GroupModel,
     group: FiniteGroup,
     library: TemplateLibrary,
+    *,
+    device: torch.device = torch.device("cpu"),
 ) -> tuple[dict[str, Any], dict[str, list[float]]]:
     """Both arguments' occupancy measurements for one model, plus the raw
     per-block energy totals the pooling path accumulates. Per-neuron
@@ -214,7 +216,7 @@ def _occupancy_block(
     in the record so an older reader can recover either count."""
     pi0 = analytic_null(group)
     trivial = trivial_block_index(group)
-    activations = neuron_activations(model, group.order)
+    activations = neuron_activations(model, group.order, device=device)
     per_argument: dict[str, Any] = {}
     block_energy: dict[str, list[float]] = {}
     for argument in ARGUMENTS:
@@ -249,11 +251,16 @@ def measure_run(
     *,
     metric: str = "val/accuracy",
     threshold: float = 0.99,
+    device: torch.device = torch.device("cpu"),
 ) -> dict[str, Any]:
     """One run's occupancy measurement record (module docstring). A run whose
     dip-aware selection finds no stable checkpoint is returned with
     ``status: "skipped"`` and the full selection record -- reported as data,
-    never silently dropped."""
+    never silently dropped.
+
+    ``device`` runs the I-08 neuron-activation forward pass there (native
+    float32); the analysis stays CPU float64, unaffected in precision (see
+    :func:`occupancy.neuron_activations`)."""
     manifest = read_manifest(run_dir)
     config = validate_config(yaml.safe_load((run_dir / "resolved_config.yaml").read_text()))
     selection = select_checkpoint(run_dir, metric=metric, threshold=threshold)
@@ -292,7 +299,7 @@ def measure_run(
     model = build_model(config, group)
     model.load_state_dict(checkpoint["model_state_dict"])
     library = template_library(group)
-    per_argument, block_energy = _occupancy_block(model, group, library)
+    per_argument, block_energy = _occupancy_block(model, group, library, device=device)
 
     record["status"] = "measured"
     record["provenance"]["checkpoint_sha256"] = file_sha256(selection.path)
