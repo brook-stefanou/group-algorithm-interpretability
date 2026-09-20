@@ -21,11 +21,13 @@ count of nonzero values).
 
 from __future__ import annotations
 
+import time
+
 import numpy as np
 import pytest
 import torch
 
-from group_algorithm_interp.groups.data import load_group
+from group_algorithm_interp.groups.data import GroupData, IrrepData, IsotypicBlock, load_group
 from group_algorithm_interp.instruments.recruited_dimension import (
     FS_COMPLEX,
     FS_QUATERNIONIC,
@@ -42,6 +44,7 @@ from group_algorithm_interp.instruments.recruited_dimension import (
     real_irreducible_dimensions,
     theoretical_dimensions,
 )
+from group_algorithm_interp.instruments.template_divergence import is_faithful
 from group_algorithm_interp.model import OneLayerTransformer
 from group_algorithm_interp.seed import set_seed
 from group_algorithm_interp.training.trainer import build_model
@@ -57,6 +60,69 @@ C7 = (7, 1)
 
 def _group(order: int, index: int):
     return load_group(order, index)
+
+
+def _build_elementary_abelian_2group(k: int) -> GroupData:
+    """(C2)^k, hand-constructed: elements are length-k bit tuples, the
+    Cayley table is XOR, and the 2**k one-dimensional real characters are
+    chi_v(x) = (-1)**popcount(v & x). Every nontrivial character's kernel is
+    an index-2 subgroup -- never trivial alone -- so no faithful set exists
+    below cardinality k, the combinatorial-blowup pathology
+    minimal_faithful_real_dimension's guard exists for (see its docstring
+    and SmallGroup(128, 2328), the real-world instance)."""
+    n = 1 << k
+    elements = list(range(n))
+    table = np.array([[a ^ b for b in elements] for a in elements], dtype=np.int64)
+
+    def popcount(x: int) -> int:
+        return bin(x).count("1")
+
+    irreps = []
+    blocks = []
+    for v in range(n):
+        character = np.array(
+            [1.0 if popcount(v & x) % 2 == 0 else -1.0 for x in elements], dtype=np.complex128
+        )
+        irreps.append(
+            IrrepData(
+                matrices=np.zeros((n, 1, 1), dtype=np.complex128),
+                character=character,
+                dimension=1,
+                table_index=v,
+                field="Q",
+                basis="hand-constructed (C2)^k character (unused placeholder matrix)",
+            )
+        )
+        blocks.append(
+            IsotypicBlock(
+                projector=np.zeros((n, n), dtype=np.float64),
+                irrep_degree=1,
+                block_rank=1,
+                irrep_indices=(v,),
+            )
+        )
+
+    conjugacy_classes = tuple(np.array([x], dtype=np.int64) for x in elements)
+    character_table = np.array([irrep.character for irrep in irreps], dtype=np.complex128)
+    frobenius_schur = np.ones(n, dtype=np.int64)
+    trivial_subgroup = np.array([0], dtype=np.int64)
+    full_group = np.array(elements, dtype=np.int64)
+
+    return GroupData(
+        order=n,
+        index=-1,
+        description=f"(C2)^{k} (hand-constructed, many one-dim irreps, no single faithful one)",
+        element_labels=tuple(str(x) for x in elements),
+        cayley_table=table,
+        conjugacy_classes=conjugacy_classes,
+        character_table=character_table,
+        frobenius_schur=frobenius_schur,
+        irreps=tuple(irreps),
+        isotypic_blocks=tuple(blocks),
+        subgroups=(trivial_subgroup, full_group),
+        left_cosets=((trivial_subgroup,), (full_group,)),
+        provenance={"backend": "hand-constructed", "purpose": "combinatorial-guard test"},
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -168,12 +234,38 @@ def test_minimal_faithful_real_dimension_cyclic_cases():
 def test_minimal_faithful_set_is_actually_faithful():
     """The reported witnessing set must genuinely be faithful (kernels intersect
     to the identity alone) for every checked group."""
-    from group_algorithm_interp.instruments.template_divergence import is_faithful
-
     for order, index in [Q8, S3, D4, C4, C2, C7]:
         group = _group(order, index)
         result = minimal_faithful_real_dimension(group)
         assert is_faithful(group, result.example_set)
+
+
+def test_minimal_faithful_real_dimension_many_one_dim_irreps_does_not_hang():
+    """The combinatorial-blowup guard applies here too: elementary-abelian
+    (C2)^7 has 127 one-dimensional nontrivial irreps and no single faithful
+    one (each kernel is an index-2 subgroup), so the exact cardinality
+    search would otherwise enumerate C(127, 6) ~ 4.8e9 combinations without
+    ever succeeding -- the same pathology confirmed to hang for the better
+    part of an hour on SmallGroup(128, 2328). Must now return promptly, a
+    genuinely faithful set, and be flagged uncertified."""
+    group = _build_elementary_abelian_2group(7)
+    start = time.perf_counter()
+    result = minimal_faithful_real_dimension(group)
+    elapsed = time.perf_counter() - start
+
+    assert elapsed < 5.0, f"minimal_faithful_real_dimension took {elapsed:.2f}s"
+    assert result.certified is False
+    assert is_faithful(group, result.example_set)
+    assert 1 <= result.example_set_cardinality <= 127
+
+
+def test_minimal_faithful_real_dimension_small_groups_unchanged_by_the_guard():
+    """The guard must change behaviour only for the large-candidate-count,
+    no-small-faithful-set case: every fixture group here has a handful of
+    candidates and gets the exact, certified answer exactly as before."""
+    for order, index in [Q8, S3, D4, C4, C2, C7]:
+        result = minimal_faithful_real_dimension(_group(order, index))
+        assert result.certified is True
 
 
 # ---------------------------------------------------------------------------

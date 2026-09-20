@@ -158,6 +158,9 @@ def gcr_readout_run(
     target_fve: float = 0.95,
     improvement_tol: float = 0.01,
     device: torch.device = torch.device("cpu"),
+    fit_device: torch.device | None = None,
+    max_rows: int = 0,
+    sample_seed: int = 0,
 ) -> dict[str, Any]:
     """One run's GCR character-readout record: dip-aware checkpoint selection
     (recorded, substitutions included), then :func:`gcr_character_readout_instrument`
@@ -223,6 +226,9 @@ def gcr_readout_run(
         target_fve=target_fve,
         improvement_tol=improvement_tol,
         device=device,
+        fit_device=fit_device,
+        max_rows=max_rows,
+        sample_seed=sample_seed,
     )
     # Bound this process's memory to one seed at a time -- both models (the
     # trained checkpoint and the random-init null) and the checkpoint state
@@ -349,6 +355,7 @@ def _cmd_measure(args: argparse.Namespace) -> int:
     if args.artifacts_dir is not None:
         os.environ["GROUP_ARTIFACTS_DIR"] = str(args.artifacts_dir)
     device = resolve_device(args.device)
+    fit_device = resolve_device(args.fit_device)
 
     cells = discover_cells(Path(args.runs_dir))
     if args.cell:
@@ -367,6 +374,9 @@ def _cmd_measure(args: argparse.Namespace) -> int:
                 target_fve=args.target_fve,
                 improvement_tol=args.improvement_tol,
                 device=device,
+                fit_device=fit_device,
+                max_rows=args.max_rows,
+                sample_seed=args.sample_seed,
             )
             for run_dir in run_dirs
         ]
@@ -442,6 +452,24 @@ def main(argv: list[str] | None = None) -> int:
         help="minimal-irrep-set search stopping tolerance (default 0.01)",
     )
     measure.add_argument(
+        "--max-rows",
+        type=int,
+        default=0,
+        dest="max_rows",
+        help="cap on the (a, b, c) design-row count; 0 or unset means no cap (the full order**3 "
+        "grid, unchanged). Over the cap the fit and the minimal-set search run on a fixed-seed "
+        "uniform subsample of whole (a, b) pairs (the read-position axis kept whole), so the big "
+        "cells no longer stall in the CPU-bound design build.",
+    )
+    measure.add_argument(
+        "--sample-seed",
+        type=int,
+        default=0,
+        dest="sample_seed",
+        help="seed for the --max-rows pair subsample (default 0); distinct from the per-run fit "
+        "split seed.",
+    )
+    measure.add_argument(
         "--artifacts-dir", default=None, help="override the group-artifact directory"
     )
     measure.add_argument(
@@ -454,9 +482,18 @@ def main(argv: list[str] | None = None) -> int:
     measure.add_argument(
         "--device",
         default="auto",
-        choices=["auto", "mps", "cpu"],
+        choices=["auto", "mps", "cuda", "cpu"],
         help="device for the read-position forward pass; 'auto' is MPS when available, "
-        "else CPU (default: auto). The fit itself always stays CPU float64.",
+        "else CPU (default: auto); 'cuda' is explicit-only.",
+    )
+    measure.add_argument(
+        "--fit-device",
+        default="cpu",
+        choices=["auto", "mps", "cuda", "cpu"],
+        help="device for the held-out-FVE least-squares fit; 'cpu' (default) is the "
+        "numpy-float64 reference, 'mps'/'cuda' run the float32 normal-equations backend on "
+        "the GPU for the big-group cells (see instruments/fit_backend.py). Opt-in: the "
+        "default keeps the pre-registered CPU-float64 fit.",
     )
     measure.set_defaults(func=_cmd_measure)
 

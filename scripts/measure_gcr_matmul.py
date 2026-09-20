@@ -318,6 +318,9 @@ def _cmd_measure(args: argparse.Namespace) -> int:
         min_coverage=args.min_coverage,
         min_abs_fve=args.min_abs_fve,
         tie_tol=args.tie_tol,
+        fit_device=resolve_device(args.fit_device),
+        max_rows=args.max_rows,
+        sample_seed=args.sample_seed,
     )
     cells: dict[tuple[int, int, int], list[dict[str, Any]]] = defaultdict(list)
     n_skipped = 0
@@ -380,15 +383,41 @@ def main(argv: list[str] | None = None) -> int:
     measure.add_argument("--min-abs-fve", type=float, default=0.5)
     measure.add_argument("--tie-tol", type=float, default=0.01)
     measure.add_argument(
+        "--max-rows",
+        type=int,
+        default=0,
+        dest="max_rows",
+        help="cap on the number of (a, b) grid cells the fit sees; 0 or unset means no cap "
+        "(the full order**2 grid, unchanged). Over the cap a fixed-seed uniform subsample of "
+        "cells is drawn before the designs are built, so the big-group cells no longer stall in "
+        "the CPU-bound design build.",
+    )
+    measure.add_argument(
+        "--sample-seed",
+        type=int,
+        default=0,
+        dest="sample_seed",
+        help="seed for the --max-rows row subsample (default 0); distinct from --fit-seed, "
+        "which seeds the cross-validation fold assignment.",
+    )
+    measure.add_argument(
         "--artifacts-dir", default=None, help="override the group-artifact directory"
     )
     measure.add_argument(
         "--device",
         default="auto",
-        choices=["auto", "mps", "cpu"],
+        choices=["auto", "mps", "cuda", "cpu"],
         help="device for the activation-extraction forward pass; 'auto' is MPS when "
-        "available, else CPU (default: auto). The matrix-product fit always stays "
-        "CPU float64.",
+        "available, else CPU (default: auto); 'cuda' is explicit-only.",
+    )
+    measure.add_argument(
+        "--fit-device",
+        default="cpu",
+        choices=["auto", "mps", "cuda", "cpu"],
+        help="device for the held-out-FVE matrix-product/bilinear fit; 'cpu' (default) is "
+        "the numpy-float64 reference, 'mps'/'cuda' run the float32 normal-equations backend "
+        "on the GPU for the big-group cells (see instruments/fit_backend.py). Opt-in: "
+        "the default keeps the pre-registered CPU-float64 fit.",
     )
     measure.set_defaults(func=_cmd_measure)
 

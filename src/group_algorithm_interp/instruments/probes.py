@@ -73,6 +73,7 @@ from sklearn.model_selection import StratifiedKFold
 
 from ..groups.group import FiniteGroup
 from ..model import GroupModel
+from . import fit_backend
 from .device import run_with_device_fallback
 from .interventions import ablate_direction, model_correct_mask
 from .occupancy import cayley_grid_tokens, neuron_activations
@@ -844,6 +845,20 @@ def read_position_logits(
     return logits.reshape(order, order, -1)
 
 
+def _row_split(
+    n_rows: int, *, train_frac: float = 0.7, seed: int = 0
+) -> tuple[np.ndarray, np.ndarray]:
+    """A reproducible fit/held-out split of ``range(n_rows)`` row indices. The
+    fit is fitted on the first set and scored only on the second -- the held-out
+    rows a nested basis cannot be rewarded for on noise. Shared by
+    :func:`pair_split` (over the full ``order**2`` pairs) and the sampled-pair
+    path (over the ``n_pairs`` rows of a subsample)."""
+    permutation = np.random.default_rng(seed).permutation(n_rows)
+    n_fit = int(round(train_frac * n_rows))
+    n_fit = max(1, min(n_rows - 1, n_fit))
+    return np.sort(permutation[:n_fit]), np.sort(permutation[n_fit:])
+
+
 def pair_split(
     order: int, *, train_frac: float = 0.7, seed: int = 0
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -851,11 +866,59 @@ def pair_split(
     row indices (into the flattened ``(a, b)`` grid). The functional-form fit is
     fitted on the first and scored only on the second -- the held-out ``(a, b)``
     pairs a nested basis cannot be rewarded for on noise."""
-    n = order * order
-    permutation = np.random.default_rng(seed).permutation(n)
-    n_fit = int(round(train_frac * n))
-    n_fit = max(1, min(n - 1, n_fit))
-    return np.sort(permutation[:n_fit]), np.sort(permutation[n_fit:])
+    return _row_split(order * order, train_frac=train_frac, seed=seed)
+
+
+def resolve_pair_sample(
+    order: int,
+    n_classes: int,
+    *,
+    max_rows: int = 0,
+    sample_seed: int = 0,
+    n_min_pairs: int = 2,
+) -> tuple[np.ndarray | None, dict[str, Any]]:
+    """Decide the ``(a, b)`` pair subsample for a readout-style design.
+
+    The readout designs (:func:`gcr_character_design`,
+    :func:`readout_characterisation.gcr_matrix_entry_design`) enumerate one row
+    per ``(a, b, c)`` triple -- ``order**3`` rows -- which stalls the design
+    build for the big panel cells (~10M rows at order 216). This bounds it by
+    subsampling *whole* ``(a, b)`` pairs, keeping the full read-position/class
+    axis (width ``n_classes``) of every sampled pair, so per-pair class-axis
+    mean-centring and the fit's estimand are unchanged -- only the number of
+    ``(a, b)`` pairs the fit sees is reduced.
+
+    Returns ``(pairs, meta)``. ``pairs`` is ``None`` when no cap applies
+    (``max_rows <= 0`` or the flattened row count ``order**2 * n_classes`` is
+    already ``<= max_rows``) -- the caller then takes the full-grid path,
+    byte-identical to the uncapped computation and drawing no random numbers.
+    When a cap applies, ``pairs`` is a sorted 1-D int64 array of flat pair
+    indices (``p = a * order + b``), a uniform sample without replacement drawn
+    with a fixed ``sample_seed`` so the run is reproducible. ``meta`` records
+    the decision (whether sampling was applied, the cap, the seed, the pair and
+    flattened-row counts) so the confidence intervals are interpretable as
+    sample-based."""
+    total_pairs = order * order
+    total_rows = total_pairs * n_classes
+    meta: dict[str, Any] = {
+        "row_sampling_applied": False,
+        "max_rows": int(max_rows),
+        "sample_seed": int(sample_seed),
+        "n_classes": int(n_classes),
+        "n_pairs_available": int(total_pairs),
+        "n_pairs_used": int(total_pairs),
+        "n_design_rows_available": int(total_rows),
+        "n_design_rows_used": int(total_rows),
+    }
+    if max_rows <= 0 or total_rows <= max_rows:
+        return None, meta
+    n_pairs = min(total_pairs, max(n_min_pairs, max_rows // max(n_classes, 1)))
+    rng = np.random.default_rng(sample_seed)
+    pairs = np.sort(rng.choice(total_pairs, size=n_pairs, replace=False)).astype(np.int64)
+    meta["row_sampling_applied"] = True
+    meta["n_pairs_used"] = int(n_pairs)
+    meta["n_design_rows_used"] = int(n_pairs * n_classes)
+    return pairs, meta
 
 
 def _held_out_fve(
@@ -863,16 +926,35 @@ def _held_out_fve(
     design: np.ndarray,
     fit_pairs: np.ndarray,
     test_pairs: np.ndarray,
+    *,
+    device: torch.device | None = None,
 ) -> float:
     """Fraction of variance explained on held-out pairs when the (class-axis)
     mean-centred logits are regressed onto the mean-centred design. Softmax is
     shift-invariant, so both are centred across the class axis first: a constant
-    per-pair shift carries no information and must not enter the fit."""
-    order = logits.shape[0]
-    n_classes = logits.shape[2]
-    y = logits.reshape(order * order, n_classes)
+    per-pair shift carries no information and must not enter the fit.
+
+    ``device`` selects the fitter. The default CPU path is the numpy
+    ``lstsq`` reference (float64), unchanged. An ``mps`` or ``cuda`` device
+    routes the dominant least-squares through the float32 normal-equations backend
+    (:mod:`.fit_backend`) so a large-group cell runs on the GPU. The design is
+    already class-axis centred (so each pair's columns and target sum to zero
+    over the class axis, and there is no intercept to fit), so the backend is
+    called with ``center=False`` to mirror the numpy model exactly; the
+    held-out sum of squares it returns is scored against this instrument's own
+    test-fold total variance, unchanged.
+
+    ``logits`` and ``design`` may be the full grid (``logits`` ``[order, order,
+    n_classes]``, ``design`` ``[order, order, n_classes, feat]``) or a sampled
+    ``(a, b)``-pair subset (``logits`` ``[n_pairs, n_classes]``, ``design``
+    ``[n_pairs, n_classes, feat]``); the number of pair rows is inferred from
+    the flattened shape, and ``fit_pairs``/``test_pairs`` index into that. The
+    full-grid path is unchanged (``order**2`` rows)."""
+    n_classes = logits.shape[-1]
+    y = logits.reshape(-1, n_classes)
+    n_rows = y.shape[0]
     y = y - y.mean(axis=1, keepdims=True)
-    x = design.reshape(order * order, n_classes, design.shape[3]).astype(np.float64)
+    x = design.reshape(n_rows, n_classes, design.shape[-1]).astype(np.float64)
     x = x - x.mean(axis=1, keepdims=True)
 
     def _stack(rows: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -880,14 +962,31 @@ def _held_out_fve(
         x_rows = x[rows].reshape(-1, x.shape[2])
         return x_rows, y_rows
 
-    x_fit, y_fit = _stack(fit_pairs)
-    coef, _, _, _ = np.linalg.lstsq(x_fit, y_fit, rcond=None)
     x_test, y_test = _stack(test_pairs)
-    residual = y_test - x_test @ coef
-    ss_res = float(residual @ residual)
     ss_tot = float(((y_test - y_test.mean()) @ (y_test - y_test.mean())))
     if ss_tot <= 0.0:
         return 0.0
+
+    if device is not None and device.type in ("mps", "cuda"):
+        # Fit on all rows with the held-out (test) rows as the single CV fold:
+        # train = the fit rows (the complement), so the backend reproduces the
+        # numpy fit-on-fit_pairs / score-on-test_pairs split. Rows are ordered
+        # (pair, class), so pair p's rows are p * n_classes + [0 .. n_classes).
+        x_all = x.reshape(n_rows * n_classes, x.shape[2])
+        y_all = y.reshape(n_rows * n_classes, 1)
+        test_rows = (
+            np.asarray(test_pairs, dtype=np.int64)[:, None] * n_classes
+            + np.arange(n_classes, dtype=np.int64)[None, :]
+        ).reshape(-1)
+        ss_res = fit_backend.heldout_residual_ss(
+            x_all, y_all, [test_rows], device=device, center=False
+        )
+        return 1.0 - ss_res / ss_tot
+
+    x_fit, y_fit = _stack(fit_pairs)
+    coef, _, _, _ = np.linalg.lstsq(x_fit, y_fit, rcond=None)
+    residual = y_test - x_test @ coef
+    ss_res = float(residual @ residual)
     return 1.0 - ss_res / ss_tot
 
 
@@ -900,6 +999,8 @@ def functional_form_fit(
     seed: int = 0,
     null_model: GroupModel | None = None,
     device: torch.device = torch.device("cpu"),
+    fit_device: torch.device | None = None,
+    pairs: np.ndarray | None = None,
 ) -> dict[str, Any]:
     """I-20: regress the model's logits onto each candidate closed-form rule and
     report held-out FVE, with a nested comparison and an untrained-model null.
@@ -912,7 +1013,19 @@ def functional_form_fit(
     held-out FVE is reported alongside and must be ~0 -- the rule-1 regression.
 
     ``device`` runs both models' read-position forward passes there (see
-    :func:`read_position_logits`); the fit itself is unaffected in precision.
+    :func:`read_position_logits`). ``fit_device`` is a *separate*, opt-in switch
+    for the least-squares fit, decoupled from the forward-pass ``device`` so the
+    fit does not silently change precision when the forward pass runs on the
+    GPU: it defaults to ``None`` (the numpy-float64-CPU reference), and only an
+    explicit ``mps`` ``fit_device`` routes the fit through the float32
+    normal-equations backend (:mod:`.fit_backend`).
+
+    ``pairs`` opts into ``(a, b)``-pair row sampling: when it is a 1-D int64
+    array of flat pair indices (from :func:`resolve_pair_sample`), the logits
+    are restricted to those pairs and the fit/held-out split is drawn over them,
+    matching the sampled designs the caller built for the same ``pairs``. It
+    must be the identical array used to build every form's design. ``None`` (the
+    default) is the full-grid path, unchanged.
 
     Gates every rung-5 claim; consumed by C1 [D32], C3, C5 and I-27's twisted-
     rule fit. Rung 5 only when connected to circuit or causal evidence.
@@ -924,18 +1037,25 @@ def functional_form_fit(
     null_logits = (
         read_position_logits(null_model, order, device=device) if null_model is not None else None
     )
-    fit_pairs, test_pairs = pair_split(order, train_frac=train_frac, seed=seed)
+    if pairs is None:
+        fit_pairs, test_pairs = pair_split(order, train_frac=train_frac, seed=seed)
+    else:
+        pair_idx = np.asarray(pairs, dtype=np.int64)
+        logits = logits.reshape(order * order, -1)[pair_idx]
+        if null_logits is not None:
+            null_logits = null_logits.reshape(order * order, -1)[pair_idx]
+        fit_pairs, test_pairs = _row_split(pair_idx.shape[0], train_frac=train_frac, seed=seed)
     per_form: list[dict[str, Any]] = []
     for form in forms:
-        fve = _held_out_fve(logits, form.design, fit_pairs, test_pairs)
+        fve = _held_out_fve(logits, form.design, fit_pairs, test_pairs, device=fit_device)
         entry: dict[str, Any] = {
             "name": form.name,
-            "n_features": int(form.design.shape[3]),
+            "n_features": int(form.design.shape[-1]),
             "held_out_fve": fve,
         }
         if null_logits is not None:
             entry["null_held_out_fve"] = _held_out_fve(
-                null_logits, form.design, fit_pairs, test_pairs
+                null_logits, form.design, fit_pairs, test_pairs, device=fit_device
             )
         per_form.append(entry)
     record: dict[str, Any] = {
@@ -1195,7 +1315,9 @@ def gcr_fourier_only_irreps(group: FiniteGroup) -> list[int]:
     return [i for i in gcr_candidate_irreps(group) if int(group.irreps[i].dimension) == 1]
 
 
-def gcr_character_design(group: FiniteGroup, irrep_indices: Sequence[int]) -> np.ndarray:
+def gcr_character_design(
+    group: FiniteGroup, irrep_indices: Sequence[int], *, pairs: np.ndarray | None = None
+) -> np.ndarray:
     """The GCR readout's design matrix over a chosen irrep set: shape
     ``[order, order, order, len(irrep_indices)]``, column ``k`` at ``(a, b,
     c)`` equal to ``Phi_rho(a, b, c) = Re tr(rho(a) rho(b) rho(c^-1))`` for
@@ -1203,6 +1325,16 @@ def gcr_character_design(group: FiniteGroup, irrep_indices: Sequence[int]) -> np
     straight from the Sage/GAP artifact (``IrrepData.matrices``, ``[order,
     degree, degree]`` complex128, ``groups/data.py``); ``rho(c^-1)`` is read
     off by indexing the matrices with the Cayley-table inverse map.
+
+    ``pairs`` bounds the design build for a large group. ``None`` (the default)
+    builds the full ``[order, order, order, ...]`` grid unchanged. Otherwise it
+    is a 1-D int64 array of flat ``(a, b)`` pair indices (``p = a * order + b``,
+    the row-major enumeration :func:`occupancy.cayley_grid_tokens` uses), and
+    only those pairs' rows are built: the result is ``[n_pairs, order, ...]``
+    (the read-position/class axis ``c`` of width ``order`` is always kept
+    whole). Building only sampled pairs avoids materialising the ``order**3``
+    grid, whose einsum stalls the big panel cells; the per-pair values are
+    identical to the corresponding rows of the full grid.
 
     CAVEAT -- load-bearing, read before treating a fit against this design
     matrix as evidence (see :func:`gcr_character_readout_instrument` for the
@@ -1219,15 +1351,30 @@ def gcr_character_design(group: FiniteGroup, irrep_indices: Sequence[int]) -> np
     e = identity_index(table)
     inv = inverses(table, e)
     irrep_indices = list(irrep_indices)
-    design = np.empty((order, order, order, len(irrep_indices)), dtype=np.float64)
+    if pairs is None:
+        design = np.empty((order, order, order, len(irrep_indices)), dtype=np.float64)
+        for k, idx in enumerate(irrep_indices):
+            matrices = group.irreps[idx].matrices  # [order, d, d] complex128: rho(g)
+            matrices_inv = matrices[inv]  # rho(c^-1), indexed directly by c
+            # ab[a, b]_{ik} = sum_j rho(a)_{ij} rho(b)_{jk} = (rho(a) @ rho(b))_{ik}.
+            ab = np.einsum("aij,bjk->abik", matrices, matrices)
+            # phi[a, b, c] = sum_{i,k} ab[a, b]_{ik} rho(c^-1)_{ki} = trace(rho(a) rho(b) rho(c^-1)).
+            phi = np.einsum("abik,cki->abc", ab, matrices_inv)
+            design[:, :, :, k] = phi.real
+        return design
+    pair_idx = np.asarray(pairs, dtype=np.int64)
+    a_idx = pair_idx // order
+    b_idx = pair_idx % order
+    n_pairs = int(pair_idx.shape[0])
+    design = np.empty((n_pairs, order, len(irrep_indices)), dtype=np.float64)
     for k, idx in enumerate(irrep_indices):
         matrices = group.irreps[idx].matrices  # [order, d, d] complex128: rho(g)
         matrices_inv = matrices[inv]  # rho(c^-1), indexed directly by c
-        # ab[a, b]_{ik} = sum_j rho(a)_{ij} rho(b)_{jk} = (rho(a) @ rho(b))_{ik}.
-        ab = np.einsum("aij,bjk->abik", matrices, matrices)
-        # phi[a, b, c] = sum_{i,k} ab[a, b]_{ik} * rho(c^-1)_{ki} = trace(rho(a) rho(b) rho(c^-1)).
-        phi = np.einsum("abik,cki->abc", ab, matrices_inv)
-        design[:, :, :, k] = phi.real
+        # ab[p]_{ik} = (rho(a) @ rho(b))_{ik} for the p-th sampled pair (a, b).
+        ab = np.einsum("pij,pjk->pik", matrices[a_idx], matrices[b_idx])
+        # phi[p, c] = sum_{i,k} ab[p]_{ik} rho(c^-1)_{ki} = trace(rho(a) rho(b) rho(c^-1)).
+        phi = np.einsum("pik,cki->pc", ab, matrices_inv)
+        design[:, :, k] = phi.real
     return design
 
 
@@ -1236,33 +1383,49 @@ def gcr_character_form(
     irrep_indices: Sequence[int] | None = None,
     *,
     name: str | None = None,
+    pairs: np.ndarray | None = None,
 ) -> FunctionalForm:
     """A :class:`FunctionalForm` whose design is the GCR character readout
     (:func:`gcr_character_design`) over ``irrep_indices`` (every nontrivial
     irrep by default, :func:`gcr_candidate_irreps`). Passing a specified
     sparse subset is what lets the minimal-key-irrep-set search in
     :func:`gcr_character_readout_instrument` score any candidate subset with
-    the same nested-safe held-out machinery as the full fit."""
+    the same nested-safe held-out machinery as the full fit. ``pairs`` is
+    threaded through to :func:`gcr_character_design` (an optional sampled
+    ``(a, b)`` pair subset that bounds the design build on a big group)."""
     resolved_indices = gcr_candidate_irreps(group) if irrep_indices is None else list(irrep_indices)
-    design = gcr_character_design(group, resolved_indices)
+    design = gcr_character_design(group, resolved_indices, pairs=pairs)
     if name is None:
         dims = ",".join(str(group.irreps[i].dimension) for i in resolved_indices)
         name = f"gcr_character[{dims}]"
     return FunctionalForm(name=name, design=design)
 
 
-def _saturated_lookup_form(group: FiniteGroup, name: str) -> FunctionalForm:
+def _saturated_lookup_form(
+    group: FiniteGroup, name: str, *, pairs: np.ndarray | None = None
+) -> FunctionalForm:
     """A saturated one-hot lookup of the true product ``a*b`` -- the accuracy
     ceiling any correct model's logits approach regardless of mechanism.
     Reported only as secondary context (:func:`gcr_character_readout_instrument`):
     this ceiling is not GCR-specific either, it is the accuracy ceiling itself,
-    the same construction as :func:`_signed_cyclic_forms`'s full rule."""
+    the same construction as :func:`_signed_cyclic_forms`'s full rule. ``pairs``
+    (an optional sampled ``(a, b)`` pair subset) bounds the build to the sampled
+    rows, matching :func:`gcr_character_design`'s convention."""
     table = group.cayley_table
     order = int(table.shape[0])
-    design = np.zeros((order, order, order, 1), dtype=np.float64)
-    for a in range(order):
-        for b in range(order):
-            design[a, b, int(table[a, b]), 0] = 1.0
+    if pairs is None:
+        design = np.zeros((order, order, order, 1), dtype=np.float64)
+        for a in range(order):
+            for b in range(order):
+                design[a, b, int(table[a, b]), 0] = 1.0
+        return FunctionalForm(name=name, design=design)
+    pair_idx = np.asarray(pairs, dtype=np.int64)
+    a_idx = pair_idx // order
+    b_idx = pair_idx % order
+    n_pairs = int(pair_idx.shape[0])
+    design = np.zeros((n_pairs, order, 1), dtype=np.float64)
+    products = np.asarray(table, dtype=np.int64)[a_idx, b_idx]
+    design[np.arange(n_pairs), products, 0] = 1.0
     return FunctionalForm(name=name, design=design)
 
 
@@ -1274,6 +1437,8 @@ def _greedy_minimal_irrep_search(
     *,
     target_fve: float,
     improvement_tol: float,
+    fit_device: torch.device | None = None,
+    pairs: np.ndarray | None = None,
 ) -> dict[str, Any]:
     """Greedy forward selection over the candidate nontrivial irreps -- the
     MINIMAL-irrep-set statistic :func:`gcr_character_readout_instrument` leads
@@ -1297,9 +1462,10 @@ def _greedy_minimal_irrep_search(
             (
                 _held_out_fve(
                     logits,
-                    gcr_character_design(group, [*selected, idx]),
+                    gcr_character_design(group, [*selected, idx], pairs=pairs),
                     fit_pairs,
                     test_pairs,
+                    device=fit_device,
                 ),
                 idx,
             )
@@ -1348,6 +1514,9 @@ def gcr_character_readout_instrument(
     target_fve: float = 0.95,
     improvement_tol: float = 0.01,
     device: torch.device = torch.device("cpu"),
+    fit_device: torch.device | None = None,
+    max_rows: int = 0,
+    sample_seed: int = 0,
 ) -> dict[str, Any]:
     """The GCR character-readout functional form: tests the Group Composition
     via Representations account's readout prediction that a model's
@@ -1386,20 +1555,48 @@ def gcr_character_readout_instrument(
     no Fourier-only rival exists), ``primary.nested_comparison`` comes back
     ``UNDEFINED`` rather than compared against an empty design; the
     minimal-set search and secondary raw FVE are unaffected.
+
+    ``device`` runs the read-position forward passes; ``fit_device`` is the
+    separate, opt-in switch (default ``None`` = numpy-float64-CPU reference)
+    that routes the held-out-FVE fits through the float32 normal-equations
+    backend on an ``mps`` GPU (:mod:`.fit_backend`).
+
+    ``max_rows`` (0 = no cap, the default) bounds the ``(a, b, c)`` design-row
+    count via :func:`resolve_pair_sample`: over that many flattened rows the
+    fit is run on a fixed-``sample_seed`` uniform subsample of whole ``(a, b)``
+    pairs (the full read-position axis kept), avoiding the ``order**3`` design
+    build that stalls the big panel cells. Sub-cap it is exactly the full-grid
+    computation; the ``sampling`` record field carries the decision.
     """
     order = group.order
     full_irreps = gcr_candidate_irreps(group)
     fourier_irreps = gcr_fourier_only_irreps(group)
 
-    full_form = gcr_character_form(group, full_irreps, name="gcr_character_full")
-    ceiling_form = _saturated_lookup_form(group, name="saturated_lookup_ceiling")
+    pairs, sampling_meta = resolve_pair_sample(
+        order, order, max_rows=max_rows, sample_seed=sample_seed
+    )
+
+    full_form = gcr_character_form(group, full_irreps, name="gcr_character_full", pairs=pairs)
+    ceiling_form = _saturated_lookup_form(group, name="saturated_lookup_ceiling", pairs=pairs)
     forms = [full_form]
     if fourier_irreps:
-        forms.append(gcr_character_form(group, fourier_irreps, name="gcr_character_fourier_only"))
+        forms.append(
+            gcr_character_form(
+                group, fourier_irreps, name="gcr_character_fourier_only", pairs=pairs
+            )
+        )
     forms.append(ceiling_form)
 
     fit = functional_form_fit(
-        model, order, forms, train_frac=train_frac, seed=seed, null_model=null_model, device=device
+        model,
+        order,
+        forms,
+        train_frac=train_frac,
+        seed=seed,
+        null_model=null_model,
+        device=device,
+        fit_device=fit_device,
+        pairs=pairs,
     )
     fve_by_name = {entry["name"]: entry["held_out_fve"] for entry in fit["forms"]}
     null_fve_by_name = (
@@ -1425,7 +1622,11 @@ def gcr_character_readout_instrument(
         }
 
     logits = read_position_logits(model, order, device=device)
-    fit_pairs, test_pairs = pair_split(order, train_frac=train_frac, seed=seed)
+    if pairs is None:
+        fit_pairs, test_pairs = pair_split(order, train_frac=train_frac, seed=seed)
+    else:
+        logits = logits.reshape(order * order, -1)[pairs]
+        fit_pairs, test_pairs = _row_split(pairs.shape[0], train_frac=train_frac, seed=seed)
     minimal_set = _greedy_minimal_irrep_search(
         group,
         logits,
@@ -1433,6 +1634,8 @@ def gcr_character_readout_instrument(
         test_pairs,
         target_fve=target_fve,
         improvement_tol=improvement_tol,
+        fit_device=fit_device,
+        pairs=pairs,
     )
 
     record: dict[str, Any] = {
@@ -1440,6 +1643,7 @@ def gcr_character_readout_instrument(
         "target_theory": "GCR",
         "rung": 5,
         "status": "measured",
+        "sampling": sampling_meta,
         "n_candidate_irreps": len(full_irreps),
         "n_fourier_irreps": len(fourier_irreps),
         "candidate_irrep_dimensions": [int(group.irreps[i].dimension) for i in full_irreps],
@@ -1512,6 +1716,7 @@ __all__ = [
     "polycyclic_digits",
     "power_map_probe",
     "read_position_logits",
+    "resolve_pair_sample",
     "signed_cyclic_coordinates",
     "signed_cyclic_instrument",
     "square_map",

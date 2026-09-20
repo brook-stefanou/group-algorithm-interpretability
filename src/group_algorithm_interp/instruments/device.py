@@ -13,9 +13,12 @@ is the shared, narrow device policy that makes that split safe:
   ``torch.device``, with ``"auto"`` meaning "MPS if available, else CPU".
   This is deliberately narrower than :func:`group_algorithm_interp.seed.resolve_device`
   (training's device resolution, which prefers CUDA), because these
-  instruments run locally -- typically on Apple silicon -- and never see
-  CUDA in practice; a training-style cuda-first ``"auto"`` would silently do
-  the wrong thing here.
+  instruments usually run locally -- typically on Apple silicon -- and rarely
+  see CUDA; a training-style cuda-first ``"auto"`` would silently do the
+  wrong thing there. An explicit ``"cuda"`` spec is accepted for the rarer
+  case of running these instruments on a CUDA box (e.g. a rented GPU pod for
+  a large panel cell): ``"auto"`` itself still never resolves to CUDA, so
+  existing callers on Apple silicon see no behaviour change.
 * :func:`run_with_device_fallback` runs a forward-pass computation on the
   requested device and, if the device is missing an op the computation
   needs (an MPS gap raised as ``RuntimeError``), transparently retries the
@@ -34,7 +37,7 @@ from typing import Callable, TypeVar
 
 import torch
 
-_VALID_SPECS = ("auto", "mps", "cpu")
+_VALID_SPECS = ("auto", "mps", "cuda", "cpu")
 
 T = TypeVar("T")
 
@@ -42,12 +45,13 @@ T = TypeVar("T")
 def resolve_device(spec: str) -> torch.device:
     """Resolve an instrument ``--device`` spec to a concrete ``torch.device``.
 
-    ``spec`` must be one of ``"auto"``, ``"mps"`` or ``"cpu"``. ``"auto"``
-    resolves to MPS when ``torch.backends.mps.is_available()``, else CPU --
-    never CUDA (see the module docstring). Requesting ``"mps"`` explicitly
-    when it is unavailable is not silently downgraded: it raises, so a typo'd
-    or genuinely unsupported request fails loudly rather than quietly running
-    on CPU with no explanation for a duration that would only make sense on a
+    ``spec`` must be one of ``"auto"``, ``"mps"``, ``"cuda"`` or ``"cpu"``.
+    ``"auto"`` resolves to MPS when ``torch.backends.mps.is_available()``,
+    else CPU -- never CUDA (see the module docstring); requesting CUDA is
+    always explicit. Requesting ``"mps"`` or ``"cuda"`` explicitly when it is
+    unavailable is not silently downgraded: it raises, so a typo'd or
+    genuinely unsupported request fails loudly rather than quietly running on
+    CPU with no explanation for a duration that would only make sense on a
     GPU.
     """
     if spec not in _VALID_SPECS:
@@ -60,6 +64,12 @@ def resolve_device(spec: str) -> torch.device:
                 "--device mps requested but torch.backends.mps.is_available() is False"
             )
         return torch.device("mps")
+    if spec == "cuda":
+        if not torch.cuda.is_available():
+            raise ValueError(
+                "--device cuda requested but torch.cuda.is_available() is False"
+            )
+        return torch.device("cuda")
     # "auto"
     if torch.backends.mps.is_available():
         return torch.device("mps")

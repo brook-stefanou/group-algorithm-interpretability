@@ -22,6 +22,12 @@ def test_resolve_device_cpu_is_always_cpu():
 
 def test_resolve_device_rejects_unknown_spec():
     with pytest.raises(ValueError, match="device must be one of"):
+        resolve_device("gpu")
+
+
+def test_resolve_device_cuda_raises_when_unavailable(monkeypatch):
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: False)
+    with pytest.raises(ValueError, match="cuda"):
         resolve_device("cuda")
 
 

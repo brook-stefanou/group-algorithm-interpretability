@@ -128,7 +128,13 @@ from ..groups.group import FiniteGroup
 from ..groups.tensor_rank import group_algebra_tensor_rank_bounds
 from ..model import GroupModel
 from .occupancy import neuron_activations, trivial_block_index
-from .template_divergence import MAX_FAITHFUL_SET_SEARCH_CARDINALITY, is_faithful
+from .template_divergence import (
+    MAX_FAITHFUL_SET_SEARCH_CARDINALITY,
+    MAX_FAITHFUL_SET_SEARCH_COMBOS,
+    block_kernel,
+    greedy_faithful_cover,
+    is_faithful,
+)
 
 _TOL = 1e-6
 
@@ -254,7 +260,13 @@ class MinimalFaithfulReal:
     non-uniqueness surfaced directly). ``fallback_used`` is True only in the
     guarded pathological case where the cardinality search hit ``max_cardinality``
     without a faithful set and fell back to the full nontrivial-block set (always
-    faithful by the regular-representation theorem)."""
+    faithful by the regular-representation theorem). ``certified`` is ``False``
+    when the candidate count exceeded ``exact_max_candidates`` and the exact
+    search was skipped in favour of a greedy kernel-intersection cover (see
+    :func:`minimal_faithful_real_dimension`) -- ``real_dimension`` and
+    ``example_set`` are then still a valid faithful set and its real
+    dimension, but only an UPPER BOUND on the true minimum, never a
+    certified one."""
 
     order: int
     real_dimension: int
@@ -265,6 +277,7 @@ class MinimalFaithfulReal:
     n_sets_at_min: int
     all_real_dimensions: tuple[int, ...]
     fallback_used: bool
+    certified: bool
 
     def to_record(self) -> dict[str, Any]:
         return {
@@ -277,6 +290,7 @@ class MinimalFaithfulReal:
             "n_sets_at_min": self.n_sets_at_min,
             "all_real_dimensions": list(self.all_real_dimensions),
             "fallback_used": self.fallback_used,
+            "certified": self.certified,
         }
 
 
@@ -284,6 +298,7 @@ def minimal_faithful_real_dimension(
     group: FiniteGroup,
     *,
     max_cardinality: int = MAX_FAITHFUL_SET_SEARCH_CARDINALITY,
+    max_combos_per_level: int = MAX_FAITHFUL_SET_SEARCH_COMBOS,
 ) -> MinimalFaithfulReal:
     """The minimal faithful *real* representation dimension of ``group`` (see
     :class:`MinimalFaithfulReal` and the module docstring).
@@ -302,7 +317,31 @@ def minimal_faithful_real_dimension(
     regular-representation theorem); every panel group's minimal faithful set is
     tiny, so the cap is generous headroom, not a tight bound. Reuses
     :func:`template_divergence.is_faithful` for the trivial-kernel-intersection
-    test unchanged -- only the cost is the real dimension."""
+    test unchanged -- only the cost is the real dimension.
+
+    The cardinality cap and lower-bound pruning alone are not enough to guard
+    a large CANDIDATE count: ``C(n, k)`` explodes from a large ``n`` even at a
+    small, capped ``k`` (a group with many one-dimensional irreps and no
+    single faithful one -- e.g. the elementary-abelian (C2)^7, 127 nontrivial
+    candidates -- has ``C(127, 6) ~ 4.8e9``, and its real-dimension lower
+    bound never prunes those levels away since 1-dimensional blocks make
+    every level's lower bound small). A flat cap on the candidate count is
+    too blunt here for the same reason as :func:`template_divergence.
+    minimum_faithful_sets` (see its module-section docstring): several real
+    panel groups have a large candidate count but a cheap search because
+    pruning kicks in at small ``k``. So the guard instead bounds the
+    per-level WORK: before enumerating cardinality-``k`` combinations,
+    ``max_combos_per_level`` caps ``C(n, k)``; a group whose search prunes to
+    completion before any over-budget level is entirely unaffected.
+    Exceeding the budget abandons the exact search (even if a faithful set
+    was already found at a smaller ``k`` -- a further level could still beat
+    it, and real dimension is not monotone, so a partial result cannot
+    safely be certified) in favour of
+    :func:`template_divergence.greedy_faithful_cover`, a fast,
+    always-terminating greedy kernel-intersection cover; the result is then
+    reported with ``certified=False`` (a valid faithful set and upper bound
+    on the true minimum, never a false minimum, but not guaranteed
+    optimal)."""
     trivial = trivial_block_index(group)
     candidates = [j for j in range(len(group.isotypic_blocks)) if j != trivial]
     all_dims = real_irreducible_dimensions(group)
@@ -311,21 +350,56 @@ def minimal_faithful_real_dimension(
     search_limit = min(n, max_cardinality)
     ascending = sorted(real_dims.values())
 
+    # Kernels computed once, outside the combinatorial loop (see
+    # `template_divergence.minimum_faithful_sets` for the same optimisation
+    # and why: `is_faithful` recomputes `block_kernel` on every call, which
+    # would otherwise redo the same O(n) work millions of times over).
+    kernels = {j: frozenset(int(x) for x in block_kernel(group, j).tolist()) for j in candidates}
+    full_intersection = frozenset(range(group.order))
+
+    def combo_is_faithful(combo: tuple[int, ...]) -> bool:
+        intersection = full_intersection
+        for j in combo:
+            intersection &= kernels[j]
+            if len(intersection) <= 1:
+                break
+        return len(intersection) == 1
+
     best_cost: int | None = None
     best_set: tuple[int, ...] | None = None
     n_at_best = 0
+    budget_exceeded = False
     for k in range(1, search_limit + 1):
         lower_bound = sum(ascending[:k])
         if best_cost is not None and lower_bound > best_cost:
             break  # no cardinality >= k can match or beat best_cost
+        if math.comb(n, k) > max_combos_per_level:
+            budget_exceeded = True
+            break
         for combo in itertools.combinations(candidates, k):
-            if not is_faithful(group, combo):
+            if not combo_is_faithful(combo):
                 continue
             cost = sum(real_dims[j] for j in combo)
             if best_cost is None or cost < best_cost:
                 best_cost, best_set, n_at_best = cost, combo, 1
             elif cost == best_cost:
                 n_at_best += 1
+
+    if budget_exceeded:
+        greedy = greedy_faithful_cover(group, candidates, tie_break_cost=lambda j: real_dims[j])
+        greedy_cost = sum(real_dims[j] for j in greedy)
+        return MinimalFaithfulReal(
+            order=group.order,
+            real_dimension=greedy_cost,
+            example_set=greedy,
+            example_set_cardinality=len(greedy),
+            example_set_degrees=tuple(group.isotypic_blocks[j].irrep_degree for j in greedy),
+            example_set_real_dims=tuple(real_dims[j] for j in greedy),
+            n_sets_at_min=1,
+            all_real_dimensions=all_dims,
+            fallback_used=False,
+            certified=False,
+        )
 
     fallback_used = False
     if best_cost is None:
@@ -349,6 +423,7 @@ def minimal_faithful_real_dimension(
         n_sets_at_min=n_at_best,
         all_real_dimensions=all_dims,
         fallback_used=fallback_used,
+        certified=True,
     )
 
 

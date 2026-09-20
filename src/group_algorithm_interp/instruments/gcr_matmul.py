@@ -92,6 +92,7 @@ import torch
 
 from ..groups.group import FiniteGroup
 from ..model import GroupModel
+from . import fit_backend
 from .device import run_with_device_fallback
 from .occupancy import (
     cayley_grid_tokens,
@@ -214,6 +215,30 @@ def _cv_sse(
     return residual_ss
 
 
+def _heldout_sse(
+    design: np.ndarray,
+    targets: np.ndarray,
+    folds: list[np.ndarray],
+    ridge: float,
+    fit_device: torch.device | None,
+) -> float:
+    """Held-out SSE of a linear model, on the numpy-float64-CPU reference path
+    or (opt-in) the ``mps``/``cuda`` normal-equations backend.
+
+    ``fit_device`` selects the fitter: ``None`` or a CPU device uses the
+    reference :func:`_cv_sse` (numpy ``lstsq`` in float64, unchanged); an
+    ``mps`` or ``cuda`` device routes the dominant cross-products through
+    :func:`fit_backend.heldout_residual_ss` (float32 normal equations on the
+    GPU, centred and ridge-stabilised -- see :mod:`.fit_backend`). The backend
+    supplies its own documented Tikhonov stabiliser, so the reference ``ridge``
+    (an absolute penalty, ``0`` in the pre-registered runs) applies only to the
+    numpy path; the backend is validated against that path to ~1e-3 on the
+    reported gaps."""
+    if fit_device is not None and fit_device.type in ("mps", "cuda"):
+        return fit_backend.heldout_residual_ss(design, targets, folds, device=fit_device)
+    return _cv_sse(design, targets, folds, ridge)
+
+
 def _cv_sse_function_of_ab(
     targets: np.ndarray, products: np.ndarray, folds: list[np.ndarray]
 ) -> float:
@@ -312,6 +337,10 @@ class IrrepMatmulFit:
     n_params_bilinear: int
     n_neurons: int
     n_cells: int
+    n_cells_available: int
+    row_sampling_applied: bool
+    max_rows: int
+    sample_seed: int
     mp_fve_heldout: float
     bilinear_fve_heldout: float
     ab_fve_heldout: float
@@ -333,6 +362,10 @@ class IrrepMatmulFit:
             "n_params_bilinear": self.n_params_bilinear,
             "n_neurons": self.n_neurons,
             "n_cells": self.n_cells,
+            "n_cells_available": self.n_cells_available,
+            "row_sampling_applied": self.row_sampling_applied,
+            "max_rows": self.max_rows,
+            "sample_seed": self.sample_seed,
             "mp_fve_heldout": self.mp_fve_heldout,
             "bilinear_fve_heldout": self.bilinear_fve_heldout,
             "ab_fve_heldout": self.ab_fve_heldout,
@@ -360,6 +393,9 @@ def fit_matmul_gcr(
     min_coverage: float = 0.9,
     min_abs_fve: float = 0.5,
     tie_tol: float = 0.01,
+    fit_device: torch.device | None = None,
+    max_rows: int = 0,
+    sample_seed: int = 0,
 ) -> IrrepMatmulFit:
     """Fit the three models to one irrep's activation grid and compare them.
 
@@ -373,6 +409,23 @@ def fit_matmul_gcr(
     exposed so a caller can tighten them; the defaults are the documented
     crediting rule. Degree exactly 2 is flagged ``low_power`` (limited room
     between the ``d**2`` and ``d**4`` coefficient counts), never suppressed.
+
+    ``fit_device`` selects the held-out-FVE fitter: ``None``/CPU (the default)
+    uses the numpy-float64-CPU reference; an ``mps`` device routes the
+    dominant cross-validated least-squares through the float32
+    normal-equations backend (:mod:`.fit_backend`) so a large-group cell runs
+    on the Apple GPU. The in-sample BIC ``lstsq`` and the rank are always the
+    numpy float64 reference; only the held-out CV fit moves to the device.
+
+    ``max_rows`` (0 = no cap, the default) bounds the number of ``(a, b)`` grid
+    cells the fit sees: over that many cells, a fixed-``sample_seed`` uniform
+    subsample without replacement of ``max_rows`` cells is drawn *before* the
+    designs are built (so the ``d**4``-column bilinear design is never
+    materialised for the full ``order**2`` grid), and the cross-validation
+    folds, the function-of-``ab`` ceiling and the total variance are all formed
+    on the sampled cells -- unbiased estimates of the same quantities on fewer
+    rows. Sub-cap (``order**2 <= max_rows``) it is byte-identical to the
+    uncapped fit and draws no random numbers.
     """
     grid = np.asarray(activations, dtype=np.float64)
     if grid.ndim == 2:
@@ -399,10 +452,25 @@ def fit_matmul_gcr(
 
     n_neurons = grid.shape[0]
     n_cells = order * order
+    n_cells_available = n_cells
     left = np.repeat(np.arange(order), order)
     right = np.tile(np.arange(order), order)
     products = np.asarray(cayley_table, dtype=np.int64)[left, right]
     targets = grid.reshape(n_neurons, n_cells).T  # [n_cells, n_neurons]
+
+    # Optional seeded row subsampling: drawn before the designs are built so the
+    # dominant (d**4-column bilinear) design is never materialised for the whole
+    # order**2 grid. Folds/ceiling/variance below are all formed on the sample.
+    row_sampling_applied = bool(max_rows and max_rows > 0 and n_cells > max_rows)
+    if row_sampling_applied:
+        sample = np.sort(
+            np.random.default_rng(sample_seed).choice(n_cells, size=max_rows, replace=False)
+        )
+        left = left[sample]
+        right = right[sample]
+        products = products[sample]
+        targets = targets[sample]
+        n_cells = int(max_rows)
 
     folds = _kfold_indices(n_cells, n_splits, seed)
     total_ss = _total_ss(targets)
@@ -416,7 +484,7 @@ def fit_matmul_gcr(
     # columns over ``order**2`` cells dominates this instrument's memory.
     mp_design = _design(matrix_product_features(irrep_matrices, products))
     rank_mp = int(np.linalg.matrix_rank(mp_design, tol=_RANK_TOL))
-    mp_fve = _fve(_cv_sse(mp_design, targets, folds, ridge), total_ss)
+    mp_fve = _fve(_heldout_sse(mp_design, targets, folds, ridge, fit_device), total_ss)
     mp_coef, *_ = np.linalg.lstsq(mp_design, targets, rcond=None)
     mp_rss = float(np.square(targets - mp_design @ mp_coef).sum())
     del mp_design, mp_coef
@@ -424,7 +492,7 @@ def fit_matmul_gcr(
 
     bilinear_design = _design(bilinear_features(irrep_matrices, left, right))
     rank_bilinear = int(np.linalg.matrix_rank(bilinear_design, tol=_RANK_TOL))
-    bilinear_fve = _fve(_cv_sse(bilinear_design, targets, folds, ridge), total_ss)
+    bilinear_fve = _fve(_heldout_sse(bilinear_design, targets, folds, ridge, fit_device), total_ss)
     bilinear_coef, *_ = np.linalg.lstsq(bilinear_design, targets, rcond=None)
     bilinear_rss = float(np.square(targets - bilinear_design @ bilinear_coef).sum())
     del bilinear_design, bilinear_coef
@@ -457,6 +525,10 @@ def fit_matmul_gcr(
         n_params_bilinear=rank_bilinear,
         n_neurons=n_neurons,
         n_cells=n_cells,
+        n_cells_available=n_cells_available,
+        row_sampling_applied=row_sampling_applied,
+        max_rows=int(max_rows),
+        sample_seed=int(sample_seed),
         mp_fve_heldout=mp_fve,
         bilinear_fve_heldout=bilinear_fve,
         ab_fve_heldout=ab_fve,
@@ -542,6 +614,9 @@ def screen_gcr_matmul(
     min_coverage: float = 0.9,
     min_abs_fve: float = 0.5,
     tie_tol: float = 0.01,
+    fit_device: torch.device | None = None,
+    max_rows: int = 0,
+    sample_seed: int = 0,
 ) -> MatmulGcrResult:
     """Run the matrix-product screen over a group's degree-``>= 2`` irreps.
 
@@ -588,6 +663,9 @@ def screen_gcr_matmul(
                 min_coverage=min_coverage,
                 min_abs_fve=min_abs_fve,
                 tie_tol=tie_tol,
+                fit_device=fit_device,
+                max_rows=max_rows,
+                sample_seed=sample_seed,
             )
         )
     return MatmulGcrResult(
@@ -709,6 +787,7 @@ def measure_gcr_matmul(
     *,
     batch_size: int = 8192,
     device: torch.device = torch.device("cpu"),
+    fit_device: torch.device | None = None,
     target: str = "post",
     **screen_kwargs: Any,
 ) -> MatmulGcrResult:
@@ -722,8 +801,13 @@ def measure_gcr_matmul(
     (essentially additive ``f(a) + g(b)``) function of the embeddings, so the
     product structure is created by the nonlinearity and appears only in its
     output and downstream. ``device`` runs the extraction forward pass there
-    (native float32); the activations returned are CPU float64 regardless, so
-    the fits are unaffected in precision. ``target`` selects the post-activation
+    (native float32); the activations returned are CPU float64 regardless.
+    ``fit_device`` is a *separate*, opt-in switch for the held-out-FVE fitter,
+    decoupled from the forward-pass ``device`` so the fit does not silently
+    change precision when the extraction runs on the GPU: it defaults to
+    ``None`` (the numpy-float64-CPU reference), and only an explicit ``mps``
+    ``fit_device`` moves the cross-validated least-squares onto the GPU in
+    float32 (:mod:`.fit_backend`). ``target`` selects the post-activation
     view (``"post"`` neuron activations, the default and principled target, or
     ``"mlp_out"`` = ``W_out @ mlp_post``). Remaining keyword arguments pass
     straight through to :func:`screen_gcr_matmul`.
@@ -731,7 +815,7 @@ def measure_gcr_matmul(
     activations = post_neuron_activations(
         model, group.order, batch_size=batch_size, device=device, target=target
     )
-    return screen_gcr_matmul(activations, group, **screen_kwargs)
+    return screen_gcr_matmul(activations, group, fit_device=fit_device, **screen_kwargs)
 
 
 __all__ = [

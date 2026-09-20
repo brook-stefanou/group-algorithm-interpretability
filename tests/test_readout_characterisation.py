@@ -175,3 +175,73 @@ def test_null_model_scores_reported_when_supplied():
     assert "null" in record
     assert record["null"]["character_only_null_held_out_fve"] < 0.3
     assert record["null"]["full_matrix_entry_null_held_out_fve"] < 0.3
+
+
+# ---------------------------------------------------------------------------
+# Seeded row sampling: the sampled design equals the corresponding full-grid
+# rows, the cap is a no-op below it, and it records interpretable metadata.
+# ---------------------------------------------------------------------------
+
+
+def test_sampled_matrix_entry_design_matches_full_grid_rows():
+    """Building the full-matrix-entry design over a sampled pair subset must
+    equal the corresponding rows of the full order**3 grid exactly."""
+    group = resolve_group("S3")
+    std_idx = _std_irrep_index(group)
+    order = group.order
+    full = R.gcr_matrix_entry_design(group, [std_idx])
+    pairs = np.array([0, 5, 6, order * order - 1, 2 * order + 3], dtype=np.int64)
+    sampled = R.gcr_matrix_entry_design(group, [std_idx], pairs=pairs)
+    assert sampled.shape == (pairs.size, order, full.shape[-1])
+    for row, p in enumerate(pairs):
+        assert np.allclose(sampled[row], full[p // order, p % order])
+
+
+def test_readout_characterisation_row_sampling_is_a_noop_above_the_cap():
+    """A cap above order**3 leaves the FVE fields byte-identical to the
+    uncapped run and reports row_sampling_applied False."""
+    group = resolve_group("S3")
+    std_idx = _std_irrep_index(group)
+    character = P.gcr_character_design(group, [std_idx])[..., 0]
+    rng = np.random.default_rng(0)
+    logits = character + rng.normal(scale=0.01, size=character.shape)
+    model = _FakeModel(logits)
+
+    baseline = R.readout_characterisation_instrument(model, group, seed=0)
+    capped = R.readout_characterisation_instrument(
+        model, group, seed=0, max_rows=10 * group.order**3, sample_seed=9
+    )
+    assert baseline["sampling"]["row_sampling_applied"] is False
+    assert capped["sampling"]["row_sampling_applied"] is False
+    for field in (
+        "character_only_held_out_fve",
+        "full_matrix_entry_held_out_fve",
+        "held_out_fve_gain_full_minus_character",
+    ):
+        assert capped[field] == baseline[field]
+
+
+def test_readout_characterisation_row_sampling_records_metadata_and_stays_finite():
+    """Under a genuine cap the run subsamples whole (a, b) pairs, keeps the full
+    class axis, and reports finite FVE fields plus the sampling metadata."""
+    group = resolve_group("S3")
+    std_idx = _std_irrep_index(group)
+    character = P.gcr_character_design(group, [std_idx])[..., 0]
+    rng = np.random.default_rng(0)
+    logits = character + rng.normal(scale=0.01, size=character.shape)
+    model = _FakeModel(logits)
+
+    order = group.order
+    cap = order * order  # well below order**3 = order * (order**2)
+    record = R.readout_characterisation_instrument(
+        model, group, seed=0, max_rows=cap, sample_seed=2
+    )
+    meta = record["sampling"]
+    assert meta["row_sampling_applied"] is True
+    assert meta["max_rows"] == cap
+    assert meta["sample_seed"] == 2
+    assert meta["n_classes"] == order
+    assert meta["n_pairs_used"] == cap // order
+    assert meta["n_design_rows_used"] <= cap
+    for field in ("character_only_held_out_fve", "full_matrix_entry_held_out_fve"):
+        assert np.isfinite(record[field])

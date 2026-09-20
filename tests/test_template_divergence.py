@@ -18,6 +18,7 @@ entries are unused by this module and left as placeholders).
 from __future__ import annotations
 
 import itertools
+import time
 
 import numpy as np
 import pytest
@@ -38,7 +39,9 @@ from group_algorithm_interp.instruments.template_divergence import (
     data_driven_comparison,
     degeneracy_screen,
     gcr_sparse_template,
+    is_faithful,
     minimal_separating_blocks,
+    minimum_faithful_sets,
     product_carrying_blocks,
 )
 from group_algorithm_interp.instruments.templates import induction_template
@@ -330,6 +333,119 @@ def test_block_kernel_matches_known_s4_kernels(s4: GroupData):
 def test_minimal_separating_blocks_excludes_trivial(s4: GroupData):
     selected = minimal_separating_blocks(s4)
     assert 0 not in selected  # index 0 is the trivial block
+
+
+# ---------------------------------------------------------------------------
+# Minimum faithful sets: combinatorial-blowup guard
+#
+# minimum_faithful_sets enumerates cardinality-k subsets of the nontrivial
+# blocks looking for a faithful one. Elementary-abelian (C2)^k is the
+# pathological case: every irrep is one-dimensional, no single irrep is
+# faithful (each kernel is an index-2 subgroup), and no faithful subset
+# exists below cardinality k (a spanning set of k independent characters is
+# needed to cut the common kernel down to the identity) -- so, uncapped, the
+# search would enumerate every subset up to MAX_FAITHFUL_SET_SEARCH_
+# CARDINALITY without success. (C2)^7 = SmallGroup(128, 2328) has 127
+# nontrivial candidate blocks; C(127, 6) ~ 4.8e9 hung the exact search for
+# the better part of an hour before the guard below was added. Built by hand
+# here (elements are length-k bit tuples, Cayley table is XOR, characters
+# are chi_v(x) = (-1)**popcount(v & x)) so the test needs no external GAP
+# artifact for a group this large.
+# ---------------------------------------------------------------------------
+
+
+def _build_elementary_abelian_2group(k: int) -> GroupData:
+    n = 1 << k
+    elements = list(range(n))
+    table = np.array([[a ^ b for b in elements] for a in elements], dtype=np.int64)
+
+    def popcount(x: int) -> int:
+        return bin(x).count("1")
+
+    irreps = []
+    blocks = []
+    for v in range(n):
+        character = np.array(
+            [1.0 if popcount(v & x) % 2 == 0 else -1.0 for x in elements], dtype=np.complex128
+        )
+        irreps.append(
+            IrrepData(
+                matrices=np.zeros((n, 1, 1), dtype=np.complex128),
+                character=character,
+                dimension=1,
+                table_index=v,
+                field="Q",
+                basis="hand-constructed (C2)^k character (unused placeholder matrix)",
+            )
+        )
+        blocks.append(
+            IsotypicBlock(
+                projector=np.zeros((n, n), dtype=np.float64),
+                irrep_degree=1,
+                block_rank=1,
+                irrep_indices=(v,),
+            )
+        )
+
+    conjugacy_classes = tuple(np.array([x], dtype=np.int64) for x in elements)
+    character_table = np.array([irrep.character for irrep in irreps], dtype=np.complex128)
+    frobenius_schur = np.ones(n, dtype=np.int64)
+    trivial_subgroup = np.array([0], dtype=np.int64)
+    full_group = np.array(elements, dtype=np.int64)
+
+    return GroupData(
+        order=n,
+        index=-1,
+        description=f"(C2)^{k} (hand-constructed, many one-dim irreps, no single faithful one)",
+        element_labels=tuple(str(x) for x in elements),
+        cayley_table=table,
+        conjugacy_classes=conjugacy_classes,
+        character_table=character_table,
+        frobenius_schur=frobenius_schur,
+        irreps=tuple(irreps),
+        isotypic_blocks=tuple(blocks),
+        subgroups=(trivial_subgroup, full_group),
+        left_cosets=((trivial_subgroup,), (full_group,)),
+        provenance={"backend": "hand-constructed", "purpose": "combinatorial-guard test"},
+    )
+
+
+@pytest.fixture(scope="module")
+def elementary_abelian_c2_7() -> GroupData:
+    return _build_elementary_abelian_2group(7)
+
+
+def test_minimum_faithful_sets_many_one_dim_irreps_does_not_hang(elementary_abelian_c2_7):
+    """The guard's whole point: this used to run for the better part of an
+    hour (confirmed on SmallGroup(128, 2328), the real-world instance of
+    this pathology). It must now return promptly, a genuinely faithful set,
+    and flag the result as uncertified (an upper bound, not a proven
+    minimum) since the exact search was abandoned over budget."""
+    group = elementary_abelian_c2_7
+    assert len(group.isotypic_blocks) == 128  # 1 trivial + 127 nontrivial
+
+    start = time.perf_counter()
+    result = minimum_faithful_sets(group)
+    elapsed = time.perf_counter() - start
+
+    assert elapsed < 5.0, (
+        f"minimum_faithful_sets took {elapsed:.2f}s; the guard should keep it fast"
+    )
+    assert result["certified"] is False
+    assert is_faithful(group, result["example_min_set"])
+    # The true minimum for (C2)^7 is exactly 7 (a basis of the dual space);
+    # the greedy cover should land there or close to it, never above n.
+    assert 1 <= result["min_cardinality"] <= 127
+
+
+def test_minimum_faithful_sets_small_groups_unchanged_by_the_guard(s4: GroupData):
+    """The guard must change behaviour only for the large-candidate-count,
+    no-small-faithful-set case: S4 (5 candidates, well within budget at
+    every level) gets the exact, certified answer exactly as before."""
+    result = minimum_faithful_sets(s4)
+    assert result["certified"] is True
+    assert result["min_cardinality"] == 1
+    assert is_faithful(s4, result["example_min_set"])
 
 
 # ---------------------------------------------------------------------------

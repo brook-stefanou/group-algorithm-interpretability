@@ -78,6 +78,7 @@ from .probes import (
     gcr_character_readout_instrument,
     identity_index,
     inverses,
+    resolve_pair_sample,
 )
 
 __all__ = [
@@ -88,7 +89,9 @@ __all__ = [
 ]
 
 
-def gcr_matrix_entry_design(group: FiniteGroup, irrep_indices: Sequence[int]) -> np.ndarray:
+def gcr_matrix_entry_design(
+    group: FiniteGroup, irrep_indices: Sequence[int], *, pairs: np.ndarray | None = None
+) -> np.ndarray:
     """The full-matrix-entry readout's design matrix: shape ``[order, order,
     order, sum_k 2 * d_k**2]`` where ``d_k`` is the degree of
     ``group.irreps[irrep_indices[k]]``.
@@ -103,6 +106,13 @@ def gcr_matrix_entry_design(group: FiniteGroup, irrep_indices: Sequence[int]) ->
     Sage/GAP irrep matrices, never from the activations); ``rho(c^-1)`` is
     read off by indexing with the Cayley-table inverse map.
 
+    ``pairs`` mirrors :func:`probes.gcr_character_design`: ``None`` (the
+    default) builds the full ``[order, order, order, ...]`` grid, unchanged;
+    a 1-D int64 array of flat ``(a, b)`` pair indices builds only those pairs'
+    rows (result ``[n_pairs, order, ...]``, the class axis ``c`` kept whole),
+    avoiding the ``order**3`` einsum that stalls the big panel cells while
+    producing values identical to the corresponding full-grid rows.
+
     Because ``Re tr(M) = sum_i Re(M_ii)``, ``gcr_character_design``'s column
     for the same irrep is exactly the sum of this design's ``(Re, i == j)``
     columns -- a genuine linear combination inside this design's column
@@ -115,20 +125,39 @@ def gcr_matrix_entry_design(group: FiniteGroup, irrep_indices: Sequence[int]) ->
     e = identity_index(table)
     inv = inverses(table, e)
     irrep_indices = list(irrep_indices)
-    blocks: list[np.ndarray] = []
+    if pairs is None:
+        blocks: list[np.ndarray] = []
+        for idx in irrep_indices:
+            matrices = group.irreps[idx].matrices  # [order, d, d] complex128: rho(g)
+            matrices_inv = matrices[inv]  # rho(c^-1), indexed directly by c
+            # ab[a, b]_{ik} = sum_j rho(a)_{ij} rho(b)_{jk} = rho(a b)_{ik}.
+            ab = np.einsum("aij,bjk->abik", matrices, matrices)
+            # m[a, b, c]_{ij} = sum_k ab[a, b]_{ik} rho(c^-1)_{kj} = [rho(a b) rho(c^-1)]_{ij}.
+            m = np.einsum("abik,ckj->abcij", ab, matrices_inv)
+            d = matrices.shape[1]
+            blocks.append(m.real.reshape(order, order, order, d * d))
+            blocks.append(m.imag.reshape(order, order, order, d * d))
+        if not blocks:
+            return np.zeros((order, order, order, 0), dtype=np.float64)
+        return np.concatenate(blocks, axis=3)
+    pair_idx = np.asarray(pairs, dtype=np.int64)
+    a_idx = pair_idx // order
+    b_idx = pair_idx % order
+    n_pairs = int(pair_idx.shape[0])
+    sampled_blocks: list[np.ndarray] = []
     for idx in irrep_indices:
         matrices = group.irreps[idx].matrices  # [order, d, d] complex128: rho(g)
         matrices_inv = matrices[inv]  # rho(c^-1), indexed directly by c
-        # ab[a, b]_{ik} = sum_j rho(a)_{ij} rho(b)_{jk} = rho(a b)_{ik}.
-        ab = np.einsum("aij,bjk->abik", matrices, matrices)
-        # m[a, b, c]_{ij} = sum_k ab[a, b]_{ik} rho(c^-1)_{kj} = [rho(a b) rho(c^-1)]_{ij}.
-        m = np.einsum("abik,ckj->abcij", ab, matrices_inv)
+        # ab[p]_{ik} = rho(a b)_{ik} for the p-th sampled pair (a, b).
+        ab = np.einsum("pij,pjk->pik", matrices[a_idx], matrices[b_idx])
+        # m[p, c]_{ij} = sum_k ab[p]_{ik} rho(c^-1)_{kj} = [rho(a b) rho(c^-1)]_{ij}.
+        m = np.einsum("pik,ckj->pcij", ab, matrices_inv)
         d = matrices.shape[1]
-        blocks.append(m.real.reshape(order, order, order, d * d))
-        blocks.append(m.imag.reshape(order, order, order, d * d))
-    if not blocks:
-        return np.zeros((order, order, order, 0), dtype=np.float64)
-    return np.concatenate(blocks, axis=3)
+        sampled_blocks.append(m.real.reshape(n_pairs, order, d * d))
+        sampled_blocks.append(m.imag.reshape(n_pairs, order, d * d))
+    if not sampled_blocks:
+        return np.zeros((n_pairs, order, 0), dtype=np.float64)
+    return np.concatenate(sampled_blocks, axis=2)
 
 
 def gcr_matrix_entry_form(
@@ -136,12 +165,14 @@ def gcr_matrix_entry_form(
     irrep_indices: Sequence[int] | None = None,
     *,
     name: str | None = None,
+    pairs: np.ndarray | None = None,
 ) -> FunctionalForm:
     """A :class:`probes.FunctionalForm` wrapping :func:`gcr_matrix_entry_design`
     over ``irrep_indices`` (every nontrivial irrep by default, matching
-    :func:`probes.gcr_candidate_irreps`)."""
+    :func:`probes.gcr_candidate_irreps`). ``pairs`` is threaded through (an
+    optional sampled ``(a, b)`` pair subset that bounds the design build)."""
     resolved = gcr_candidate_irreps(group) if irrep_indices is None else list(irrep_indices)
-    design = gcr_matrix_entry_design(group, resolved)
+    design = gcr_matrix_entry_design(group, resolved, pairs=pairs)
     if name is None:
         dims = ",".join(str(group.irreps[i].dimension) for i in resolved)
         name = f"gcr_matrix_entries[{dims}]"
@@ -159,6 +190,9 @@ def readout_characterisation_instrument(
     improvement_tol: float = 0.01,
     tie_tol: float = 0.01,
     device: torch.device = torch.device("cpu"),
+    fit_device: torch.device | None = None,
+    max_rows: int = 0,
+    sample_seed: int = 0,
 ) -> dict[str, Any]:
     """The positive readout characterisation: character-only vs full-matrix-
     entry, held out.
@@ -188,6 +222,22 @@ def readout_characterisation_instrument(
     design is consistent with any correct algorithm, not only GCR -- the
     load-bearing statistics are the held-out gap and the minimal irrep set,
     never the raw FVE numbers alone.
+
+    ``device`` runs the read-position forward passes; ``fit_device`` is the
+    separate, opt-in switch (default ``None`` = numpy-float64-CPU reference,
+    passed straight through to :func:`probes.functional_form_fit` and
+    :func:`probes.gcr_character_readout_instrument`) that routes the held-out-
+    FVE fits through the float32 normal-equations backend on an ``mps`` GPU
+    (:mod:`.fit_backend`).
+
+    ``max_rows`` (0 = no cap, the default) bounds the ``(a, b, c)`` design-row
+    count via :func:`probes.resolve_pair_sample`: over that many flattened rows
+    both this comparison and the nested minimal-set search (which reuses the
+    identical ``sample_seed`` so they see the same pairs) run on a fixed uniform
+    subsample of whole ``(a, b)`` pairs, avoiding the ``order**3`` full-matrix-
+    entry design build that stalls the big panel cells. Sub-cap it is exactly
+    the full-grid computation; the ``sampling`` record field carries the
+    decision so the CIs are interpretable as sample-based.
     """
     order = group.order
     full_irreps = gcr_candidate_irreps(group)
@@ -202,8 +252,12 @@ def readout_characterisation_instrument(
             ),
         }
 
-    character_form = gcr_character_form(group, full_irreps, name="character_only")
-    matrix_form = gcr_matrix_entry_form(group, full_irreps, name="full_matrix_entry")
+    pairs, sampling_meta = resolve_pair_sample(
+        order, order, max_rows=max_rows, sample_seed=sample_seed
+    )
+
+    character_form = gcr_character_form(group, full_irreps, name="character_only", pairs=pairs)
+    matrix_form = gcr_matrix_entry_form(group, full_irreps, name="full_matrix_entry", pairs=pairs)
 
     fit = functional_form_fit(
         model,
@@ -213,6 +267,8 @@ def readout_characterisation_instrument(
         seed=seed,
         null_model=null_model,
         device=device,
+        fit_device=fit_device,
+        pairs=pairs,
     )
     fve_by_name = {entry["name"]: entry["held_out_fve"] for entry in fit["forms"]}
     character_fve = fve_by_name["character_only"]
@@ -233,6 +289,9 @@ def readout_characterisation_instrument(
         target_fve=target_fve,
         improvement_tol=improvement_tol,
         device=device,
+        fit_device=fit_device,
+        max_rows=max_rows,
+        sample_seed=sample_seed,
     )
     minimal_irrep_set = character_readout["primary"]["minimal_irrep_set"]
 
@@ -241,6 +300,7 @@ def readout_characterisation_instrument(
         "target_theory": "GCR",
         "rung": 5,
         "status": "measured",
+        "sampling": sampling_meta,
         "n_candidate_irreps": len(full_irreps),
         "candidate_irrep_dimensions": [int(group.irreps[i].dimension) for i in full_irreps],
         "character_only_held_out_fve": character_fve,

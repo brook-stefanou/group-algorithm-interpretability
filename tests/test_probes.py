@@ -637,6 +637,48 @@ def test_gcr_character_readout_undefined_nested_comparison_without_fourier_rival
     assert record["n_fourier_irreps"] == 0
 
 
+def test_gcr_character_readout_row_sampling_is_a_noop_above_the_cap():
+    """A cap above order**3 leaves the GCR readout's FVE fields byte-identical
+    to the uncapped run and reports row_sampling_applied False."""
+    group = resolve_group("S3")
+    candidates = P.gcr_candidate_irreps(group)
+    std_idx = next(i for i in candidates if group.irreps[i].dimension == 2)
+    logits = _sparse_gcr_target(group, [std_idx], [1.0], noise_scale=0.01, seed=0)
+    model = _FakeModel(logits)
+    baseline = P.gcr_character_readout_instrument(model, group, seed=0)
+    capped = P.gcr_character_readout_instrument(
+        model, group, seed=0, max_rows=10 * group.order**3, sample_seed=4
+    )
+    assert baseline["sampling"]["row_sampling_applied"] is False
+    assert capped["sampling"]["row_sampling_applied"] is False
+    assert (
+        capped["secondary_raw_fve"]["full_held_out_fve"]
+        == baseline["secondary_raw_fve"]["full_held_out_fve"]
+    )
+    assert (
+        capped["primary"]["minimal_irrep_set"]["selected_irrep_indices"]
+        == baseline["primary"]["minimal_irrep_set"]["selected_irrep_indices"]
+    )
+
+
+def test_gcr_character_readout_row_sampling_records_metadata_and_stays_finite():
+    """Under a genuine cap the run subsamples whole (a, b) pairs (the full class
+    axis kept) and reports finite FVE plus the sampling metadata."""
+    group = resolve_group("S3")
+    candidates = P.gcr_candidate_irreps(group)
+    std_idx = next(i for i in candidates if group.irreps[i].dimension == 2)
+    logits = _sparse_gcr_target(group, [std_idx], [1.0], noise_scale=0.01, seed=0)
+    model = _FakeModel(logits)
+    order = group.order
+    cap = order * order
+    record = P.gcr_character_readout_instrument(model, group, seed=0, max_rows=cap, sample_seed=1)
+    meta = record["sampling"]
+    assert meta["row_sampling_applied"] is True
+    assert meta["n_pairs_used"] == cap // order
+    assert meta["n_classes"] == order
+    assert np.isfinite(record["secondary_raw_fve"]["full_held_out_fve"])
+
+
 def test_fc_model_is_accepted_by_the_probes():
     """The FC baseline shares the W_E / read-position contract, so the same
     probes accept it (what makes the I-36 architecture replication cheap)."""

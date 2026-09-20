@@ -73,7 +73,7 @@ from __future__ import annotations
 
 import itertools
 import math
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -362,6 +362,32 @@ def gcr_sparse_template(group: FiniteGroup) -> np.ndarray:
 # ``cost="total_block_rank"`` additionally widens the search by one level
 # (k+1) after the first hit, since a slightly larger set can have a smaller
 # total dimension count than every set at the minimum cardinality.
+#
+# That cardinality cap alone is NOT enough of a guard: ``C(n, k)`` blows up
+# from a large *candidate count* ``n`` even at a small, capped ``k``. A group
+# with many one-dimensional irreps and no single faithful one -- the
+# elementary-abelian (C2)^7 = SmallGroup(128, 2328), 127 nontrivial candidate
+# blocks and no faithful singleton -- has ``C(127, 6) ~ 4.8e9``, which hangs
+# the exact search for the better part of an hour even though ``k`` never
+# exceeds :data:`MAX_FAITHFUL_SET_SEARCH_CARDINALITY`.
+#
+# A flat cap on the candidate count ``n`` is the obvious guard but is too
+# blunt: several real panel groups have a large ``n`` (SmallGroup(127, 1),
+# 63 nontrivial blocks; SmallGroup(128, 1), 64) yet the exact search is
+# already cheap for them, because they have a faithful block at cardinality
+# 1 and the loop stops there -- ``n`` alone does not predict cost, whether a
+# small-``k`` faithful set exists does. So the guard instead bounds the
+# actual per-level WORK: before enumerating cardinality-``k`` combinations,
+# :data:`MAX_FAITHFUL_SET_SEARCH_COMBOS` caps ``C(n, k)``. A group whose
+# search would have stopped early (a faithful set found at some small ``k``)
+# never reaches an over-budget level regardless of its candidate count, so
+# its result is completely unaffected by this guard; only a group with NO
+# faithful set below budget -- the (C2)^7 pathology -- falls through to
+# :func:`greedy_faithful_cover`, a set-cover-style greedy search over irrep
+# KERNELS (not subsets) that is ``O(n^2)`` and always terminates. The greedy
+# result is reported with ``certified=False``: it is a valid faithful set and
+# an upper bound on the true minimum, never a false minimum, but is not
+# guaranteed optimal.
 # ---------------------------------------------------------------------------
 
 #: The combinatorial search cap for :func:`minimum_faithful_sets`: increasing
@@ -373,6 +399,21 @@ def gcr_sparse_template(group: FiniteGroup) -> np.ndarray:
 #: unexpectedly large minimal faithful set. Named and overridable via
 #: ``max_cardinality``, never a bare literal.
 MAX_FAITHFUL_SET_SEARCH_CARDINALITY = 6
+
+#: The per-level combinatorial-search budget for :func:`minimum_faithful_sets`
+#: and :func:`recruited_dimension.minimal_faithful_real_dimension`: before
+#: enumerating cardinality-``k`` combinations of the ``n`` nontrivial
+#: candidates, ``C(n, k)`` is checked against this budget. Exceeding it at
+#: any level stops the exact search there (as if the cardinality cap had been
+#: reached without a faithful set) and falls back to a greedy kernel-
+#: intersection cover, reported uncertified -- see the module-section
+#: docstring above for why this is a per-level work budget rather than a flat
+#: candidate-count cap. ``C(30, 6) = 593775`` and ``C(40, 6) ~ 3.8e6``, so
+#: this comfortably covers every real panel group's candidate count at the
+#: default cardinality cap while stopping well short of the ``C(127, 6) ~
+#: 4.8e9`` (C2)^7 case. Named and overridable via ``max_combos_per_level``,
+#: never a bare literal.
+MAX_FAITHFUL_SET_SEARCH_COMBOS = 1_000_000
 
 
 def is_faithful(group: FiniteGroup, block_indices: Sequence[int]) -> bool:
@@ -394,6 +435,51 @@ def is_faithful(group: FiniteGroup, block_indices: Sequence[int]) -> bool:
     return len(intersection) == 1
 
 
+def greedy_faithful_cover(
+    group: FiniteGroup,
+    candidates: Sequence[int],
+    *,
+    tie_break_cost: Callable[[int], int] | None = None,
+) -> tuple[int, ...]:
+    """A greedy set-cover search for a faithful block set: repeatedly select
+    the candidate block whose kernel most shrinks the current common-kernel
+    intersection (ties broken by ``tie_break_cost`` ascending when given,
+    then by block index, for determinism), until the intersection is exactly
+    the identity.
+
+    Unlike :func:`minimum_faithful_sets`'s exact search, this never
+    enumerates block SUBSETS -- only individual block KERNELS -- so its cost
+    is ``O(n^2)`` in the candidate count regardless of how large the minimal
+    faithful set turns out to be, and it always terminates in at most
+    ``len(candidates)`` steps (the full candidate set is faithful by the
+    regular-representation theorem, see :func:`minimal_separating_blocks`).
+    It is a fast, always-terminating UPPER BOUND on the minimum faithful set,
+    not a certified minimum -- callers that need certification must use the
+    exact search instead (only tractable for a small candidate count)."""
+    kernels = {j: frozenset(int(x) for x in block_kernel(group, j).tolist()) for j in candidates}
+    intersection: frozenset[int] = frozenset(range(group.order))
+    remaining = set(candidates)
+    selected: list[int] = []
+    while len(intersection) > 1 and remaining:
+
+        def _key(j: int, _intersection: frozenset[int] = intersection) -> tuple[int, int, int]:
+            reduction = len(_intersection) - len(_intersection & kernels[j])
+            tiebreak = tie_break_cost(j) if tie_break_cost is not None else 0
+            return (-reduction, tiebreak, j)
+
+        best = min(remaining, key=_key)
+        intersection &= kernels[best]
+        selected.append(best)
+        remaining.discard(best)
+    if len(intersection) != 1:
+        raise ValueError(
+            "greedy faithful-set cover exhausted every candidate without reaching a "
+            "trivial kernel intersection; this violates the regular-representation "
+            "theorem and indicates corrupted character data"
+        )
+    return tuple(selected)
+
+
 def block_set_cost(group: FiniteGroup, block_indices: Sequence[int]) -> dict[str, int]:
     """The cost of a block set on the three bases this module reports:
     ``cardinality`` (block count), ``total_block_rank`` (summed dimension,
@@ -413,15 +499,39 @@ def block_set_cost(group: FiniteGroup, block_indices: Sequence[int]) -> dict[str
 _FAITHFUL_SET_COSTS = ("cardinality", "total_block_rank")
 
 
+def _greedy_faithful_fallback(
+    group: FiniteGroup, candidates: Sequence[int], *, cost: str
+) -> dict[str, Any]:
+    """The uncertified :func:`minimum_faithful_sets` result when the exact
+    search is abandoned over budget: a fast, always-terminating greedy cover
+    (see :func:`greedy_faithful_cover`), reported as an upper bound."""
+    blocks = group.isotypic_blocks
+    tie_break_cost = (lambda j: blocks[j].block_rank) if cost == "total_block_rank" else None
+    greedy = greedy_faithful_cover(group, candidates, tie_break_cost=tie_break_cost)
+    greedy_cost = block_set_cost(group, greedy)
+    return {
+        "min_cardinality": greedy_cost["cardinality"],
+        "n_sets_at_min_cardinality": 1,
+        "min_total_block_rank": greedy_cost["total_block_rank"],
+        "example_min_set": greedy,
+        "cost": cost,
+        "fallback_used": False,
+        "certified": False,
+    }
+
+
 def minimum_faithful_sets(
     group: FiniteGroup,
     *,
     cost: str = "cardinality",
     max_cardinality: int = MAX_FAITHFUL_SET_SEARCH_CARDINALITY,
+    max_combos_per_level: int = MAX_FAITHFUL_SET_SEARCH_COMBOS,
 ) -> dict[str, Any]:
     """The minimum-cost faithful set(s) among NONTRIVIAL blocks (see the
-    module-section docstring above for the two supported ``cost`` options
-    and the shared cardinality-increasing search strategy).
+    module-section docstring above for the two supported ``cost`` options,
+    the shared cardinality-increasing search strategy, and why the
+    combinatorial guard is a per-level work budget rather than a flat
+    candidate-count cap).
 
     Returns a dict: ``min_cardinality`` (the smallest block count any
     faithful set achieves), ``n_sets_at_min_cardinality`` (how many distinct
@@ -432,11 +542,19 @@ def minimum_faithful_sets(
     ``example_min_set`` (one faithful set achieving both ``min_cardinality``
     and, among ties, the smallest ``total_block_rank`` -- a representative,
     not "the" minimal set, since minimal faithful sets are generally not
-    unique), ``cost`` (echoed back), and ``fallback_used`` (``True`` when the
+    unique), ``cost`` (echoed back), ``fallback_used`` (``True`` when the
     cardinality search hit ``max_cardinality`` without finding a faithful
     set and fell back to the full nontrivial-block set -- the pathological
     case the regular-representation theorem guarantees cannot happen for any
-    real group, but which is guarded against rather than assumed away)."""
+    real group, but which is guarded against rather than assumed away), and
+    ``certified`` (``False`` when a search level's ``C(n, k)`` exceeded
+    ``max_combos_per_level`` before a faithful set was found, so the exact
+    search was abandoned in favour of :func:`greedy_faithful_cover` --
+    every field above is then still a valid faithful set and cost, but only
+    an UPPER BOUND on the true minimum, never a certified one; ``True``
+    whenever the exact search ran to a conclusion, including the
+    ``fallback_used`` case, since that fallback set is exactly the full
+    candidate set, not a heuristic guess)."""
     if cost not in _FAITHFUL_SET_COSTS:
         raise ValueError(f"cost must be one of {_FAITHFUL_SET_COSTS}, got {cost!r}")
     trivial = trivial_block_index(group)
@@ -444,19 +562,43 @@ def minimum_faithful_sets(
     n = len(candidates)
     search_limit = min(n, max_cardinality)
 
+    # Kernels computed once, outside the combinatorial loop: `is_faithful`
+    # recomputes `block_kernel` (a character-array scan) on every call, which
+    # is fine for a one-off check but would redundantly redo the same O(n)
+    # work millions of times over the search's inner loop.
+    kernels = {j: frozenset(int(x) for x in block_kernel(group, j).tolist()) for j in candidates}
+    full_intersection = frozenset(range(group.order))
+
+    def combo_is_faithful(combo: tuple[int, ...]) -> bool:
+        intersection = full_intersection
+        for j in combo:
+            intersection &= kernels[j]
+            if len(intersection) <= 1:
+                break
+        return len(intersection) == 1
+
     def faithful_combos(k: int) -> list[tuple[int, ...]]:
         return [
-            combo for combo in itertools.combinations(candidates, k) if is_faithful(group, combo)
+            combo for combo in itertools.combinations(candidates, k) if combo_is_faithful(combo)
         ]
 
     min_cardinality: int | None = None
     combos_at_min: list[tuple[int, ...]] = []
+    budget_exceeded = False
     for k in range(1, search_limit + 1):
+        if math.comb(n, k) > max_combos_per_level:
+            # This level alone is already too expensive to enumerate (the
+            # (C2)^7 case): abandon the exact search rather than hang.
+            budget_exceeded = True
+            break
         combos = faithful_combos(k)
         if combos:
             min_cardinality = k
             combos_at_min = combos
             break
+
+    if budget_exceeded:
+        return _greedy_faithful_fallback(group, candidates, cost=cost)
 
     fallback_used = False
     if min_cardinality is None:
@@ -480,7 +622,12 @@ def minimum_faithful_sets(
     best = min(combos_at_min, key=rank_key)
     min_total_block_rank = block_set_cost(group, best)["total_block_rank"]
 
-    if cost == "total_block_rank" and not fallback_used and min_cardinality < search_limit:
+    if (
+        cost == "total_block_rank"
+        and not fallback_used
+        and min_cardinality < search_limit
+        and math.comb(n, min_cardinality + 1) <= max_combos_per_level
+    ):
         # Widen the search by one level: a slightly larger set can have a
         # smaller total dimension count than every set at min_cardinality.
         next_combos = faithful_combos(min_cardinality + 1)
@@ -498,6 +645,7 @@ def minimum_faithful_sets(
         "example_min_set": best,
         "cost": cost,
         "fallback_used": fallback_used,
+        "certified": True,
     }
 
 
@@ -530,7 +678,11 @@ def used_set_minimality(
     ``n_minimal_faithful_sets`` (:func:`minimum_faithful_sets`'s
     ``n_sets_at_min_cardinality``, surfaced here because non-uniqueness of the
     minimal faithful set is exactly what would make a naive single-set
-    comparison misleading)."""
+    comparison misleading), and ``minimum_certified``
+    (:func:`minimum_faithful_sets`'s ``certified`` -- ``False`` means
+    ``min_cardinality``/``min_total_block_rank`` are only an upper bound, not
+    a certified minimum, so the ratios above are upper bounds on the true
+    ratio too)."""
     used = tuple(sorted({int(b) for b in used_blocks}))
     used_faithful = is_faithful(group, used)
     used_cost = block_set_cost(group, used)
@@ -561,6 +713,7 @@ def used_set_minimality(
         "rank_ratio": rank_ratio,
         "is_irredundant": is_irredundant,
         "n_minimal_faithful_sets": minimum["n_sets_at_min_cardinality"],
+        "minimum_certified": minimum["certified"],
     }
 
 
@@ -1012,6 +1165,7 @@ __all__ = [
     "DEFINED",
     "MAX_COSET_SUPPORT_FRACTION",
     "MAX_FAITHFUL_SET_SEARCH_CARDINALITY",
+    "MAX_FAITHFUL_SET_SEARCH_COMBOS",
     "MIN_FAVOURED_FRACTION",
     "MIN_FLIP_OVER_RANDOM",
     "MIN_MP_MINUS_BILINEAR",

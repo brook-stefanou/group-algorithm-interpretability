@@ -403,6 +403,68 @@ def test_record_schema_of_a_measured_result():
 
 
 # ---------------------------------------------------------------------------
+# Seeded row sampling: the cap that stops the big cells stalling in the
+# CPU-bound design build.
+# ---------------------------------------------------------------------------
+
+
+def test_row_sampling_is_a_noop_when_the_cap_exceeds_the_cell_count():
+    """A cap larger than the order**2 grid must leave every FVE field
+    byte-identical to the uncapped fit and draw no random numbers."""
+    group = resolve_group("S3")
+    _, matrices = _first_high_degree_block(group)
+    activations = _matrix_product_activations(group, matrices, n_neurons=6, noise=0.05, seed=0)
+    baseline = fit_matmul_gcr(activations, matrices, group.cayley_table, n_splits=4, seed=0)
+    capped = fit_matmul_gcr(
+        activations,
+        matrices,
+        group.cayley_table,
+        n_splits=4,
+        seed=0,
+        max_rows=10 * group.order * group.order,
+        sample_seed=7,
+    )
+    assert capped.row_sampling_applied is False
+    assert baseline.row_sampling_applied is False
+    assert capped.n_cells == baseline.n_cells == group.order * group.order
+    for field in (
+        "mp_fve_heldout",
+        "bilinear_fve_heldout",
+        "ab_fve_heldout",
+        "mp_fraction_of_ab",
+        "mp_minus_bilinear_heldout",
+        "bic_mp",
+        "bic_bilinear",
+    ):
+        assert getattr(capped, field) == getattr(baseline, field)
+
+
+def test_row_sampling_records_metadata_and_stays_finite():
+    """Under a genuine cap the fit runs on max_rows sampled cells and reports
+    finite FVE fields plus the sampling metadata; the seed is deterministic."""
+    group = resolve_group("S3")
+    _, matrices = _first_high_degree_block(group)
+    activations = _matrix_product_activations(group, matrices, n_neurons=6, noise=0.05, seed=0)
+    n_cells = group.order * group.order
+    cap = n_cells // 2
+    fit = fit_matmul_gcr(
+        activations, matrices, group.cayley_table, n_splits=4, seed=0, max_rows=cap, sample_seed=3
+    )
+    assert fit.row_sampling_applied is True
+    assert fit.n_cells == cap
+    assert fit.n_cells_available == n_cells
+    assert fit.max_rows == cap
+    assert fit.sample_seed == 3
+    for field in ("mp_fve_heldout", "bilinear_fve_heldout", "ab_fve_heldout"):
+        assert np.isfinite(getattr(fit, field))
+    # Deterministic: the same sample_seed reproduces the sampled fit exactly.
+    again = fit_matmul_gcr(
+        activations, matrices, group.cayley_table, n_splits=4, seed=0, max_rows=cap, sample_seed=3
+    )
+    assert again.mp_fve_heldout == fit.mp_fve_heldout
+
+
+# ---------------------------------------------------------------------------
 # Post-activation extraction: the re-targeted input tensor
 # ---------------------------------------------------------------------------
 

@@ -156,6 +156,9 @@ def readout_characterisation_run(
     improvement_tol: float = 0.01,
     tie_tol: float = 0.01,
     device: torch.device = torch.device("cpu"),
+    fit_device: torch.device | None = None,
+    max_rows: int = 0,
+    sample_seed: int = 0,
 ) -> dict[str, Any]:
     """One run's readout-characterisation record: dip-aware checkpoint
     selection (recorded, substitutions included), then
@@ -223,6 +226,9 @@ def readout_characterisation_run(
         improvement_tol=improvement_tol,
         tie_tol=tie_tol,
         device=device,
+        fit_device=fit_device,
+        max_rows=max_rows,
+        sample_seed=sample_seed,
     )
     # Bound this process's memory to one seed at a time -- both models (the
     # trained checkpoint and the random-init null) and the checkpoint state
@@ -346,6 +352,7 @@ def _cmd_measure(args: argparse.Namespace) -> int:
     if args.artifacts_dir is not None:
         os.environ["GROUP_ARTIFACTS_DIR"] = str(args.artifacts_dir)
     device = resolve_device(args.device)
+    fit_device = resolve_device(args.fit_device)
 
     cells = discover_cells(Path(args.runs_dir))
     if args.cell:
@@ -365,6 +372,9 @@ def _cmd_measure(args: argparse.Namespace) -> int:
                 improvement_tol=args.improvement_tol,
                 tie_tol=args.tie_tol,
                 device=device,
+                fit_device=fit_device,
+                max_rows=args.max_rows,
+                sample_seed=args.sample_seed,
             )
             for run_dir in run_dirs
         ]
@@ -449,6 +459,24 @@ def main(argv: list[str] | None = None) -> int:
         help="held-out FVE gain below which character_only_sufficient is True (default 0.01)",
     )
     measure.add_argument(
+        "--max-rows",
+        type=int,
+        default=0,
+        dest="max_rows",
+        help="cap on the (a, b, c) design-row count; 0 or unset means no cap (the full order**3 "
+        "grid, unchanged). Over the cap the fit runs on a fixed-seed uniform subsample of whole "
+        "(a, b) pairs (the read-position axis kept whole), so the big cells no longer stall in "
+        "the CPU-bound full-matrix-entry design build.",
+    )
+    measure.add_argument(
+        "--sample-seed",
+        type=int,
+        default=0,
+        dest="sample_seed",
+        help="seed for the --max-rows pair subsample (default 0); distinct from the per-run fit "
+        "split seed.",
+    )
+    measure.add_argument(
         "--artifacts-dir", default=None, help="override the group-artifact directory"
     )
     measure.add_argument(
@@ -461,10 +489,18 @@ def main(argv: list[str] | None = None) -> int:
     measure.add_argument(
         "--device",
         default="cpu",
-        choices=["auto", "mps", "cpu"],
-        help="device for the read-position forward pass; the fit itself always stays "
-        "CPU float64 (default: cpu -- MPS is slower here than CPU for this "
-        "instrument's small forward passes)",
+        choices=["auto", "mps", "cuda", "cpu"],
+        help="device for the read-position forward pass (default: cpu -- MPS is slower "
+        "here than CPU for this instrument's small forward passes); 'cuda' is explicit-only.",
+    )
+    measure.add_argument(
+        "--fit-device",
+        default="cpu",
+        choices=["auto", "mps", "cuda", "cpu"],
+        help="device for the held-out-FVE least-squares fit; 'cpu' (default) is the "
+        "numpy-float64 reference, 'mps'/'cuda' run the float32 normal-equations backend on "
+        "the GPU for the big-group cells (see instruments/fit_backend.py). Opt-in: the "
+        "default keeps the pre-registered CPU-float64 fit.",
     )
     measure.set_defaults(func=_cmd_measure)
 
