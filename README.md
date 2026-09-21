@@ -4,10 +4,12 @@ Project write-up: [brookstefanou.com/projects/finite-group-interp](https://brook
 
 Small models learn to multiply in finite groups. This repository studies which
 part of a group's representation-theoretic structure a trained model uses to do
-it. The thesis is that a model settles on a near-minimal faithful subset of that
-structure and recovers the product in the readout, without carrying the whole
-regular representation. The design controls the comparison with matched pairs of
-groups that share a character table.
+it. The finding is that a model recruits only a small multiple of the minimal
+faithful amount of that structure, far below the whole regular representation, and
+that the multi-layer-perceptron neurons never build the product as a shared-index
+matrix multiplication. Matched pairs of groups that share a character table act as
+a falsification instrument, since within a pair the competing accounts predict no
+difference and any difference the model shows counts against them.
 
 For the argument and the design in full, see
 [the core study](docs/core-study.md) and [the methodology](docs/methodology.md).
@@ -29,8 +31,11 @@ Each reads a single trained model.
   product of the two argument matrices or only a generic bilinear form.
 - `readout_characterisation.py` tests whether the output stage needs anything
   beyond the scalar character of the product.
-- `coset_quotient.py` reads the coset route as one instance of the thesis, on
-  groups where a subgroup quotient is well-formed.
+- `coset_quotient.py` reads the coset route as one concrete instance, on groups
+  where a subgroup quotient is well-formed.
+- `power_map_attribution.py` measures whether a model's per-element representation
+  encodes power-map structure beyond conjugacy class, the axis a
+  character-table-matched pair leaves free.
 
 ## The study docs
 
