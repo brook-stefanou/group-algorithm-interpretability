@@ -66,9 +66,7 @@ def resolve_device(spec: str) -> torch.device:
         return torch.device("mps")
     if spec == "cuda":
         if not torch.cuda.is_available():
-            raise ValueError(
-                "--device cuda requested but torch.cuda.is_available() is False"
-            )
+            raise ValueError("--device cuda requested but torch.cuda.is_available() is False")
         return torch.device("cuda")
     # "auto"
     if torch.backends.mps.is_available():
