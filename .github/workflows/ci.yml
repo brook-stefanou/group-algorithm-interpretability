@@ -31,7 +31,7 @@ jobs:
           uv run python scripts/check_research_log.py
           --base "${{ github.event.pull_request.base.sha || github.event.before }}"
           --render-dir "$RUNNER_TEMP/research-log-indexes"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: research-log-indexes
@@ -42,7 +42,7 @@ jobs:
       - run: uv run mypy
       - run: uv run pytest --cov-report=xml:coverage.xml
       - run: uv build --no-sources
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage-python-3.12
